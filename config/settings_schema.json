@@ -1,25 +1,12 @@
 [
   {
     "name": "theme_info",
-    "theme_name": "Vendy Pro",
-    "theme_version": "2.0.2", 
+    "theme_name": "DEVOK",
+    "theme_version": "1.0.0",
     "theme_author": "Shopify",
-    "theme_documentation_url": "https:\/\/documentation.zemez.io\/shopify\/documentation\/index.php?project=vendy_pro",
-    "theme_support_url": "https:\/\/zemez.ticksy.com\/submit\/#100021039" 
+    "theme_documentation_url": "https:\/\/help.shopify.com\/manual\/online-store\/themes",
+    "theme_support_url": "https:\/\/support.shopify.com\/"
   },
-  { 
-    "name": "NEED MORE HELP?",
-    "settings": [
-      {   
-        "type": "paragraph",
-        "content": "Learn more from our [Documentation](https:\/\/documentation.zemez.io\/shopify\/documentation\/index.php?project=vendy_pro)"
-      },
-      {
-        "type": "paragraph",
-        "content": "In case of additional questions or problems, as well as requests to customize the template, please contact with us by [support link](https:\/\/zemez.ticksy.com\/submit\/#100021039)"
-      }
-    ] 
-  }, 
   {
     "name": "t:settings_schema.logo.name",
     "settings": [
@@ -27,26 +14,26 @@
         "type": "image_picker",
         "id": "logo",
         "label": "t:settings_schema.logo.settings.logo_image.label"
-      }, 
+      },
       {
-        "type": "image_picker", 
+        "type": "image_picker",
         "id": "logo_inverted",
         "label": "t:settings_schema.logo.settings.logo_image_inverted.label"
-      }, 
-      { 
+      },
+      {
         "type": "range",
-        "id": "logo_width", 
-        "min": 50, 
+        "id": "logo_width",
+        "min": 50,
         "max": 300,
-        "step": 10, 
+        "step": 10,
         "default": 100,
         "unit": "px",
         "label": "t:settings_schema.logo.settings.logo_width.label"
-      }, 
+      },
       {
         "type": "image_picker",
         "id": "favicon",
-        "label": "t:settings_schema.logo.settings.favicon.label", 
+        "label": "t:settings_schema.logo.settings.favicon.label",
         "info": "t:settings_schema.logo.settings.favicon.info"
       }
     ]
@@ -135,7 +122,7 @@
             "type": "color",
             "id": "price_sale",
             "label": "t:settings_schema.colors.settings.price_sale.label",
-            "default": "#E10000" 
+            "default": "#E10000"
           }
         ],
         "role": {
@@ -207,22 +194,22 @@
     "name": "t:settings_schema.custom_font.name",
     "settings": [
       {
-        "type":"checkbox",
-        "id":"use_custom-font",
-        "label":"Enable Custom Font",
-        "default":false
+        "type": "checkbox",
+        "id": "use_custom-font",
+        "label": "Enable Custom Font",
+        "default": false
       },
       {
-        "type":"text",
-        "id":"link_font",
-        "label":"Add Custom Font Link",
-        "info":"Upload font file in woff2 format in shopify files or paste font link",
+        "type": "text",
+        "id": "link_font",
+        "label": "Add Custom Font Link",
+        "info": "Upload font file in woff2 format in shopify files or paste font link",
         "default": "https:\/\/fonts.googleapis.com\/css2?family=Cormorant:wght@400;500;600;700&display=swap"
       },
       {
-        "type":"text",
-        "id":"name_font",
-        "label":"Write Custom Font Name",
+        "type": "text",
+        "id": "name_font",
+        "label": "Write Custom Font Name",
         "default": "Cormorant"
       },
       {
@@ -231,23 +218,23 @@
         "label": "Choose Type Font (serif or sans-serif)",
         "options": [
           {
-          "value": "sans-serif",
-          "label": "sans-serif"
+            "value": "sans-serif",
+            "label": "sans-serif"
           },
-           {
-          "value": "serif",
-          "label": "serif"
+          {
+            "value": "serif",
+            "label": "serif"
           }
         ],
         "default": "serif",
         "info": "Select an appropriate accordingly font"
       },
       {
-        "type":"checkbox",
-        "id":"use_font_only_heading",
-        "label":"Applying Custom Font only for heading elements(h1-h6)",
-        "default":false
-      } 
+        "type": "checkbox",
+        "id": "use_font_only_heading",
+        "label": "Applying Custom Font only for heading elements(h1-h6)",
+        "default": false
+      }
     ]
   },
   {
@@ -307,30 +294,30 @@
         "label": "Footer Type",
         "info": "Applying different layout for bottom part footer",
         "options": [
-            {
-                "value": "1",
-                "label": "Type #1"
-            },
-            {
-                "value": "2",
-                "label": "Type #2"
-            },
-            {
-                "value": "3",
-                "label": "Type #3"
-            },
-            {
-                "value": "4",
-                "label": "Type #4"
-            },
-            {
-                "value": "5",
-                "label": "Type #5"
-            },
-            {
-                "value": "6", 
-                "label": "Type #6"
-            }
+          {
+            "value": "1",
+            "label": "Type #1"
+          },
+          {
+            "value": "2",
+            "label": "Type #2"
+          },
+          {
+            "value": "3",
+            "label": "Type #3"
+          },
+          {
+            "value": "4",
+            "label": "Type #4"
+          },
+          {
+            "value": "5",
+            "label": "Type #5"
+          },
+          {
+            "value": "6",
+            "label": "Type #6"
+          }
         ]
       }
     ]
@@ -522,13 +509,13 @@
       },
       {
         "type": "select",
-        "id": "card_design", 
+        "id": "card_design",
         "options": [
           {
             "value": "design-1",
             "label": "1"
           },
-          { 
+          {
             "value": "design-2",
             "label": "2"
           },
@@ -544,14 +531,12 @@
         "default": "design-1",
         "label": "Design card"
       },
-
       {
         "type": "checkbox",
         "id": "badge_card_toggle",
         "label": "t:sections.zmz-featured-collection.settings.badge_card_toggle.label",
         "default": true
       },
-      
       {
         "type": "range",
         "id": "card_image_padding",
@@ -562,7 +547,6 @@
         "label": "t:settings_schema.global.settings.image_padding.label",
         "default": 0
       },
-
       {
         "type": "select",
         "id": "card_text_alignment",
@@ -584,11 +568,11 @@
         "label": "t:settings_schema.global.settings.text_alignment.label"
       },
       {
-        "type": "color_scheme", 
+        "type": "color_scheme",
         "id": "card_color_scheme",
         "label": "t:sections.all.colors.label",
         "default": "background-1"
-      }, 
+      },
       {
         "type": "header",
         "content": "t:settings_schema.global.settings.header__border.content"
@@ -908,7 +892,7 @@
         "type": "color_scheme",
         "id": "blog_card_color_scheme",
         "label": "t:sections.all.colors.label",
-        "default": "background-1" 
+        "default": "background-1"
       },
       {
         "type": "header",
@@ -1680,7 +1664,6 @@
       }
     ]
   },
-
   {
     "name": "t:settings_schema.currency_format.name",
     "settings": [
@@ -1707,7 +1690,6 @@
         "type": "header",
         "content": "t:settings_schema.currency_selector.settings.content"
       },
-     
       {
         "type": "select",
         "id": "selector_view",
@@ -1735,7 +1717,7 @@
       {
         "type": "checkbox",
         "id": "enable_flag",
-        "label": "t:settings_schema.currency_selector.settings.enable_flag.label", 
+        "label": "t:settings_schema.currency_selector.settings.enable_flag.label",
         "default": false
       }
     ]
@@ -1843,7 +1825,7 @@
         "default": "#121212"
       }
     ]
-  }, 
+  },
   {
     "name": "Recently viewed product count",
     "settings": [
@@ -1851,12 +1833,12 @@
         "type": "range",
         "id": "recently_view_count",
         "min": 4,
-        "max": 20, 
+        "max": 20,
         "step": 1,
         "unit": "pc",
         "label": "Recently viewed products count",
         "default": 10
-      }, 
+      },
       {
         "type": "header",
         "content": "t:sections.product-recommendations.settings.header__2.content"
@@ -1889,7 +1871,7 @@
       },
       {
         "type": "checkbox",
-        "id": "viewed_show_rating", 
+        "id": "viewed_show_rating",
         "default": false,
         "label": "t:sections.product-recommendations.settings.show_rating.label",
         "info": "t:sections.product-recommendations.settings.show_rating.info"
@@ -1899,12 +1881,12 @@
   {
     "name": "Preloader",
     "settings": [
-       {
+      {
         "type": "checkbox",
-        "id": "off_preloader", 
+        "id": "off_preloader",
         "default": false,
         "label": "Disable page preloader?"
-       } 
+      }
     ]
   }
 ]
