@@ -70,13 +70,13 @@
     "use_compare_size": false,
     "use_compare_color": false,
     "accent_icons": "text",
-    "social_facebook_link": "https:\/\/www.facebook.com\/groups\/devokJetCommunity",
-    "social_instagram_link": "https:\/\/www.instagram.com\/devok_wp",
+    "social_facebook_link": "https:\/\/www.facebook.com\/groups\/ZemezJetCommunity",
+    "social_instagram_link": "https:\/\/www.instagram.com\/zemez_wp",
     "social_youtube_link": "https:\/\/www.youtube.com\/channel\/UCPW43un8VFXHe9LxKpR_2Hg",
     "social_tiktok_link": "#",
     "social_twitter_link": "",
     "social_snapchat_link": "",
-    "social_pinterest_link": "https:\/\/www.pinterest.com\/devok_wp\/",
+    "social_pinterest_link": "https:\/\/www.pinterest.com\/zemez_wp\/",
     "social_tumblr_link": "",
     "social_vimeo_link": "",
     "currency_code_enabled": false,
@@ -417,13 +417,13 @@
     "share_twitter": true,
     "share_pinterest": true,
     "sections": {
-      "devok-compare": {
-        "type": "devok-compare",
+      "zmz-compare": {
+        "type": "zmz-compare",
         "settings": {
         }
       },
-      "devok-section-modal": {
-        "type": "devok-section-modal",
+      "zmz-section-modal": {
+        "type": "zmz-section-modal",
         "blocks": {
           "fef8ca4f-ed86-4007-b659-08c9ed42dcd7": {
             "type": "heading",
