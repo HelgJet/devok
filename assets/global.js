@@ -1061,6 +1061,12 @@ class SliderComponent extends HTMLElement {
     const nextPosition = this.slider.scrollLeft + this.sliderItemOffset;
     this.setSlidePosition(nextPosition);
   }
+
+    setSlidePosition = (position) => {
+    this.slider.scrollTo({
+      left: position,
+    });
+  };
 }
 
 customElements.define('slider-component', SliderComponent);
