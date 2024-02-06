@@ -918,7 +918,25 @@ class SliderComponent extends HTMLElement {
       this.slider.addEventListener('scroll', this.setSlideVisibility.bind(this));  
     }
 
+      // Add autoplay settings
+    this.autoplayInterval = 5000; // Adjust the autoplay interval in milliseconds
+    this.autoplayTimer = null;
+
+    // Start autoplay
+    this.startAutoplay();
+
   }
+
+    startAutoplay() {
+    this.autoplayTimer = setInterval(() => {
+      this.slideNext(); // You can customize this method based on your requirements
+    }, this.autoplayInterval);
+  }
+
+    stopAutoplay() {
+    clearInterval(this.autoplayTimer);
+  }
+
 
   setSlideVisibility() {
     if(!this.slider.hasAttribute("data-devok-featcollection-type")) return;
@@ -1035,6 +1053,13 @@ class SliderComponent extends HTMLElement {
     this.slider.scrollTo({
       left: this.slideScrollPosition
     });
+    // Stop autoplay when user interacts with the slider
+    this.stopAutoplay();
+  }
+  
+  slideNext() {
+    const nextPosition = this.slider.scrollLeft + this.sliderItemOffset;
+    this.setSlidePosition(nextPosition);
   }
 }
 
