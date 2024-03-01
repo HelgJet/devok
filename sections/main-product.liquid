@@ -1844,6 +1844,8 @@
 {% for product in category_products %}
   <p>{{ product.title }}</p> 
 {% endfor %}
+                 
+<p>{{ best_selling_products.size | json }}</p>
 
 {% schema %}
 {
