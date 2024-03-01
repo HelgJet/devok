@@ -1837,7 +1837,7 @@
 
 {% assign count = 0 %}
 
-	{% for tag in collection.all_tags %}
+	{% for tag in current_category.all_tags %}
 						
 						{%- assign tag_text =  'bestsellers' -%}
 						{%- assign tag_low = tag | downcase -%}
