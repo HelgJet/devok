@@ -1827,19 +1827,21 @@
 
 {% assign current_product = product %}
 {% assign current_category = current_product.collections.first | default: current_product.collections.all.first %}
-{% assign category_products = collections[current_category.handle].products | where: 'type', " "  %}
+{% assign category_products = collections[current_category.handle].products %}
 
-{{ category_products | json }}
-                      
-<ul class="grid">
+{% assign bestseller_products = "" | split: "" %} 
+
 {% for product in category_products %}
   {% if product.handle != current_product.handle %}
- 
-        <li class="grid__item">
-        {% render 'card-product', card_product: product %}
-        </li>
-    
-{% endif %}
+    {% if product.tags contains 'bestsellers' %}
+   
+      <div class="product">
+        <h2>{{ product.title }}</h2>
+      </div>
+      
+      {% assign bestseller_products = bestseller_products | append: product.handle | append: "," %}
+    {% endif %}
+  {% endif %}
 {% endfor %}
 </ul>
   <hr/>
