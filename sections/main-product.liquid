@@ -1827,11 +1827,14 @@
 
 {% assign current_product = product %}
 {% assign current_category = current_product.collections.first | default: current_product.collections.all.first %}
-{% assign category_products = "" | split: "" %} 
+{% assign category_products = '' %} 
 
 {% for product in collections[current_category.handle].products %}
   {% unless product.handle == current_product.handle %}
-    {% assign category_products = category_products | append: product | split: "" %}
+     {% assign category_products = category_products
+                          | append: product
+                          | append: ','
+                        %}
   {% endunless %}
 {% endfor %}
 
