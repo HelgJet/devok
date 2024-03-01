@@ -1829,17 +1829,55 @@
 {% assign current_category = current_product.collections.first | default: current_product.collections.all %}
 {% assign category_products = collections[current_category.handle].products %}
 
-
+<ul class="grid">
 {% for product in category_products %}
   {% for tag in product.tags %}
     {%- assign tag_text =  'bestsellers' -%}
 		{%- assign tag_low = tag | downcase -%}
       {% if tag_text == tag_low %}
-  <p>{{ product.title }}</p> 
+        <li class="grid__item">
+        {% render 'card-product', card_product: product %}
+        </li>
     {% endif %}
   {% endfor %}
 {% endfor %}
-                      
+
+  <hr/>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const collectionHandle = '{{ current_product.handle }}'; // Current collection handle
+    fetch(`/collections/${collectionHandle}/products.json`)
+        .then(response => response.json())
+        .then(data => {
+            const bestsellerProducts = data.products.filter(product => product.tags.includes('bestsellers'));
+            displayBestsellers(bestsellerProducts);
+        })
+        .catch(error => console.error('Error:', error));
+});
+
+// Function to display bestseller products
+function displayBestsellers(products) {
+    const container = document.getElementById('bestseller-products-container');
+    container.innerHTML = ''; // Clear existing content
+
+    products.forEach(product => {
+        const productHTML = `
+            <div class="product">
+                <a href="${product.url}">
+                    <img src="${product.featured_image.src}" alt="${product.title}">
+                    <h3>${product.title}</h3>
+                </a>
+            </div>
+        `;
+        container.innerHTML += productHTML;
+    });
+}
+</script>
+  
+    <div id="bestseller-products-container">
+    <!-- Bestseller products will be displayed here -->
+</div>                  
 
 {% schema %}
 {
