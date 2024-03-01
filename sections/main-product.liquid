@@ -1840,22 +1840,19 @@
 %}
                       
 {% if current_collection and current_collection.products_count > 1 %}
-       <ul class="grid">               
-      {% assign current_product_found = false %}
-      {% for product in current_collection.products %}
-      {% if product.handle == current_product.handle %}
-      {% assign current_product_found = true %}
-      {% else %}
-      {% unless current_product_found == false and forloop.last %}
-        
-            <li class="grid__item">
-              {% render 'card-product', card_product: product %}
-            </li>
-    
-      {% endunless %}
+     <ul class="grid">
+  {% assign current_product_found = false %}
+  {% for product in current_collection.products %}
+    {% if product.handle != current_product.handle and product.tags contains 'bestsellers' %}
+      {% if current_product_found == false %}
+        {% assign current_product_found = true %}
       {% endif %}
-      {% endfor %}
-       </ul>
+      <li class="grid__item">
+        {% render 'card-product', card_product: product %}
+      </li>
+    {% endif %}
+  {% endfor %}
+</ul>
   {% endif %}
   <hr/>
 
