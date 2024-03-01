@@ -1827,6 +1827,7 @@
 
        
 {% liquid
+  assign current_product = product
   if collection == null or collection.handle == 'frontpage' or collection.handle == 'all'
     assign found_a_collection = false
     for c in product.collections
