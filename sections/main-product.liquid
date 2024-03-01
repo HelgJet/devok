@@ -1847,11 +1847,11 @@
       {% assign current_product_found = true %}
       {% else %}
       {% unless current_product_found == false and forloop.last %}
-           {% if product.tags contains 'bestsellers' %}
+        
             <li class="grid__item">
               {% render 'card-product', card_product: product %}
             </li>
-        {% endif %}
+    
       {% endunless %}
       {% endif %}
       {% endfor %}
