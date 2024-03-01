@@ -1827,11 +1827,13 @@
 
 {% assign current_product = product %}
 {% assign current_category = current_product.collections.first | default: current_product.collections.all.first %}
-{% assign category_products = collections[current_category.handle].products | where: 'tag', "bestsellers" %}
-
+{% assign category_products = collections[current_category.handle].products  %}
+{% assign best_products_from_category = category_products | where: 'tag', "bestsellers" %}
+                      
+    <p>{{ best_products_from_category | json }}</p>                
 
 <ul class="grid">
-{% for product in category_products %}
+{% for product in best_products_from_category %}
   {% if product.handle != current_product.handle %}
   
         <li class="grid__item">
