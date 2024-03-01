@@ -1835,13 +1835,13 @@
 
 {% assign best_selling_products = '' | split: '' %}
 
-{% assign count = 0 %}
 
-	{% for tag in current_category.all_tags %}
+
+	{% for tag in collection.all_tags %}
 						
 						{%- assign tag_text =  'bestsellers' -%}
 						{%- assign tag_low = tag | downcase -%}
-					   
+					     {% assign count = 0 %}
                           
                         
 						
@@ -1849,7 +1849,7 @@
 							{% if product.tags contains tag %}
                                {% if tag_text == tag_low %}
                                      {% assign best_selling_products = best_selling_products | append: product | split: "" %}
-								{%- assign count = count | plus: 1 -%}
+								     {%- assign count = count | plus: 1 -%}
                                    {% endif %}
 							{% endif %}
 						{% endfor %}
@@ -1859,7 +1859,7 @@
   <p>{{ product.title }}</p> 
 {% endfor %}
                  
-<p>{{ current_category.all_tags.size | json }}</p>
+<p>{{ best_selling_products.size | json }}</p>
 
 {% schema %}
 {
