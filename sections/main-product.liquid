@@ -1832,7 +1832,7 @@
 
 {% for product in category_products %}
   {% if product.tags contains 'bestsellers' %}
-    {% assign best_products_from_category = best_products_from_category | concat: product | join: "," %}
+    {% assign best_products_from_category = best_products_from_category | concat: product  %}
   {% endif %}
 {% endfor %}
 
