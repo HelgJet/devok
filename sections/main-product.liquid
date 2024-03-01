@@ -1836,13 +1836,11 @@
     {%- assign tag_text =  'bestsellers' -%}
 		{%- assign tag_low = tag | downcase -%}
       {% if tag_text == tag_low %}
-              {% assign best_selling_products = best_selling_products | push: product %}
-
+     {% assign best_selling_products = best_selling_products | append: product | split: "" %}
     {% endif %}
   {% endfor %}
 {% endfor %}
 
-{% assign best_selling_products = best_selling_products_handles | split: ',' %}
 
 {% for product in category_products %}
   <p>{{ product.title }}</p> 
