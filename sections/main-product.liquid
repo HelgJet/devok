@@ -1686,8 +1686,15 @@
     
        {% assign best_selling_products = category_products | sort_by: 'best-selling' %}
 
-   <p>{{ category_products.first.product.title | json }}</p>                      
-   <p>{{ best_selling_products.first.product.title | json }}</p>
+  
+ {% for product in category_products %}
+      <p>{{ product.title }}</p>
+    {% endfor %}
+                                   
+ {% for product in best_selling_products %}
+      <p>{{ product.title }}</p>
+    {% endfor %}
+                                   
 {% schema %}
 {
    "name": "t:sections.main-product.name",
