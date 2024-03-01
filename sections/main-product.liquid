@@ -1828,18 +1828,27 @@
 {% assign current_product = product %}
 {% assign current_category = current_product.collections.first | default: current_product.collections.all.first %}
 {% assign category_products = collections[current_category.handle].products  %}
-{% assign best_products_from_category = "" %} 
 
-{% for product in category_products %}
-  {% if product.tags contains 'bestsellers' %}
-    {% assign best_products_from_category = best_products_from_category | concat: product  %}
-  {% endif %}
-{% endfor %}
 
-{{ best_products_from_category | json }}           
+  {% capture best_products_json %}
+  [
+  {% for product in category_products %}
+    {% if product.tags contains 'bestsellers' %}
+      {
+        "title": "{{ product.title | escape }}",
+        "handle": "{{ product.handle }}",
+        "tags": {{ product.tags | json }}
+      }{% unless forloop.last %},{% endunless %}
+    {% endif %}
+  {% endfor %}
+  ]
+{% endcapture %}
+
+
+        
 
 <ul class="grid">
-{% for product in best_products_from_category %}
+{% for product in best_products_json %}
   {% if product.handle != current_product.handle %}
   
         <li class="grid__item">
