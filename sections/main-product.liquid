@@ -1825,12 +1825,12 @@
 </script>
 
 {% assign current_product = product %}
-
 {% assign current_category = current_product.collections.first | default: current_product.collections.all %}
 {% assign category_products = collections[current_category.handle].products %}
 
 <ul class="grid">
 {% for product in category_products %}
+  {% unless current_product %}
   {% for tag in product.tags %}
     {%- assign tag_text =  'bestsellers' -%}
 		{%- assign tag_low = tag | downcase -%}
@@ -1840,6 +1840,7 @@
         </li>
     {% endif %}
   {% endfor %}
+ {% endunless %}
 {% endfor %}
 </ul>
   <hr/>
@@ -1868,7 +1869,6 @@ function displayBestsellers(products) {
         const productHTML = `
             <div class="product">
                 <a href="${product.url}">
-                    
                     <h3>${product.title}</h3>
                 </a>
             </div>
