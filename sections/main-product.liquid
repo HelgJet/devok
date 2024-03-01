@@ -1835,11 +1835,25 @@
 
 {% assign best_selling_products = '' | split: '' %}
 
-{% for product in category_products %}
-  {% if product.tags contains 'bestsellers' %}
-    {% assign best_selling_products = best_selling_products | append: product | split: '' %}
-  {% endif %}
-{% endfor %}
+{% assign count = 0 %}
+
+	{% for tag in collection.all_tags %}
+						
+						{%- assign tag_text =  'bestsellers' -%}
+						{%- assign tag_low = tag | downcase -%}
+					   
+                          
+                        
+						
+						{% for product in current_category.all_products %}
+							{% if product.tags contains tag %}
+                               {% if tag_text == tag_low %}
+                                     {% assign best_selling_products = best_selling_products | append: product | split: "" %}
+								{%- assign count = count | plus: 1 -%}
+                                   {% endif %}
+							{% endif %}
+						{% endfor %}
+  	{% endfor %}
 
 {% for product in category_products %}
   <p>{{ product.title }}</p> 
