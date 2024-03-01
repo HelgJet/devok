@@ -1828,7 +1828,6 @@
 
 {% assign current_category = current_product.collections.first | default: current_product.collections.all %}
 {% assign category_products = collections[current_category.handle].products %}
-{% assign best_selling_products = '' | split: '' %} 
 
 
 {% for product in category_products %}
@@ -1836,21 +1835,11 @@
     {%- assign tag_text =  'bestsellers' -%}
 		{%- assign tag_low = tag | downcase -%}
       {% if tag_text == tag_low %}
-     {% assign best_selling_products = best_selling_products | append: product | split: "" %}
+  <p>{{ product.title }}</p> 
     {% endif %}
   {% endfor %}
 {% endfor %}
-
-
-{% for product in category_products %}
-  <p>{{ product.title }}</p> 
-{% endfor %}
-<hr/>
-{% for product in best_selling_products %}
-  <p>{{ product.title }}</p> 
-{% endfor %}
                       
-
 
 {% schema %}
 {
