@@ -1828,18 +1828,16 @@
 
 {% assign current_category = current_product.collections.first | default: current_product.collections.all %}
 {% assign category_products = collections[current_category.handle].products %}
-{% assign best_selling_products_handles = '' %}
+{% assign best_selling_products = '' | split: '' %} 
+
 
 {% for product in category_products %}
   {% for tag in product.tags %}
     {%- assign tag_text =  'bestsellers' -%}
 		{%- assign tag_low = tag | downcase -%}
       {% if tag_text == tag_low %}
-      {% if best_selling_products_handles == '' %}
-        {% assign best_selling_products_handles = product.handle %}
-      {% else %}
-        {% assign best_selling_products_handles = best_selling_products_handles | append: ',' | append: product.handle %}
-      {% endif %}
+              {% assign best_selling_products = best_selling_products | push: product %}
+
     {% endif %}
   {% endfor %}
 {% endfor %}
