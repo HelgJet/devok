@@ -1828,25 +1828,16 @@
 {% assign current_product = product %}
 {% assign current_category = current_product.collections.first | default: current_product.collections.all.first %}
 {% assign category_products = collections[current_category.handle].products %}
-
-{% comment %}Initialize an empty variable for output or further operations{% endcomment %}
-{% assign bestseller_products = "" | split: "" %} 
+                      
 <ul class="grid">
 {% for product in category_products %}
-  {% if product.handle != current_product.handle %}
-    {% if product.tags contains 'bestsellers' %}
-     
+   {% if product.handle != current_product.handle and product.tags contains 'bestsellers' %}
       <li class="grid__item">
         {% render 'card-product', card_product: product %}
-        </li>
-      {% assign bestseller_products = bestseller_products | append: product.handle | append: "," %}
+      </li>
     {% endif %}
-  {% endif %}
 {% endfor %}
-</ul>             
-
-         {{ bestseller_products | json }}             
-
+</ul>
 
   <hr/>
 
