@@ -1828,6 +1828,7 @@
 {% assign current_product = product %}
 {% assign current_category = current_product.collections.first | default: current_product.collections.all.first %}
 {% assign category_products = collections[current_category.handle].products %}
+
                       
 <ul class="grid">
 {% for product in category_products %}
@@ -1835,7 +1836,7 @@
       <li class="grid__item">
         {% render 'card-product', card_product: product %}
       </li>
-    {% endif %}
+  {% endif %}
 {% endfor %}
 </ul>
 
