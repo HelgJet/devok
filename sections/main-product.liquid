@@ -1841,12 +1841,8 @@
                       
 {% if current_collection and current_collection.products_count > 1 %}
      <ul class="grid">
-  {% assign current_product_found = false %}
   {% for product in current_collection.products %}
     {% if product.handle != current_product.handle and product.tags contains 'bestsellers' %}
-      {% if current_product_found == false %}
-        {% assign current_product_found = true %}
-      {% endif %}
       <li class="grid__item">
         {% render 'card-product', card_product: product %}
       </li>
@@ -1861,7 +1857,7 @@
     </div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const collectionHandle = '{{ current_category.handle }}'; // Current collection handle
+    const collectionHandle = '{{ current_collection.handle }}'; // Current collection handle
     fetch(`/collections/${collectionHandle}/products.json`)
         .then(response => response.json())
         .then(data => {
