@@ -1824,46 +1824,38 @@
    }
 </script>
 
+
 {% assign current_product = product %}
 {% assign current_category = current_product.collections.first | default: current_product.collections.all.first %}
+{% assign category_products = '' %} 
 
+{% for product in collections[current_category.handle].products %}
+  {% unless product.handle == current_product.handle %}
+     {% assign category_products = product | compact %}
+  {% endunless %}
+{% endfor %}
 
-{% if current_category %}
-  {% assign product_handles = current_category.products | map: 'handle' %}
-  {% assign current_product_handle = current_product.handle %}
-  
-  {% comment %}Exclude the current product handle{% endcomment %}
-  {% assign category_product_handles_excluding_current = product_handles | where: "handle", "handle != current_product_handle" %}
-  
-  {% comment %}Re-fetch the products based on the filtered handles if needed{% endcomment %}
-  {% assign category_products_excluding_current = "" | split: "" %}
-  {% for handle in category_product_handles_excluding_current %}
-    {% assign product = collections[current_category.handle].products | where: "handle", handle | first %}
-    {% assign category_products_excluding_current = category_products_excluding_current | concat: product %}
+                      
+<ul class="grid">
+{% for product in category_products %}
+  {% if product.handle != current_product.handle %}
+  {% for tag in product.tags %}
+    {%- assign tag_text =  'bestsellers' -%}
+		{%- assign tag_low = tag | downcase -%}
+      {% if tag_text == tag_low %}
+        <li class="grid__item">
+        {% render 'card-product', card_product: product %}
+        </li>
+    {% endif %}
   {% endfor %}
 {% endif %}
-
-                    
-
-<ul class="grid">
-  {% for product in category_products_excluding_current %}
-
-      {% for tag in product.tags %}
-        {%- assign tag_text = 'bestsellers' -%}
-        {%- assign tag_low = tag | downcase -%}
-        {% if tag_text == tag_low %}
-          <li class="grid__item">
-            {% render 'card-product', card_product: product %}
-          </li>
-        {% endif %}
-      {% endfor %}
-  {% endfor %}
+{% endfor %}
 </ul>
-<hr>
+  <hr/>
 
-<div id="bestseller-products-container">
-  <!-- Bestseller products will be displayed here -->
-</div>
+    <div id="bestseller-products-container">
+    <!-- Bestseller products will be displayed here -->
+    </div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const collectionHandle = '{{ current_category.handle }}'; // Current collection handle
@@ -1893,6 +1885,8 @@ function displayBestsellers(products) {
     });
 }
 </script>
+  
+                  
 
 {% schema %}
 {
