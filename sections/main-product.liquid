@@ -1833,7 +1833,7 @@
   {% unless product.handle == current_product.handle %}
      {% assign category_products = category_products
                           | append: product
-                          | append: ','
+                     
                         %}
   {% endunless %}
 {% endfor %}
