@@ -1824,10 +1824,18 @@
    }
 </script>
 
-{% assign current_product = product %}
-{% assign current_category = current_product.collections.first | default: current_product.collections.all %}
-{% assign category_products = collections[current_category.handle].products %}
 
+{% assign current_product = product %}
+{% assign current_category = current_product.collections.first | default: current_product.collections.all.first %}
+{% assign category_products = "" | split: "" %} <!-- Initialize an empty array -->
+
+{% for product in collections[current_category.handle].products %}
+  {% unless product.handle == current_product.handle %}
+    {% assign category_products = category_products | append: product | split: "" %}
+  {% endunless %}
+{% endfor %}
+
+                      
 <ul class="grid">
 {% for product in category_products %}
   {% if product.handle != current_product.handle %}
