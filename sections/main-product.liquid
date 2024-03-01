@@ -1834,15 +1834,11 @@
 <ul class="grid">
 {% for product in category_products %}
   {% if product.handle != current_product.handle %}
-  {% for tag in product.tags %}
-    {%- assign tag_text =  'bestsellers' -%}
-		{%- assign tag_low = tag | downcase -%}
-      {% if tag_text == tag_low %}
+ 
         <li class="grid__item">
         {% render 'card-product', card_product: product %}
         </li>
-    {% endif %}
-  {% endfor %}
+    
 {% endif %}
 {% endfor %}
 </ul>
