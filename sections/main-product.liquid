@@ -1830,7 +1830,7 @@
 
 <ul class="grid">
 {% for product in category_products %}
-  {% unless current_product %}
+  {% if product.handle != current_product.handle %}
   {% for tag in product.tags %}
     {%- assign tag_text =  'bestsellers' -%}
 		{%- assign tag_low = tag | downcase -%}
@@ -1840,7 +1840,7 @@
         </li>
     {% endif %}
   {% endfor %}
- {% endunless %}
+{% endif %}
 {% endfor %}
 </ul>
   <hr/>
