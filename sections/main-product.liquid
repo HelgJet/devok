@@ -1853,7 +1853,7 @@
 
        <ul class="grid">               
       {% assign current_product_found = false %}
-      {% for product in collection.products  limit: limit %}
+      {% for product in collection.products limit: 10 %}
       {% if product.handle == current_product.handle %}
       {% assign current_product_found = true %}
       {% else %}
