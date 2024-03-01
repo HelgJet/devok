@@ -1826,12 +1826,12 @@
 
 
 {% assign current_product = product %}
-{% assign current_category = current_product.collections.first | default: current_product.collections.all.first %}
+{% assign current_category = current_product.collections.first %}
 {% assign category_products = collections[current_category.handle].products %}
 
                       
 <ul class="grid">
-{% for product in category_products limit: 10 %}
+{% for product in category_products %}
    {% if product.handle != current_product.handle and product.tags contains 'bestsellers' %}
       <li class="grid__item">
         {% render 'card-product', card_product: product %}
@@ -1853,7 +1853,7 @@
 
        <ul class="grid">               
       {% assign current_product_found = false %}
-      {% for product in collection.products limit: 10 %}
+      {% for product in collection.products %}
       {% if product.handle == current_product.handle %}
       {% assign current_product_found = true %}
       {% else %}
