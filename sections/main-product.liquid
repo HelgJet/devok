@@ -1849,7 +1849,7 @@
     </div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const collectionHandle = '{{ current_product.handle }}'; // Current collection handle
+    const collectionHandle = '{{ current_category.handle }}'; // Current collection handle
     fetch(`/collections/${collectionHandle}/products.json`)
         .then(response => response.json())
         .then(data => {
