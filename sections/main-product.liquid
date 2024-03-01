@@ -1827,26 +1827,26 @@
 
 {% assign current_product = product %}
 {% assign current_category = current_product.collections.first | default: current_product.collections.all.first %}
-{% assign category_products = current_category | map: 'product' %} 
+
+{% assign category_products_with_tag = "" | split: "" %} 
 
 {% for product in collections[current_category.handle].products %}
-  {% unless product.handle == current_product.handle %}
-     {% assign current_category_products = category_products | compact %}
-  {% endunless %}
+  {% if product.tags contains 'bestsellers' and product.handle != current_product.handle %}
+    {% assign category_products_with_tag = category_products_with_tag | append: product | split: "," %}
+  {% endif %}
 {% endfor %}
 
-
+   {% assign category_products_with_tag = product | compact %}
 <ul class="grid">
-{% for product in category_products %}
+{% for product in category_products_with_tag %}
   {% if product.handle != current_product.handle %}
   {% for tag in product.tags %}
-    {%- assign tag_text =  'bestsellers' -%}
-		{%- assign tag_low = tag | downcase -%}
-      {% if tag_text == tag_low %}
+
+	
         <li class="grid__item">
         {% render 'card-product', card_product: product %}
         </li>
-    {% endif %}
+
   {% endfor %}
 {% endif %}
 {% endfor %}
