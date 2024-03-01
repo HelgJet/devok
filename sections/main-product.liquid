@@ -1684,7 +1684,7 @@
                                    
         {% assign category_products = collections[current_category.handle].products %}
     
-       {% assign best_selling_products = category_products | sort: 'best_selling_rank' %}
+       {% assign best_selling_products = category_products | where: "tags", "bestseller" %}
 
   
  {% for product in category_products %}
