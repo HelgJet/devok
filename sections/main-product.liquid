@@ -1825,18 +1825,26 @@
 </script>
 
 {% assign current_product = product %}
+
 {% assign current_category = current_product.collections.first | default: current_product.collections.all %}
-
 {% assign category_products = collections[current_category.handle].products %}
-
-{% assign best_selling_products = '' | split: '' %}
-{% assign tag_text = 'bestsellers' | downcase %}
+{% assign best_selling_products_handles = '' %}
 
 {% for product in category_products %}
-  {% if product.tags contains tag_text %}
-    {% assign best_selling_products = best_selling_products | append: product.handle | split: '' %}
-  {% endif %}
+  {% for tag in product.tags %}
+    {%- assign tag_text =  'bestsellers' -%}
+		{%- assign tag_low = tag | downcase -%}
+      {% if tag_text == tag_low %}
+      {% if best_selling_products_handles == '' %}
+        {% assign best_selling_products_handles = product.handle %}
+      {% else %}
+        {% assign best_selling_products_handles = best_selling_products_handles | append: ',' | append: product.handle %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
 {% endfor %}
+
+{% assign best_selling_products = best_selling_products_handles | split: ',' %}
 
 {% for product in category_products %}
   <p>{{ product.title }}</p> 
