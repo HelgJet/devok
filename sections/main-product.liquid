@@ -1828,9 +1828,18 @@
 {% assign current_product = product %}
 {% assign current_category = current_product.collections.first | default: current_product.collections.all.first %}
 {% assign category_products = collections[current_category.handle].products  %}
-{% assign best_products_from_category = category_products | where: 'tag', "bestsellers" %}
-                      
-    <p>{{ best_products_from_category | json }}</p>                
+{% assign current_product = product %}
+{% assign current_category = current_product.collections.first | default: current_product.collections.all.first %}
+{% assign category_products = collections[current_category.handle].products %}
+{% assign best_products_from_category = "" | split: "" %} <!-- Initialize as an empty array -->
+
+{% for product in category_products %}
+  {% if product.tags contains 'bestsellers' %}
+    {% assign best_products_from_category = best_products_from_category | concat: product | split: "" %}
+  {% endif %}
+{% endfor %}
+
+{{ best_products_from_category | json }}           
 
 <ul class="grid">
 {% for product in best_products_from_category %}
