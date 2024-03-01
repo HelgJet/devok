@@ -1674,6 +1674,18 @@
    }
 </script> 
 
+
+{% assign current_product = product %}
+                                   {% if current_product.collections.first %}
+{% assign current_category = current_product.collections.first %}
+                                   {% else %}
+                                     {% assign current_category = current_product.collections.all %}
+                                   {% endif %}
+                                   
+        {% assign category_products = collections[current_category.handle].products %}
+
+   <p>{{ category_products | json }}</p>                      
+
 {% schema %}
 {
    "name": "t:sections.main-product.name",
