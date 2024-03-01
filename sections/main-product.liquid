@@ -1841,9 +1841,12 @@
     {% endif %}
   {% endfor %}
 {% endfor %}
-
+</ul>
   <hr/>
 
+    <div id="bestseller-products-container">
+    <!-- Bestseller products will be displayed here -->
+    </div>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const collectionHandle = '{{ current_product.handle }}'; // Current collection handle
@@ -1875,9 +1878,7 @@ function displayBestsellers(products) {
 }
 </script>
   
-    <div id="bestseller-products-container">
-    <!-- Bestseller products will be displayed here -->
-</div>                  
+                  
 
 {% schema %}
 {
