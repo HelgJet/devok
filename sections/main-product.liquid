@@ -1831,7 +1831,7 @@
 {% assign current_product = product %}
 {% assign current_category = current_product.collections.first | default: current_product.collections.all.first %}
 {% assign category_products = collections[current_category.handle].products %}
-{% assign best_products_from_category = "" | split: "" %} <!-- Initialize as an empty array -->
+{% assign best_products_from_category = "" | split: "" %} 
 
 {% for product in category_products %}
   {% if product.tags contains 'bestsellers' %}
