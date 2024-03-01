@@ -1831,7 +1831,7 @@
 
                       
 <ul class="grid">
-{% for product in category_products %}
+{% for product in category_products limit: 10 %}
    {% if product.handle != current_product.handle and product.tags contains 'bestsellers' %}
       <li class="grid__item">
         {% render 'card-product', card_product: product %}
