@@ -1827,7 +1827,7 @@
 
 {% assign current_product = product %}
 {% assign current_category = current_product.collections.first | default: current_product.collections.all.first %}
-{% assign category_products = "" | split: "" %} <!-- Initialize an empty array -->
+{% assign category_products = "" | split: "" %} 
 
 {% for product in collections[current_category.handle].products %}
   {% unless product.handle == current_product.handle %}
