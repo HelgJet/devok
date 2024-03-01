@@ -1828,11 +1828,11 @@
 {% assign current_product = product %}
 {% assign current_category = current_product.collections.first | default: current_product.collections.all.first %}
 {% assign category_products = collections[current_category.handle].products  %}
-{% assign best_products_from_category = "" | split: "" %} 
+{% assign best_products_from_category = "" %} 
 
 {% for product in category_products %}
   {% if product.tags contains 'bestsellers' %}
-    {% assign best_products_from_category = best_products_from_category | concat: product | split: "" %}
+    {% assign best_products_from_category = best_products_from_category | concat: product | join: "," %}
   {% endif %}
 {% endfor %}
 
