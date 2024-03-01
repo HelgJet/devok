@@ -1828,7 +1828,9 @@
 {% assign current_product = product %}
 {% assign current_category = current_product.collections.first | default: current_product.collections.all.first %}
 {% assign category_products = collections[current_category.handle].products | where: 'tag', "bestsellers"  %}
-                 
+
+{{ category_products | json }}
+                      
 <ul class="grid">
 {% for product in category_products %}
   {% if product.handle != current_product.handle %}
