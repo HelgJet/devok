@@ -1684,7 +1684,7 @@
                                    
         {% assign category_products = collections[current_category.handle].products %}
 
-   <p>{{ category_products.size }}</p>                      
+   <p>{{ category_products.size | json }}</p>                      
 
 {% schema %}
 {
