@@ -49,15 +49,10 @@
 	    {{ 'component-wishlist.css' | asset_url | stylesheet_tag }}
 	  {% endif %}
 	
-{%- unless settings.type_body_font.system? -%}
-  {{ settings.type_body_font | font_url | preload_tag: as: 'font', type: 'font/woff2' }}
-{%- endunless -%}
-
- 
-{%- unless settings.type_header_font.system? -%}
-  {{ settings.type_header_font | font_url | preload_tag: as: 'font', type: 'font/woff2' }}
-{%- endunless -%}
-
+ {%- unless settings.type_header_font.system? and settings.type_body_font.system? -%}
+      <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+    {%- endunless -%}
+    
     {%- if settings.predictive_search_enabled -%}
       <link rel="stylesheet" href="{{ 'component-predictive-search.css' | asset_url }}" media="print" onload="this.media='all'">
     {%- endif -%}
