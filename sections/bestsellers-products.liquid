@@ -317,7 +317,7 @@ class BestsellersProducts extends HTMLElement {
   
        const swiperEl = document.querySelector('#BestsellerSliderProducts');
        Object.assign(swiperEl, {
-         slidesPerView: perMobile,
+         slidesPerView: this.selectors.perMobile,
          spaceBetween: 15,
          breakpoints: {
            640: {
@@ -329,7 +329,7 @@ class BestsellersProducts extends HTMLElement {
              spaceBetween: 20,
            },
            1024: {
-             slidesPerView: perDesktop,
+             slidesPerView: this.selectors.perDesktop,
              spaceBetween: 20,
            },
          },
