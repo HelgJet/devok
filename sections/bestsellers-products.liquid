@@ -135,7 +135,7 @@
     data-slider-per-mobile="{{ columns_mobile_int }}"
                 data-slider-per-desktop="{{ columns_desktop_int }}">
      <swiper-container id="BestsellerSliderProducts" init="false" navigation="true">
-                <swiper-slide></swiper-slide>
+                
         </swiper-container>
   </bestsellers-products>
   <script>
@@ -280,7 +280,7 @@ class BestsellersProducts extends HTMLElement {
     // Remove undefined values from the array
     const filteredBestsellers = bestsellers.filter(item => item !== undefined);
 
-    return filteredBestsellers;
+     return filteredRecentlyViewed.slice(-`${this.selectors.recentlyViewedCount}`));
   }
   
    fetchProductHTML = (handle) => {
