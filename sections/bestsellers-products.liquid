@@ -101,7 +101,6 @@
   </div>
 
   {% if tags_contains %}
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js" defer></script>
 
     <script>
       let columnsDesktop = {{ section.settings.columns_desktop }};
@@ -140,6 +139,7 @@
   </bestsellers-products>
   <script>
 
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js" defer></script>
 
 // Example function to fetch best selling products from the same category
 async function fetchBestSellingProducts(category, maxLimit, tagsProduct, currentProductHandle) {
