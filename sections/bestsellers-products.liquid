@@ -45,7 +45,6 @@
 -%}
 
 
-{{ collection.handle | json }}
 
 {% if collection and collection.products_count > 1 %}
   {%- liquid
@@ -127,11 +126,11 @@
     </script>
   {% endif %}
 
-  <bestsellers-product id="bs-products-container" >
+  <bestsellers-products id="bs-products-container" >
      <swiper-container id="BestsellerSliderProducts-{{ section.id }}" navigation="true">
                 
         </swiper-container>
-  </bestsellers-product>
+  </bestsellers-products>
   <script>
 
 
