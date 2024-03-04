@@ -127,11 +127,11 @@
     </script>
   {% endif %}
 
-  <bestseller-product id="bs-products-container" >
+  <bestsellers-product id="bs-products-container" >
      <swiper-container id="BestsellerSliderProducts-{{ section.id }}" navigation="true">
                 
         </swiper-container>
-  </bestseller-product>
+  </bestsellers-product>
   <script>
 
 
@@ -269,7 +269,6 @@ class BestsellersProducts extends HTMLElement {
     } 
   } 
 
- 
 
   getBestsellersProductHandles() {
     const bestsellers = JSON.parse(localStorage.getItem('productHandles')) || [];
