@@ -1823,68 +1823,6 @@
       localStorage.setItem('recentlyViewed', JSON.stringify(recentlyViewed));  
    }
 </script>
-
-  {% comment %}
-       
-{% liquid
-  assign current_product = product
-  if collection == null or collection.handle == 'frontpage' or collection.handle == 'all'
-    assign found_a_collection = false
-    for c in product.collections
-      if found_a_collection == false and c.handle != 'frontpage' and c.handle != 'all' and c.all_products_count > 1
-        assign found_a_collection = true
-        assign current_collection = c
-      endif
-    endfor
-  endif
-%}
-                      
-{% if current_collection and current_collection.products_count > 1 %}
-     <ul class="grid">
-  {% for product in current_collection.products %}
-    {% if product.handle != current_product.handle and product.tags contains 'bestsellers' %}
-      <li class="grid__item">
-        {% render 'card-product', card_product: product %}
-      </li>
-    {% endif %}
-  {% endfor %}
-</ul>
-  {% endif %}
-  <hr/>
-
-    <div id="bestseller-products-container">
-    <!-- Bestseller products will be displayed here -->
-    </div>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const collectionHandle = '{{ current_collection.handle }}'; // Current collection handle
-    fetch(`/collections/${collectionHandle}/products.json`)
-        .then(response => response.json())
-        .then(data => {
-            const bestsellerProducts = data.products.filter(product => product.tags.includes('bestsellers'));
-            displayBestsellers(bestsellerProducts);
-        })
-        .catch(error => console.error('Error:', error));
-});
-
-// Function to display bestseller products
-function displayBestsellers(products) {
-    const container = document.getElementById('bestseller-products-container');
-    container.innerHTML = ''; // Clear existing content
-
-    products.forEach(product => {
-        const productHTML = `
-            <div class="product">
-                <a href="${product.url}">
-                    <h3>${product.title}</h3>
-                </a>
-            </div>
-        `;
-        container.innerHTML += productHTML;
-    });
-}
-</script>
-  {% endcomment %}
                   
 
 {% schema %}

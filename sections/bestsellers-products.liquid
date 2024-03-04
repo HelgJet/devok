@@ -277,10 +277,8 @@ class BestsellersProducts extends HTMLElement {
 
   getBestsellersProductHandles() {
     const bestsellers = JSON.parse(localStorage.getItem('productHandles')) || [];
-    // Remove undefined values from the array
     const filteredBestsellers = bestsellers.filter(item => item !== undefined);
-
-     return filteredBestsellers;
+    return filteredBestsellers;
   }
   
    fetchProductHTML = (handle) => {
@@ -302,7 +300,6 @@ class BestsellersProducts extends HTMLElement {
       .catch((err) => console.error(`[Bestsellers] Failed to load content for handle: ${handle}`, err));
    }  
 
-   
    async setTemplate(handles){ 
       const requests = handles.map(this.fetchProductHTML); 
       const responses = await Promise.all(requests); 
