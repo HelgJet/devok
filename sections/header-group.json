@@ -15,49 +15,10 @@
             "time": "2024-08-25T00:30:00Z",
             "timer_color_scheme": "background-1"
           }
-        },
-        "450ee7c2-9276-404b-bbc5-97b5f25103fc": {
-          "type": "announcement",
-          "disabled": true,
-          "settings": {
-            "only_home": true,
-            "text": "Devok PRO THE BEST SHOPIFY THEME FOR FASHION",
-            "section_heading_scale_1": 100,
-            "text_color_1": "#1383df",
-            "btn_text": "BUY NOW",
-            "price_text": "Now Exclusive price $79",
-            "section_heading_scale_2": 143,
-            "text_color_2": "#e10000",
-            "text_alignment": "center",
-            "color_scheme": "accent-1",
-            "link": "#",
-            "ad_timer": true,
-            "time": "2024-08-24T00:00:00Z",
-            "timer_color_scheme": "accent-2",
-            "columns_mobile": "1"
-          }
-        },
-        "2b08a40f-fe5b-4db6-9b19-2f3b7a657e83": {
-          "type": "announcement-coupon",
-          "disabled": true,
-          "settings": {
-            "only_home": false,
-            "sale-heading": "PROMOTION",
-            "sale-text": "Promotion text short description. Use Coupon",
-            "sale-mobile": "Promotion text short description. Use Coupon",
-            "discount-percent": "50% OFF",
-            "coupon": "CODE-THIS-50-OFF",
-            "disable_period": 1,
-            "timer_color_scheme": "inverse",
-            "ad_timer": true,
-            "time": "2024-05-25T00:30:00Z"
-          }
         }
       },
       "block_order": [
-        "a0964bee-05b2-48f3-8870-a0b8c9adf003",
-        "450ee7c2-9276-404b-bbc5-97b5f25103fc",
-        "2b08a40f-fe5b-4db6-9b19-2f3b7a657e83"
+        "a0964bee-05b2-48f3-8870-a0b8c9adf003"
       ],
       "settings": {
         "page_width": 1800,
