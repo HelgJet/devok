@@ -137,11 +137,11 @@
                  
      </swiper-container>
   </bestsellers-products>
+
+      <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js" defer></script>
+
   <script>
-
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js" defer></script>
-
-// Example function to fetch best selling products from the same category
+//fetch best selling products from the same category
 async function fetchBestSellingProducts(category, maxLimit, tagsProduct, currentProductHandle) {
     const storefrontAccessToken = '374602b3d4bb8103e75becaae1d47c10';
     const domain = 'devpeview.myshopify.com';
