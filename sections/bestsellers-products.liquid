@@ -254,8 +254,8 @@ class BestsellersProducts extends HTMLElement {
     this.selectors = {
       itemProduct: '[product-template-js]',
       sectionId: this.dataset.section,
-      perDesktop: parsInt(this.dataset.sliderPerDesktop),
-      perMobile: parsInt(this.dataset.sliderPerMobile),
+      perDesktop: parseInt(this.dataset.sliderPerDesktop),
+      perMobile: parseInt(this.dataset.sliderPerMobile),
     };   
   }
 
