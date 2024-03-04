@@ -362,7 +362,7 @@
         "use_section_width": true,
         "title": "Your KAYA Bestseller Products",
         "max_limit": 10,
-        "tags_filter": "",
+        "tags_filter": "bestsellers",
         "columns_desktop": 5,
         "columns_mobile": 1.5,
         "padding_top": 36,
