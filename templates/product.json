@@ -236,6 +236,7 @@
     },
     "devok-frequently-products": {
       "type": "devok-frequently-products",
+      "disabled": true,
       "settings": {
         "title": "Frequently bought together",
         "padding_top": 36,
@@ -287,6 +288,7 @@
         "4b54f1e3-a25c-42c4-9436-2b73a64eee0d",
         "1ce0c7ae-664e-4c6f-8cba-747b18517b1d"
       ],
+      "disabled": true,
       "settings": {
         "box_type": "box",
         "section_width": 1200,
@@ -300,6 +302,7 @@
     },
     "6ea88f57-a0c5-445c-b40d-2fb2157aa2dc": {
       "type": "quick-order-list",
+      "disabled": true,
       "settings": {
         "show_image": true,
         "show_sku": true,
@@ -312,6 +315,7 @@
     },
     "product-recommendations": {
       "type": "product-recommendations",
+      "disabled": true,
       "settings": {
         "page_width": 1200,
         "use_section_width": true,
@@ -334,6 +338,7 @@
     },
     "7452ec4e-e0f8-4701-8743-05dda031deaf": {
       "type": "devok-viewed-product",
+      "disabled": true,
       "settings": {
         "page_width": 1200,
         "use_section_width": true,
@@ -349,6 +354,20 @@
         "padding_top": 36,
         "padding_bottom": 36
       }
+    },
+    "bestsellers_products_PA4jnN": {
+      "type": "bestsellers-products",
+      "settings": {
+        "page_width": 1200,
+        "use_section_width": true,
+        "title": "Your KAYA Bestseller Products",
+        "max_limit": 10,
+        "tags_filter": "",
+        "columns_desktop": 5,
+        "columns_mobile": 1.5,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
     }
   },
   "order": [
@@ -357,6 +376,7 @@
     "product-details-tabs",
     "6ea88f57-a0c5-445c-b40d-2fb2157aa2dc",
     "product-recommendations",
-    "7452ec4e-e0f8-4701-8743-05dda031deaf"
+    "7452ec4e-e0f8-4701-8743-05dda031deaf",
+    "bestsellers_products_PA4jnN"
   ]
 }
