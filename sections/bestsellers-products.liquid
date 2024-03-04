@@ -30,6 +30,8 @@
  assign collection = current_product.collections.first
 -%}
 
+{{ collection.handle | json }}
+
 {% if collection and collection.products_count > 1 %}
   {%- liquid
     assign limit = section.settings.max_limit | plus: 1
@@ -172,7 +174,8 @@ class BestsellersProducts extends HTMLElement {
 
   getBestsellersProductHandles() {
     const bestsellers = JSON.parse(localStorage.getItem('productHandles')) || [];
-    return filteredBestsellers = bestsellers.filter(item => item !== undefined);
+    const filteredBestsellers = bestsellers.filter(item => item !== undefined);
+    return filteredBestsellers;
   }
   
     fetchProductHTML = (handle) => {
