@@ -59,9 +59,13 @@
       assign tags_filter = section.settings.tags_filter | split: ","
       assign tags_filter_js = section.settings.tags_filter | split: ", "
     endif
+ 
+    assign columns_mobile_int = section.settings.columns_mobile | plus: 0
+    assign columns_desktop_int = section.settings.columns_desktop | plus: 0
+
   -%}
 
-
+{% comment %}
   <div id="BestsellerProducts-{{ section.id }}">
     <div class="section-{{ section.id }}-padding isolate{% if section.settings.use_section_width %} page-width{% endif %}">
       <div data-section="{{ section.id }}">
@@ -125,9 +129,11 @@
        swiperEl.initialize();
     </script>
   {% endif %}
-
-  <bestsellers-products id="bs-products-container" >
-     <swiper-container id="BestsellerSliderProducts-{{ section.id }}" navigation="true">
+{% endcomment %}
+  
+  <bestsellers-products id="bs-products-container" data-section="{{ section.id }}"   data-slider-per-mobile="{{ columns_mobile_int }}"
+                data-slider-per-desktop="{{ columns_desktop_int }}">
+     <swiper-container id="BestsellerSliderProducts-{{ section.id }}" init="false" navigation="true">
                 
         </swiper-container>
   </bestsellers-products>
@@ -246,6 +252,7 @@ class BestsellersProducts extends HTMLElement {
     this.slider = this.querySelector('[id^="BestsellerSliderProducts-"]');
     this.selectors = {
       itemProduct: '[product-template-js]',
+      sectionId: this.dataset.section,
       perDesktop: this.slider.dataset.sliderPerDesktop,
       perMobile: this.slider.dataset.sliderPerMobile,
       BestsellersCount: this.slider.dataset.viewedcount
@@ -300,38 +307,40 @@ class BestsellersProducts extends HTMLElement {
    async setTemplate(handles){ 
       const requests = handles.map(this.fetchProductHTML); 
       const responses = await Promise.all(requests); 
-      const itemProducts = responses.map((item, index) => `<swiper-slide id="Slide-${this.selectors.sectionId}-${index + 1}" class="grid__item slider__slide slide__viewed">${item}</swiper-slide>`).join('');
+      const itemProducts = responses.map((item, index) => `<swiper-slide id="Slide-${this.selectors.sectionId}-${index + 1}" class="">${item}</swiper-slide>`).join('');
       this.slider.innerHTML = '';
       this.classList.add('recently-viewed--loaded');
       this.slider.innerHTML = itemProducts;
       this.initSlider(handles);   
    }  
 
-  // initSlider(elements) {
-  //   let isSlider = false; 
+  initSlider(elements) {
+    let isSlider = false; 
      
-  //   if (this.selectors.isDesktopSlider == 1 && elements.length > this.selectors.perDesktop) {
-  //     this.slider.classList.add('slider', 'slider--desktop');
-  //     this.sliderButtons.classList.remove('hidden');
-  //     this.slider.parentElement.classList.add('slider-component-desktop');
-  //     isSlider = true;
-  //   }  
-  //   if (this.selectors.isMobileSlider == 1 && elements.length > this.selectors.perMobile) {
-  //       this.slider.classList.add('slider', 'slider--tablet', 'grid--peek');
-  //       this.sliderButtons.classList.remove('hidden');
-  //       this.slider.classList.add('grid')
-  //       isSlider = true; 
-  //   } 
+    let columnsDesktop = {{ section.settings.columns_desktop }};
+      let columnsMobile = {{ section.settings.columns_mobile }};
 
-  //   const sliderComponent = this.querySelector('slider-component');
-
-  //   if (!isSlider) return;
-
-  //   if (sliderComponent) {
-  //     sliderComponent.initPages();
-  //     sliderComponent.resetPages();
-  //   }
-  // }
+       const swiperEl = document.querySelector("#BestsellerProducts--{{ section.id }}");
+       Object.assign(swiperEl, {
+         slidesPerView: columnsMobile,
+         spaceBetween: 15,
+         breakpoints: {
+           640: {
+             slidesPerView: 2.5,
+             spaceBetween: 15,
+           },
+           768: {
+             slidesPerView: 3.5,
+             spaceBetween: 20,
+           },
+           1024: {
+             slidesPerView: columnsDesktop,
+             spaceBetween: 20,
+           },
+         },
+       });
+       swiperEl.initialize();
+ }
 }
 
 customElements.define('bestsellers-products', BestsellersProducts);
