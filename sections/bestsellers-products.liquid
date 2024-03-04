@@ -4,11 +4,11 @@
 {{ 'component-price.css' | asset_url | stylesheet_tag }}
 
 {%- style -%}
-  #BestsellerProducts-{{ section.id }} {
+  #bs-products-container-{{ section.id }} {
     --page-width: {{ section.settings.page_width | divided_by: 10 }}rem;
   }
 
-  #BestsellerProducts-{{ section.id }}  {
+  #bs-products-container-{{ section.id }}  {
     --grid-desktop-horizontal-spacing: {{ section.settings.spacing_grid_horizontal }}px;
   }
 
@@ -26,27 +26,12 @@
 {%- endstyle -%}
 
 {%- liquid
-  assign highest_products_count = 0
-  assign collection_with_most_products = null
-
-  if collection == null or collection.handle == 'frontpage' or collection.handle == 'all'
-    for c in product.collections
-      if c.handle != 'frontpage' and c.handle != 'all' and c.all_products_count > 1
-        if c.products_count > highest_products_count
-          assign highest_products_count = c.products_count
-          assign collection_with_most_products = c
-        endif
-      endif
-    endfor
-    if collection_with_most_products != null
-      assign collection = collection_with_most_products
-    endif
-  endif
+ assign current_product = product
+ assign collection = current_product.collections.first
 -%}
 
 {% if collection and collection.products_count > 1 %}
   {%- liquid
-    assign current_product = product
     assign limit = section.settings.max_limit | plus: 1
     assign limit_js = section.settings.max_limit | plus: 0
     assign current_collection_handle = collection.handle
@@ -61,87 +46,27 @@
     assign columns_mobile_int = section.settings.columns_mobile | plus: 0
     assign columns_desktop_int = section.settings.columns_desktop | plus: 0
   -%}
-
-  {% comment %}
-    <div id="BestsellerProducts-{{ section.id }}">
-      <div class="section-{{ section.id }}-padding isolate{% if section.settings.use_section_width %} page-width{% endif %}">
-        <div data-section="{{ section.id }}">
-          {%- unless section.settings.title == blank -%}
-            <h2>
-              {{ section.settings.title | escape }}
-            </h2>
-          {%- endunless -%}
-
-          {% assign current_product_found = false %}
-
-          <swiper-container id="BestsellerProducts--{{ section.id }}" navigation="true">
-            {% for product in current_products_list limit: limit %}
-              {% if product.handle == current_product.handle %}
-                {% assign current_product_found = true %}
-              {% else %}
-                {% unless current_product_found == false and forloop.last %}
-                  {% if tags_contains %}
-                    {% for tag in tags_filter %}
-                      {% if product.tags contains tag %}
-                        <swiper-slide>
-                          {% render 'card-product', card_product: product %}
-                        </swiper-slide>
-                      {% endif %}
-                    {% endfor %}
-                  {% endif %}
-                {% endunless %}
-              {% endif %}
-            {% endfor %}
-          </swiper-container>
-        </div>
-      </div>
-    </div>
-
-    {% if tags_contains %}
-
-      <script>
-        let columnsDesktop = {{ section.settings.columns_desktop }};
-        let columnsMobile = {{ section.settings.columns_mobile }};
-
-         const swiperEl = document.querySelector("#BestsellerProducts--{{ section.id }}");
-         Object.assign(swiperEl, {
-           slidesPerView: columnsMobile,
-           spaceBetween: 15,
-           breakpoints: {
-             640: {
-               slidesPerView: 2.5,
-               spaceBetween: 15,
-             },
-             768: {
-               slidesPerView: 3.5,
-               spaceBetween: 20,
-             },
-             1024: {
-               slidesPerView: columnsDesktop,
-               spaceBetween: 20,
-             },
-           },
-         });
-         swiperEl.initialize();
-      </script>
-    {% endif %}
-  {% endcomment %}
-
+  <div id="bs-products-container-{{ section.id }}"> 
+ <div class="section-{{ section.id }}-padding isolate{% if section.settings.use_section_width %} page-width{% endif %}">
   <bestsellers-products
-    id="bs-products-container"
     data-section="{{ section.id }}"
     data-slider-per-mobile="{{ columns_mobile_int }}"
     data-slider-per-desktop="{{ columns_desktop_int }}"
     init="false"
   >
+
     {%- unless section.settings.title == blank -%}
       <h2>
         {{ section.settings.title | escape }}
       </h2>
     {%- endunless -%}
-    <swiper-container id="BestsellerSliderProducts"></swiper-container>
+    <swiper-container id="BestsellerSliderProducts">
+    
+    </swiper-container>
+ 
   </bestsellers-products>
-
+   </div>
+      </div>
   <script>
 
     
@@ -153,26 +78,12 @@ async function fetchBestSellingProducts(category, maxLimit, tagsProduct, current
     query FetchBestSellingProducts($category: String!) {
       collectionByHandle(handle: $category) { 
         title
-        products(first: 50, sortKey: BEST_SELLING) {
+        products(first: 30, sortKey: BEST_SELLING) {
           edges {
             node {
               id
-              title
               handle
               tags
-              priceRange {
-                minVariantPrice {
-                  amount
-                  currencyCode
-                }
-                maxVariantPrice {
-                  amount
-                  currencyCode
-                }
-              }
-              featuredImage {
-                url
-              }
             }
           }
         }
@@ -221,7 +132,7 @@ async function fetchBestSellingProducts(category, maxLimit, tagsProduct, current
 
 document.addEventListener('DOMContentLoaded', async () => {
     const category = '{{ current_collection_handle }}';
-    const maxLimit = parseInt('{{ limit_js }}', 10);
+    const maxLimit = parseInt('{{ limit_js }}', 10); 
     const currentProductHandle = '{{ current_product.handle }}';
     let productTags = '{{ tags_filter_js }}';
     productTags = productTags ?? "";
@@ -236,7 +147,7 @@ class BestsellersProducts extends HTMLElement {
  
     this.slider = this.querySelector('#BestsellerSliderProducts');
     this.selectors = {
-      itemProduct: '[product-template-js]',
+      itemProduct: '[product-template-js]', 
       sectionId: this.dataset.section,
       perDesktop: parseInt(this.dataset.sliderPerDesktop),
       perMobile: parseInt(this.dataset.sliderPerMobile),
@@ -255,17 +166,16 @@ class BestsellersProducts extends HTMLElement {
   loadBestsellersProducts() {
     const productHandles = this.getBestsellersProductHandles();
     if (productHandles.length > 0) {
-      this.setTemplate(productHandles); 
+      this.setTemplate(productHandles);  
     } 
   } 
 
   getBestsellersProductHandles() {
     const bestsellers = JSON.parse(localStorage.getItem('productHandles')) || [];
-    const filteredBestsellers = bestsellers.filter(item => item !== undefined);
-    return filteredBestsellers;
+    return filteredBestsellers = bestsellers.filter(item => item !== undefined);
   }
   
-   fetchProductHTML = (handle) => {
+    fetchProductHTML = (handle) => {
       const productUrl = `/products/${handle}?view=litecard`; 
       return fetch(productUrl)
       .then((res) => res.text())  
@@ -277,13 +187,13 @@ class BestsellersProducts extends HTMLElement {
          if (itemProduct) {
             return itemProduct.outerHTML;
           } else {
-            console.error(`[Bestsellers] No element found for handle: ${handle}`);
+            console.error(`[Bestsellers Product] No element found for handle: ${handle}`);
             return ''; // or handle this case in a way that makes sense for your application
         } 
       }) 
-      .catch((err) => console.error(`[Bestsellers] Failed to load content for handle: ${handle}`, err));
+      .catch((err) => console.error(`[Bestsellers Product] Failed to load content for handle: ${handle}`, err));
    }  
-
+   
    async setTemplate(handles){ 
       const requests = handles.map(this.fetchProductHTML); 
       const responses = await Promise.all(requests); 
@@ -299,20 +209,20 @@ class BestsellersProducts extends HTMLElement {
        const swiperEl = document.querySelector('#BestsellerSliderProducts');
        Object.assign(swiperEl, {
          slidesPerView: this.selectors.perMobile,
-         spaceBetween: 15,
+         spaceBetween: 16,
          navigation: true,
          breakpoints: {
            640: {
              slidesPerView: 2.5,
-             spaceBetween: 15,
+             spaceBetween: 16,
            },
            768: {
              slidesPerView: 3.5,
-             spaceBetween: 20,
+             spaceBetween: 24,
            },
            1024: {
              slidesPerView: this.selectors.perDesktop,
-             spaceBetween: 20, 
+             spaceBetween: 24, 
            },
          },
        });
