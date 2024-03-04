@@ -1,6 +1,454 @@
-{% schema %}
-  {
-    "name": "Section name",
-    "settings": []
+{{ 'component-loading-overlay.css' | asset_url | stylesheet_tag }}
+{{ 'component-rating.css' | asset_url | stylesheet_tag }}
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  #BestsellerProducts-{{ section.id }} {
+    --page-width: {{ section.settings.page_width | divided_by: 10 }}rem;
   }
+
+  #BestsellerProducts-{{ section.id }}  {
+    --grid-desktop-horizontal-spacing: {{ section.settings.spacing_grid_horizontal }}px;
+  }
+
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{%- liquid
+  assign highest_products_count = 0
+  assign collection_with_most_products = null
+
+  if collection == null or collection.handle == 'frontpage' or collection.handle == 'all'
+    for c in product.collections
+      if c.handle != 'frontpage' and c.handle != 'all' and c.all_products_count > 1
+        if c.products_count > highest_products_count
+          assign highest_products_count = c.products_count
+          assign collection_with_most_products = c
+        endif
+      endif
+    endfor
+    if collection_with_most_products != null
+      assign collection = collection_with_most_products
+    endif
+  endif
+-%}
+
+
+{{ collection.handle | json }}
+
+{% if collection and collection.products_count > 1 %}
+  {%- liquid
+    assign current_product = product
+    assign limit = section.settings.max_limit | plus: 1
+    assign limit_js = section.settings.max_limit | plus: 0
+    assign current_collection_handle = collection.handle
+    assign current_products_list = collections[current_collection_handle].products
+    assign tags_contains = false
+    if section.settings.tags_filter != blank
+      assign tags_contains = true
+      assign tags_filter = section.settings.tags_filter | split: ","
+      assign tags_filter_js = section.settings.tags_filter | split: ", "
+    endif
+  -%}
+
+
+  <div id="BestsellerProducts-{{ section.id }}">
+    <div class="section-{{ section.id }}-padding isolate{% if section.settings.use_section_width %} page-width{% endif %}">
+      <div data-section="{{ section.id }}">
+        {%- unless section.settings.title == blank -%}
+          <h2>
+            {{ section.settings.title | escape }}
+          </h2>
+        {%- endunless -%}
+
+        {% assign current_product_found = false %}
+
+        <swiper-container id="BestsellerProducts--{{ section.id }}" navigation="true">
+          {% for product in current_products_list limit: limit %}
+            {% if product.handle == current_product.handle %}
+              {% assign current_product_found = true %}
+            {% else %}
+              {% unless current_product_found == false and forloop.last %}
+                {% if tags_contains %}
+                  {% for tag in tags_filter %}
+                    {% if product.tags contains tag %}
+                      <swiper-slide>
+                        {% render 'card-product', card_product: product %}
+                      </swiper-slide>
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
+              {% endunless %}
+            {% endif %}
+          {% endfor %}
+        </swiper-container>
+      </div>
+    </div>
+  </div>
+
+  {% if tags_contains %}
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js" defer></script>
+
+    <script>
+      let columnsDesktop = {{ section.settings.columns_desktop }};
+      let columnsMobile = {{ section.settings.columns_mobile }};
+
+       const swiperEl = document.querySelector("#BestsellerProducts--{{ section.id }}");
+       Object.assign(swiperEl, {
+         slidesPerView: columnsMobile,
+         spaceBetween: 15,
+         breakpoints: {
+           640: {
+             slidesPerView: 2.5,
+             spaceBetween: 15,
+           },
+           768: {
+             slidesPerView: 3.5,
+             spaceBetween: 20,
+           },
+           1024: {
+             slidesPerView: columnsDesktop,
+             spaceBetween: 20,
+           },
+         },
+       });
+       swiperEl.initialize();
+    </script>
+  {% endif %}
+
+  <bestseller-product id="bs-products-container" >
+     <swiper-container id="BestsellerSliderProducts-{{ section.id }}" navigation="true">
+                
+        </swiper-container>
+  </bestseller-product>
+  <script>
+
+
+// Example function to fetch best selling products from the same category
+async function fetchBestSellingProducts(category, maxLimit, tagsProduct, currentProductHandle) {
+    const storefrontAccessToken = '374602b3d4bb8103e75becaae1d47c10';
+    const domain = 'devpeview.myshopify.com';
+    const query = `
+    query FetchBestSellingProducts($category: String!) {
+      collectionByHandle(handle: $category) { 
+        title
+        products(first: 50, sortKey: BEST_SELLING) {
+          edges {
+            node {
+              id
+              title
+              handle
+              tags
+              priceRange {
+                minVariantPrice {
+                  amount
+                  currencyCode
+                }
+                maxVariantPrice {
+                  amount
+                  currencyCode
+                }
+              }
+              featuredImage {
+                url
+              }
+            }
+          }
+        }
+      }
+    }`;
+
+    try {
+        const response = await fetch(`https://${domain}/api/2021-10/graphql.json`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Shopify-Storefront-Access-Token': storefrontAccessToken,
+            },
+            body: JSON.stringify({
+                query,
+                variables: { category: category },
+            }),
+        });
+        
+        if (!response.ok) throw new Error('Network response was not ok.');
+
+        const { data } = await response.json();
+      
+        let products = data.collectionByHandle.products.edges.map(edge => edge.node);
+
+        // // Apply tag filter only if tagsProduct is not empty
+        if (tagsProduct?.trim().length > 0) {
+            const tagsArray = tagsProduct.toLowerCase().split(',').map(tag => tag.trim());
+            products = products.filter(product => 
+                product.tags.some(tag => tagsArray.includes(tag.toLowerCase()))
+            );
+        } 
+      
+        // Filter out the current product   
+        products = products.filter(product => product.handle !== currentProductHandle);
+        const limitedProducts = products.slice(0, maxLimit);
+
+       // Set localStorage with product handles
+        const productHandles = limitedProducts.map(product => product.handle);
+        localStorage.setItem('productHandles', JSON.stringify(productHandles));
+      
+    } catch (error) {
+        console.error('Error fetching products:', error);
+    }
+}
+
+// function displayProducts(products) {
+//     const productsList = document.getElementById('bs-products-container');
+  
+//     productsList.innerHTML = products.map(product => {
+//         const isPriceSame = product.priceRange.minVariantPrice.amount === product.priceRange.maxVariantPrice.amount;
+//         const priceDisplay = isPriceSame 
+//             ? `${product.priceRange.minVariantPrice.currencyCode} ${parseFloat(product.priceRange.minVariantPrice.amount).toFixed(2)}` 
+//             : `${product.priceRange.minVariantPrice.currencyCode} ${parseFloat(product.priceRange.minVariantPrice.amount).toFixed(2)} - ${parseFloat(product.priceRange.maxVariantPrice.amount).toFixed(2)}`;
+        
+//         return `
+//             <li class="grid__item">
+//                 <a href="/products/${product.handle}">
+//                     <img src="${product.featuredImage.url}" alt="${product.title}" width="100" height="100">
+//                     ${product.title}
+//                     <br>
+//                     Price: ${priceDisplay}
+//                 </a>
+//             </li>
+//         `;
+//     }).join('');
+// }
+
+document.addEventListener('DOMContentLoaded', async () => {
+    const category = '{{ current_collection_handle }}';
+    const maxLimit = parseInt('{{ limit_js }}', 10);
+    const currentProductHandle = '{{ current_product.handle }}';
+    let productTags = '{{ tags_filter_js }}';
+    productTags = productTags ?? "";
+    await fetchBestSellingProducts(category, maxLimit, productTags, currentProductHandle);
+});
+
+class BestsellersProducts extends HTMLElement {
+   constructor() {
+    super();
+ 
+    this.slider = this.querySelector('[id^="BestsellerSliderProducts-"]');
+    this.selectors = {
+      itemProduct: '[product-template-js]',
+      perDesktop: this.slider.dataset.sliderPerDesktop,
+      perMobile: this.slider.dataset.sliderPerMobile,
+      BestsellersCount: this.slider.dataset.viewedcount
+    };   
+  }
+
+  connectedCallback() { 
+      const handleIntersection = (entries, observer) => {
+        if (!entries[0].isIntersecting) return;
+        observer.unobserve(this);
+        this.loadBestsellersProducts();  
+      }
+      new IntersectionObserver(handleIntersection.bind(this), {rootMargin: '0px 0px 400px 0px'}).observe(this);
+  }
+
+  loadBestsellersProducts() {
+    const productHandles = this.getBestsellersProductHandles();
+    if (productHandles.length > 0) {
+      this.setTemplate(productHandles); 
+    } 
+  } 
+
+ 
+
+  getBestsellersProductHandles() {
+    const bestsellers = JSON.parse(localStorage.getItem('productHandles')) || [];
+    // Remove undefined values from the array
+    const filteredBestsellers = bestsellers.filter(item => item !== undefined);
+
+    return filteredBestsellers.slice(-`${this.selectors.BestsellersCount}`).reverse();
+  }
+  
+   fetchProductHTML = (handle) => {
+      const productUrl = `/products/${handle}?view=litecard`; 
+      return fetch(productUrl)
+      .then((res) => res.text())  
+      .then((res) => {
+         const text = res;
+         const parser = new DOMParser(); 
+         const htmlDocument = parser.parseFromString(text, 'text/html');
+         const itemProduct = htmlDocument.documentElement.querySelector(this.selectors.itemProduct); 
+         if (itemProduct) {
+            return itemProduct.outerHTML;
+          } else {
+            console.error(` No element found for handle: ${handle}`);
+            return ''; // or handle this case in a way that makes sense for your application
+        } 
+      }) 
+      .catch((err) => console.error(`Failed to load content for handle: ${handle}`, err));
+   }  
+
+   
+   async setTemplate(handles){ 
+      const requests = handles.map(this.fetchProductHTML); 
+      const responses = await Promise.all(requests); 
+      const itemProducts = responses.map((item, index) => `<swiper-slide id="Slide-${this.selectors.sectionId}-${index + 1}" class="grid__item slider__slide slide__viewed">${item}</swiper-slide>`).join('');
+      this.slider.innerHTML = '';
+      this.titleSection.classList.remove('hidden');
+      this.classList.add('recently-viewed--loaded');
+      this.slider.innerHTML = itemProducts;
+      this.initSlider(handles);   
+   }  
+
+  // initSlider(elements) {
+  //   let isSlider = false; 
+     
+  //   if (this.selectors.isDesktopSlider == 1 && elements.length > this.selectors.perDesktop) {
+  //     this.slider.classList.add('slider', 'slider--desktop');
+  //     this.sliderButtons.classList.remove('hidden');
+  //     this.slider.parentElement.classList.add('slider-component-desktop');
+  //     isSlider = true;
+  //   }  
+  //   if (this.selectors.isMobileSlider == 1 && elements.length > this.selectors.perMobile) {
+  //       this.slider.classList.add('slider', 'slider--tablet', 'grid--peek');
+  //       this.sliderButtons.classList.remove('hidden');
+  //       this.slider.classList.add('grid')
+  //       isSlider = true; 
+  //   } 
+
+  //   const sliderComponent = this.querySelector('slider-component');
+
+  //   if (!isSlider) return;
+
+  //   if (sliderComponent) {
+  //     sliderComponent.initPages();
+  //     sliderComponent.resetPages();
+  //   }
+  // }
+}
+
+customElements.define('bestsellers-products', BestsellersProducts);
+
+
+    
+  </script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Bestseller Products",
+  "tag": "section",
+  "limit": 1,
+  "class": "section bestseller-products",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "settings": [
+    {
+      "type": "range",
+      "id": "page_width",
+      "min": 1000,
+      "max": 1920,
+      "step": 10,
+      "default": 1200,
+      "unit": "px",
+      "label": "t:settings_schema.layout.settings.page_width.label"
+    },
+
+    {
+      "type": "checkbox",
+      "id": "use_section_width",
+      "label": "Use section width",
+      "default": true
+    },
+
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Your KAYA Bestseller Products",
+      "label": "Title"
+    },
+
+     {
+      "type": "range",
+      "id": "max_limit",
+      "min": 10,
+      "max": 30,
+      "step": 5,
+      "default": 10,
+      "label": "Max Limit Products"
+    },
+
+     {
+      "type": "text",
+      "id": "tags_filter",
+      "label": "Filter by tags (separate by ',')"
+     },
+
+     {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 3,
+      "max": 6,
+      "step": 0.5,
+      "default": 5,
+      "label": "Columns desktop"
+    },
+
+
+    {
+      "type": "header",
+      "content": "Header mobile content"
+    },
+
+     {
+      "type": "range",
+      "id": "columns_mobile",
+      "min": 1,
+      "max": 3,
+      "step": 0.5,
+      "default": 1.5,
+      "label": "Columns mobile"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Section padding top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Section padding bottom",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bestseller Products"
+	  }
+  ]
+}
 {% endschema %}
