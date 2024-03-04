@@ -3,13 +3,6 @@
     "0982bc30-bc03-4c3e-91de-9de9d9d7f4ec": {
       "type": "rich-text",
       "blocks": {
-        "template--14893808975914__0982bc30-bc03-4c3e-91de-9de9d9d7f4ec-167675197644a76286-0": {
-          "type": "heading",
-          "settings": {
-            "heading": "<p><strong>15% off $60, 20% off $80 or 25% off $100 + free shipping<\/strong><\/p>",
-            "heading_size": "h2"
-          }
-        },
         "template--14893808975914__0982bc30-bc03-4c3e-91de-9de9d9d7f4ec-167675197644a76286-1": {
           "type": "text",
           "settings": {
@@ -18,7 +11,6 @@
         }
       },
       "block_order": [
-        "template--14893808975914__0982bc30-bc03-4c3e-91de-9de9d9d7f4ec-167675197644a76286-0",
         "template--14893808975914__0982bc30-bc03-4c3e-91de-9de9d9d7f4ec-167675197644a76286-1"
       ],
       "settings": {
@@ -28,102 +20,6 @@
         "full_width": false,
         "padding_top": 40,
         "padding_bottom": 40
-      }
-    },
-    "041c7a76-2a90-4220-93b6-ce43ae2209c6": {
-      "type": "devok-collection-list",
-      "blocks": {
-        "template--14904679923754__041c7a76-2a90-4220-93b6-ce43ae2209c6-1678960762d646aacd-2": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": "summer-style"
-          }
-        },
-        "0ecd90e5-0bd2-4c3b-8793-4c712b15d54f": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": "sportswear"
-          }
-        },
-        "f03dcfe0-f1e5-456c-8703-2927a399a47d": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": "underwear-nightwear"
-          }
-        },
-        "template--14904679923754__041c7a76-2a90-4220-93b6-ce43ae2209c6-1678960762d646aacd-1": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": "gifts"
-          }
-        },
-        "b5a5283c-da81-43c6-bf5e-83e6e9b48f0a": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": "shoes"
-          }
-        },
-        "8adfcc04-7575-47ca-b5d6-8b50ceb94172": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": "bags"
-          }
-        },
-        "7042000c-7e1c-4cd3-9928-99d6e3193fcd": {
-          "type": "featured_collection",
-          "settings": {
-            "collection": "beauty"
-          }
-        }
-      },
-      "block_order": [
-        "template--14904679923754__041c7a76-2a90-4220-93b6-ce43ae2209c6-1678960762d646aacd-2",
-        "0ecd90e5-0bd2-4c3b-8793-4c712b15d54f",
-        "f03dcfe0-f1e5-456c-8703-2927a399a47d",
-        "template--14904679923754__041c7a76-2a90-4220-93b6-ce43ae2209c6-1678960762d646aacd-1",
-        "b5a5283c-da81-43c6-bf5e-83e6e9b48f0a",
-        "8adfcc04-7575-47ca-b5d6-8b50ceb94172",
-        "7042000c-7e1c-4cd3-9928-99d6e3193fcd"
-      ],
-      "settings": {
-        "page_width": 1200,
-        "use_section_width": false,
-        "title": "",
-        "heading_size": "h1",
-        "image_ratio": "adapt",
-        "columns_desktop": 6,
-        "enable_desktop_slider": true,
-        "spacing_grid_horizontal": 15,
-        "nav_style_type": "type_2",
-        "off_carousel_counter": true,
-        "color_scheme": "background-1",
-        "contentHorizontal": "center",
-        "banner_style": "overlay",
-        "v_cpos": "flex-end",
-        "useButton": true,
-        "btn_bg_color": "#222222",
-        "btn_border_color": "#222222",
-        "btn_text_color": "#ffffff",
-        "btn_bg_color_hover": "#222222",
-        "btn_border_color_hover": "#222222",
-        "btn_text_color_hover": "#ffffff",
-        "buttom_full_width": true,
-        "show_view_all": false,
-        "collection_card_style": "standard",
-        "collection_card_image_padding": 0,
-        "collection_card_color_scheme": "background-2",
-        "collection_card_border_thickness": 0,
-        "collection_card_border_opacity": 0,
-        "collection_card_corner_radius": 0,
-        "border_color": "",
-        "collection_card_shadow_opacity": 10,
-        "collection_card_shadow_horizontal_offset": 0,
-        "collection_card_shadow_vertical_offset": 0,
-        "collection_card_shadow_blur": 0,
-        "columns_mobile": "2",
-        "swipe_on_mobile": true,
-        "padding_top": 0,
-        "padding_bottom": 32
       }
     },
     "banner": {
@@ -144,7 +40,7 @@
         "use_section_width": false,
         "products_per_page": 9,
         "columns_desktop": 3,
-        "pagination_type": "pagination_infinite",
+        "pagination_type": "pagination_page",
         "image_ratio": "portrait",
         "show_secondary_image": true,
         "show_vendor": false,
@@ -195,7 +91,6 @@
   },
   "order": [
     "0982bc30-bc03-4c3e-91de-9de9d9d7f4ec",
-    "041c7a76-2a90-4220-93b6-ce43ae2209c6",
     "banner",
     "product-grid",
     "cfffdf64-f193-43e0-a013-68752c727324"
