@@ -310,7 +310,7 @@ class BestsellersProducts extends HTMLElement {
       this.slider.innerHTML = '';
       this.classList.add('recently-viewed--loaded');
       this.slider.innerHTML = itemProducts;
-      // this.initSlider(handles);   
+      this.initSlider(handles);   
    }  
 
   initSlider(elements) {
@@ -330,7 +330,7 @@ class BestsellersProducts extends HTMLElement {
              spaceBetween: 20,
            },
            1024: {
-             slidesPerView: 5,
+             slidesPerView: this.selectors.perDesktop,
              spaceBetween: 20, 
            },
          },
