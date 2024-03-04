@@ -302,7 +302,6 @@ class BestsellersProducts extends HTMLElement {
       const responses = await Promise.all(requests); 
       const itemProducts = responses.map((item, index) => `<swiper-slide id="Slide-${this.selectors.sectionId}-${index + 1}" class="grid__item slider__slide slide__viewed">${item}</swiper-slide>`).join('');
       this.slider.innerHTML = '';
-      this.titleSection.classList.remove('hidden');
       this.classList.add('recently-viewed--loaded');
       this.slider.innerHTML = itemProducts;
       this.initSlider(handles);   
