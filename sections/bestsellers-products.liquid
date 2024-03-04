@@ -280,7 +280,7 @@ class BestsellersProducts extends HTMLElement {
     // Remove undefined values from the array
     const filteredBestsellers = bestsellers.filter(item => item !== undefined);
 
-     return filteredRecentlyViewed.slice(-`${this.selectors.recentlyViewedCount}`);
+     return filteredBestsellers.slice(-`${this.selectors.recentlyViewedCount}`);
   }
   
    fetchProductHTML = (handle) => {
