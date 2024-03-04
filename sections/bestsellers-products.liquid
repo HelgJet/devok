@@ -133,15 +133,21 @@
   <bestsellers-products id="bs-products-container" data-section="{{ section.id }}" 
     data-slider-per-mobile="{{ columns_mobile_int }}"
      data-slider-per-desktop="{{ columns_desktop_int }}">
+     {%- unless section.settings.title == blank -%}
+          <h2 >
+            {{ section.settings.title | escape }}
+          </h2>
+        {%- endunless -%}
      <swiper-container id="BestsellerSliderProducts" >
                  
      </swiper-container>
   </bestsellers-products>
 
-  
 
   <script>
-//fetch best selling products from the same category
+
+    
+//fetching best selling products from the same category
 async function fetchBestSellingProducts(category, maxLimit, tagsProduct, currentProductHandle) {
     const storefrontAccessToken = '374602b3d4bb8103e75becaae1d47c10';
     const domain = 'devpeview.myshopify.com';
@@ -215,28 +221,6 @@ async function fetchBestSellingProducts(category, maxLimit, tagsProduct, current
     }
 }
 
-// function displayProducts(products) {
-//     const productsList = document.getElementById('bs-products-container');
-  
-//     productsList.innerHTML = products.map(product => {
-//         const isPriceSame = product.priceRange.minVariantPrice.amount === product.priceRange.maxVariantPrice.amount;
-//         const priceDisplay = isPriceSame 
-//             ? `${product.priceRange.minVariantPrice.currencyCode} ${parseFloat(product.priceRange.minVariantPrice.amount).toFixed(2)}` 
-//             : `${product.priceRange.minVariantPrice.currencyCode} ${parseFloat(product.priceRange.minVariantPrice.amount).toFixed(2)} - ${parseFloat(product.priceRange.maxVariantPrice.amount).toFixed(2)}`;
-        
-//         return `
-//             <li class="grid__item">
-//                 <a href="/products/${product.handle}">
-//                     <img src="${product.featuredImage.url}" alt="${product.title}" width="100" height="100">
-//                     ${product.title}
-//                     <br>
-//                     Price: ${priceDisplay}
-//                 </a>
-//             </li>
-//         `;
-//     }).join('');
-// }
-
 document.addEventListener('DOMContentLoaded', async () => {
     const category = '{{ current_collection_handle }}';
     const maxLimit = parseInt('{{ limit_js }}', 10);
@@ -246,6 +230,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     await fetchBestSellingProducts(category, maxLimit, productTags, currentProductHandle);
 });
 
+
+// Custom web component for set template card product and init slider     
 class BestsellersProducts extends HTMLElement {
    constructor() {
     super();
@@ -337,12 +323,9 @@ class BestsellersProducts extends HTMLElement {
 }
 
 customElements.define('bestsellers-products', BestsellersProducts);
-
-
-    
-  </script>
-
-      <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js" defer></script>
+</script>
+  
+ <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js" defer></script>
 {% endif %}
 
 {% schema %}
