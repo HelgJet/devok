@@ -211,7 +211,7 @@
         "page_width": 1200,
         "use_section_width": true,
         "enable_sticky_info": true,
-        "show_sticky_buttons": true,
+        "show_sticky_buttons": false,
         "media_position": "left",
         "gallery_layout": "columns",
         "media_size": "medium",
@@ -232,15 +232,6 @@
         "padding_right": 50,
         "section_spacing_grid_horizontal": 28,
         "section_spacing_grid_vertical": 28
-      }
-    },
-    "devok-frequently-products": {
-      "type": "devok-frequently-products",
-      "disabled": true,
-      "settings": {
-        "title": "Frequently bought together",
-        "padding_top": 36,
-        "padding_bottom": 36
       }
     },
     "product-details-tabs": {
@@ -288,7 +279,6 @@
         "4b54f1e3-a25c-42c4-9436-2b73a64eee0d",
         "1ce0c7ae-664e-4c6f-8cba-747b18517b1d"
       ],
-      "disabled": true,
       "settings": {
         "box_type": "box",
         "section_width": 1200,
@@ -298,19 +288,6 @@
         "padding_top": 36,
         "padding_bottom": 36,
         "tab_style": "uppercase"
-      }
-    },
-    "6ea88f57-a0c5-445c-b40d-2fb2157aa2dc": {
-      "type": "quick-order-list",
-      "disabled": true,
-      "settings": {
-        "show_image": true,
-        "show_sku": true,
-        "enable_show_more": true,
-        "show_more_count": 6,
-        "color_scheme": "background-1",
-        "padding_top": 36,
-        "padding_bottom": 36
       }
     },
     "product-recommendations": {
@@ -336,25 +313,6 @@
         "padding_bottom": 28
       }
     },
-    "7452ec4e-e0f8-4701-8743-05dda031deaf": {
-      "type": "devok-viewed-product",
-      "disabled": true,
-      "settings": {
-        "page_width": 1200,
-        "use_section_width": true,
-        "title": "Recently viewed products",
-        "heading_size": "h2",
-        "columns_desktop": 4,
-        "enable_desktop_slider": true,
-        "spacing_grid_horizontal": 15,
-        "nav_style_type": "type_2",
-        "color_scheme": "background-1",
-        "columns_mobile": "2",
-        "swipe_on_mobile": false,
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
-    },
     "bestsellers_products_PA4jnN": {
       "type": "bestsellers-products",
       "settings": {
@@ -372,11 +330,8 @@
   },
   "order": [
     "main",
-    "devok-frequently-products",
     "product-details-tabs",
-    "6ea88f57-a0c5-445c-b40d-2fb2157aa2dc",
     "product-recommendations",
-    "7452ec4e-e0f8-4701-8743-05dda031deaf",
     "bestsellers_products_PA4jnN"
   ]
 }
