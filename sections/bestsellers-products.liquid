@@ -313,30 +313,30 @@ class BestsellersProducts extends HTMLElement {
       // this.initSlider(handles);   
    }  
 
- //  initSlider(elements) {
+  initSlider(elements) {
   
- //       const swiperEl = document.querySelector('#BestsellerSliderProducts');
- //       Object.assign(swiperEl, {
- //         slidesPerView: this.selectors.perMobile,
- //         spaceBetween: 15,
- //         navigation: true,
- //         breakpoints: {
- //           640: {
- //             slidesPerView: 2.5,
- //             spaceBetween: 15,
- //           },
- //           768: {
- //             slidesPerView: 3.5,
- //             spaceBetween: 20,
- //           },
- //           1024: {
- //             slidesPerView: this.selectors.perDesktop,
- //             spaceBetween: 20, 
- //           },
- //         },
- //       });
- //       swiperEl.initialize();
- // }
+       const swiperEl = document.querySelector('#BestsellerSliderProducts');
+       Object.assign(swiperEl, {
+         slidesPerView: this.selectors.perMobile,
+         spaceBetween: 15,
+         navigation: true,
+         breakpoints: {
+           640: {
+             slidesPerView: 2.5,
+             spaceBetween: 15,
+           },
+           768: {
+             slidesPerView: 3.5,
+             spaceBetween: 20,
+           },
+           1024: {
+             slidesPerView: this.selectors.perDesktop,
+             spaceBetween: 20, 
+           },
+         },
+       });
+       swiperEl.initialize();
+ }
 }
 
 customElements.define('bestsellers-products', BestsellersProducts);
