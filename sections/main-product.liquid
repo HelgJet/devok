@@ -1824,22 +1824,23 @@
    }
 </script>
 
-
-
-                      
    <div class="related-blog-posts">
+     <h2>Related post</h2>
   {% assign current_product_id = product.id %}
   {% for blog in blogs %}
     {% for article in blog.articles %}
-         {% assign meta_products_string = article.metafields.custom.related_products
+          {% assign meta_products_string = article.metafields.custom.related_products
       | remove: 'gid://shopify/Article/'
       | remove: '['
       | remove: ']'
       | remove: '"'
     %}
-    {% assign meta_product_ids = meta_products_string | split: ',' %}
- 
-      {% if meta_product_ids contains current_product_id %}
+
+            {% assign related_product_ids = meta_products_string | split: ',' %}
+
+       {{ related_product_ids | json }}
+      
+      {% if related_product_ids contains current_product_id %}
         <div class="related-post">
           <a href="{{ article.url }}">
             <img src="{{ article.image.src | img_url: '300x300' }}" alt="{{ article.title }}">
