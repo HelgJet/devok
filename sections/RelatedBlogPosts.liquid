@@ -12,15 +12,23 @@
 
 {% if related_post_ids %}
 
-{{ blog.articles | json }}
+{% for link in linklists.blogs.links %}
+            {% assign blog = link.object %}
+            
+            {% for article in blogs[blog.handle].articles %}
+            	{{article.title}}
+            {% endfor %}
+{% endfor %}
+
   
 {% assign related_post_ids = related_post_ids | split: ',' %}
 
   {% assign found_posts = false %}
   {% assign related_posts = '' | split: ',' %} 
   
-  {% for blog in blogs %}
-    {% for article in blog.articles %}
+   {% for link in linklists.blogs.links %}
+       {% assign blog = link.object %}
+   {% for article in blogs[blog.handle].articles %}
       {% if related_post_ids contains article.id %}
         {% assign found_posts = true %}
         {% assign related_posts = related_posts | append: article | split: ',' %}
