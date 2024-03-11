@@ -12,11 +12,10 @@
 
 {% if related_post_ids %}
 
- {{ related_post_ids | json }}
+{{ blog.articles | json }}
   
 {% assign related_post_ids = related_post_ids | split: ',' %}
 
-  
   {% assign found_posts = false %}
   {% assign related_posts = '' | split: ',' %} 
   
