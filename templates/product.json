@@ -313,20 +313,6 @@
         "padding_bottom": 28
       }
     },
-    "bestsellers_products_PA4jnN": {
-      "type": "bestsellers-products",
-      "settings": {
-        "page_width": 1200,
-        "use_section_width": true,
-        "title": "Your KAYA Bestseller Products",
-        "max_limit": 10,
-        "tags_filter": "bestsellers",
-        "columns_desktop": 5,
-        "columns_mobile": 1.5,
-        "padding_top": 36,
-        "padding_bottom": 36
-      }
-    },
     "related_blog_posts_dDj77p": {
       "type": "RelatedBlogPosts",
       "settings": {
@@ -338,7 +324,6 @@
     "main",
     "product-details-tabs",
     "product-recommendations",
-    "bestsellers_products_PA4jnN",
     "related_blog_posts_dDj77p"
   ]
 }
