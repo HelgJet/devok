@@ -5,7 +5,10 @@
 
 
 
-{% assign related_post_ids = product.metafields.custom.related_post_ids.value | remove: '\"' | remove: '[' | remove: ']' %}
+{% assign related_post_ids = product.metafields.custom.related_post_ids.value 
+      | remove: '['
+      | remove: ']'
+      | remove: '"' %}
 
 {% if related_post_ids %}
 
