@@ -292,7 +292,6 @@
     },
     "product-recommendations": {
       "type": "product-recommendations",
-      "disabled": true,
       "settings": {
         "page_width": 1200,
         "use_section_width": true,
