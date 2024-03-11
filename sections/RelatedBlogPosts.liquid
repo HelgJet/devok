@@ -106,9 +106,7 @@
   {% endfor %}
 
   {% if found_posts %}
-    {% assign related_posts_array = related_posts | split: ',' %}
-    <!-- Output your related posts here -->
-    {{ related_posts_array | json }}
+ 
   {% else %}
     <p>No related posts found.</p>
   {% endif %}
@@ -119,7 +117,7 @@
 
 
 <div class="related-blog-posts">
-  {% for article in related_posts_array %}
+  {% for article in related_posts %}
     <div class="blog-post" id={{ article.id }}>
       <h3>{{ article.title }}</h3>
       <img src="{{ article.image.src | img_url: '300x300' }}" alt="{{ article.title }}">
