@@ -17,7 +17,7 @@
     | split: ','
   %}
   {% elsif section.settings.global_related_posts_ids != blank  %}
-    {% assign related_posts_ids = section.settings.global_related_posts_ids | split: ',' %}
+    {% assign related_post_ids = section.settings.global_related_posts_ids | split: ',' %}
 {% endif %}
   
     <div class="blog-articles">
@@ -29,7 +29,6 @@
               assign post_id = meta_post_id | times: 1
             -%}
             {% if post_id == article.id %}
-              {% assign found_posts = true %}
               <div id="{{ article.id }}" class="blog-articles__article article">
                 {% render 'article-card', blog: blog, article: article, show_image: true %}
               </div>
