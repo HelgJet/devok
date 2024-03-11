@@ -1825,31 +1825,63 @@
 </script>
 
 
-     
-{% assign current_product_id = product.id %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const storefrontAccessToken = 'your_storefront_access_token';
+    const currentProductHandle = '{{ product.handle }}';
+    const query = JSON.stringify({
+      query: `
+        {
+          shop {
+            articles(first: 10) { # Adjust this query based on your needs
+              edges {
+                node {
+                  title
+                  handle
+                  contentHtml
+                  metafields(namespace: "custom", key: "related_products") {
+                    value
+                  }
+                }
+              }
+            }
+          }
+        }
+      `
+    });
 
-{% for blog in blogs %}
-  {% assign articles = blog.articles %}
-  {% for article in articles %}
-    {% assign related_products = article.metafields.custom.related_products | remove: 'gid://shopify/Product/'
-      | remove: '['
-      | remove: ']'
-      | remove: '"'
-    %}
-    {{ related_products | json }}
-    {% for related_product in related_products %}
-      {% if related_product.id == current_product_id %}
-        <!-- Display the article's information here -->
-        <div class="related-article">
-          <h3>{{ article.title }}</h3>
-          <p>{{ article.excerpt | strip_html }}</p>
-          <a href="{{ article.url }}">Read more</a>
-        </div>
-        {% break %} <!-- Breaks out of the loop once a match is found -->
-      {% endif %}
-    {% endfor %}
-  {% endfor %}
-{% endfor %}
+    fetch('https://your-shopify-domain.myshopify.com/api/2022-01/graphql.json', { // Update API version as needed
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Shopify-Storefront-Access-Token': storefrontAccessToken,
+      },
+      body: query
+    })
+    .then(response => response.json())
+    .then(response => {
+      const articles = response.data.shop.articles.edges;
+      articles.forEach(articleEdge => {
+        const article = articleEdge.node;
+        // Assuming the metafield value is a serialized array of product handles
+        // Check if the metafields are already in a suitable format or need parsing.
+        try {
+          const relatedProducts = JSON.parse(article.metafields.value);
+          if (relatedProducts.includes(currentProductHandle)) {
+            // Append article details to your page
+            console.log(article.title); // Example action, replace with actual DOM manipulation
+          }
+        } catch(e) {
+          console.error("Error parsing related products metafield", e);
+        }
+      });
+    })
+    .catch(error => {
+      console.error("Error fetching related articles:", error);
+    });
+  });
+</script>
+
 
 
                   
