@@ -1826,54 +1826,54 @@
 
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const storefrontAccessToken = '374602b3d4bb8103e75becaae1d47c10';
-    const domain = 'devpeview.myshopify.com';
+ document.addEventListener('DOMContentLoaded', function() {
+  const storefrontAccessToken = '374602b3d4bb8103e75becaae1d47c10';
+  const domain = 'devpeview.myshopify.com';
+  
+  // Assuming this is a placeholder and will be replaced dynamically with actual product handle
+  const currentProductHandle = '{{ product.handle }}';
 
-    const currentProductHandle = '{{ product.handle }}';
-
-
-    const query = {
-    query: `
-      blogs(first: 5) { # Adjust the number of blogs as necessary
-    edges {
-      node {
-        id
-        title
-        articles(first: 10) { # Adjust the number of articles as necessary
-          edges {
-            node {
-              title
+  // GraphQL query string
+  const queryString = `
+  {
+    blogs(first: 5) { # Adjust the number of blogs as necessary
+      edges {
+        node {
+          id
+          title
+          articles(first: 10) { # Adjust the number of articles as necessary
+            edges {
+              node {
+                title
                 handle
                 metafields(namespace: "custom", key: "related_products") {
                   value
+                }
               }
             }
           }
         }
       }
     }
-  }
-    `
-  };
+  }`;
 
-    fetch(`https://${domain}/api/2021-10/graphql.json`, { 
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Shopify-Storefront-Access-Token': storefrontAccessToken,
-      },
-        body: JSON.stringify({
-                query,
-       }),
-    })
-    .then(response => response.json())
-    .then(response => {
-      const articles = response.data.blogs.articles.edges;
+  fetch(`https://${domain}/api/2021-10/graphql.json`, { 
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Shopify-Storefront-Access-Token': storefrontAccessToken,
+    },
+    body: JSON.stringify({ query: queryString }),
+  })
+  .then(response => response.json())
+  .then(response => {
+    // Access the nested articles structure correctly
+    const blogs = response.data.blogs.edges;
+    blogs.forEach(blogEdge => {
+      const articles = blogEdge.node.articles.edges;
       articles.forEach(articleEdge => {
         const article = articleEdge.node;
         // Assuming the metafield value is a serialized array of product handles
-        // Check if the metafields are already in a suitable format or need parsing.
         try {
           const relatedProducts = JSON.parse(article.metafields.value);
           if (relatedProducts.includes(currentProductHandle)) {
@@ -1881,14 +1881,16 @@
             console.log(article.title); // Example action, replace with actual DOM manipulation
           }
         } catch(e) {
-          console.error("Error parsing related products metafield", e);
+          console.error("Error parsing related products metafield:", e);
         }
       });
-    })
-    .catch(error => {
-      console.error("Error fetching related articles:", error);
     });
+  })
+  .catch(error => {
+    console.error("Error fetching related articles:", error);
   });
+});
+
 </script>
 
 
