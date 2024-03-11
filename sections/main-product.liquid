@@ -1826,19 +1826,26 @@
 
 
      
-{% assign product_handle = product.handle %}
-{% assign articles = blogs.news.articles %} <!-- Assuming 'news' is your blog handle; adjust as needed -->
+{% assign current_product_handle = product.handle %}
 
-{% for article in articles %}
-  {% if article.metafields.custom.related_products contains product_handle %}
-    <!-- Display the article's information here -->
-    <div class="related-article">
-      <h3>{{ article.title }}</h3>
-      <p>{{ article.excerpt | strip_html }}</p>
-      <a href="{{ article.url }}">Read more</a>
-    </div>
-  {% endif %}
+{% for blog in blogs %}
+  {% assign articles = blog.articles %}
+  {% for article in articles %}
+    {% assign related_products = article.metafields.custom.related_products %}
+    {% for related_product in related_products %}
+      {% if related_product.handle == current_product_handle %}
+        <!-- Display the article's information here -->
+        <div class="related-article">
+          <h3>{{ article.title }}</h3>
+          <p>{{ article.excerpt | strip_html }}</p>
+          <a href="{{ article.url }}">Read more</a>
+        </div>
+        {% break %} <!-- Breaks out of the loop once a match is found -->
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
 {% endfor %}
+
 
                   
 
