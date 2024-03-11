@@ -83,6 +83,39 @@
   {% endfor %}
 {% endif %}
 
+
+{% assign related_post_ids = product.metafields.custom.related_post_ids.value | remove: '[' | remove: ']' | remove: '"' | split: ',' %}
+
+{% if related_post_ids.size > 0 %}
+  {% assign found_posts = false %}
+  {% assign related_posts = '' %}
+
+  {% for blog_handle in blogs %}
+    {% assign blog_articles = blogs[blog_handle].articles %}
+
+    {% for article in blog_articles %}
+      {% if related_post_ids contains article.id %}
+        {% assign found_posts = true %}
+        {% capture related_posts %}
+          {{ related_posts }}{{ article | json }},
+        {% endcapture %}
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
+
+  {% if found_posts %}
+    {% assign related_posts_array = related_posts | split: ',' %}
+    <!-- Output your related posts here -->
+    {{ related_posts_array | json }}
+  {% else %}
+    <p>No related posts found.</p>
+  {% endif %}
+{% else %}
+  <p>No related post IDs specified.</p>
+{% endif %}
+
+
+
 <div class="related-blog-posts">
   {% for article in related_posts %}
     <div class="blog-post" id={{ article.id }}>
