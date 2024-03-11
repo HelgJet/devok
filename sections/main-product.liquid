@@ -1830,7 +1830,7 @@
   {% for blog in blogs %}
     {% for article in blog.articles %}
           {% assign meta_products_string = article.metafields.custom.related_products
-      | remove: 'gid://shopify/Article/'
+      | remove: 'gid://shopify/OnlineStoreArticle/'
       | remove: '['
       | remove: ']'
       | remove: '"'
