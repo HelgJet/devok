@@ -1,6 +1,71 @@
+{% comment %}
+  Dynamically fetches related blog posts based on product metafields across all blogs.
+  Falls back to globally defined posts if no specific metafields are present.
+{% endcomment %}
+
+{% assign related_post_ids = product.metafields.custom.related_post_ids %}
+
+{% if related_post_ids %}
+  {% assign related_post_ids = related_post_ids | split: ',' %}
+  {% assign found_posts = false %}
+  {% assign related_posts = '' | split: ',' %} {#- Initialize an empty array to hold our found related posts -#}
+  
+  {% for blog in blogs %}
+    {% for post in blog.articles %}
+      {% if rrelated_post_ids contains post.id %}
+        {% assign found_posts = true %}
+        {% assign related_posts = related_posts | append: post | split: ',' %}
+      {% endif %}
+    {% endfor %}
+    
+    {% if found_posts %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% if found_posts == false %}
+  {% assign global_related_posts_ids = section.settings.global_related_posts_ids | split: ',' %}
+  {% assign related_posts = '' | split: ',' %} {#- Initialize an empty array for global related posts -#}
+  
+  {% for blog in blogs %}
+    {% for post in blog.articles %}
+      {% if global_related_posts_ids contains post.id %}
+        {% assign related_posts = related_posts | append: post | split: ',' %}
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
+{% endif %}
+
+<div class="related-blog-posts">
+  {% for post in related_posts %}
+    <div class="blog-post">
+      <h3>{{ post.title }}</h3>
+      <img src="{{ post.image.src | img_url: '300x300' }}" alt="{{ post.title }}">
+      <p>{{ post.excerpt | strip_html | truncatewords: 20 }}</p>
+      <a href="{{ post.url }}" title="{{ post.title }}">Read more</a>
+    </div>
+  {% else %}
+    <p>No related posts available.</p>
+  {% endfor %}
+</div>
+
+
 {% schema %}
-  {
-    "name": "Section name",
-    "settings": []
-  }
+{
+  "name": "Related Blog Posts",
+  "settings": [
+    {
+      "id": "global_related_posts_ids",
+      "type": "text",
+      "label": "Global Related Post IDs",
+      "info": "Enter comma-separated blog post IDs to be used as a global fallback."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Default Related Blog Posts"
+    }
+  ]
+}
 {% endschema %}
