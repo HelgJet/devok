@@ -16,7 +16,7 @@
 {% assign found_posts = false %}
   
   {% if related_post_ids.size > 0 %}   
-        <div class="blog-articles {% if section.settings.layout == 'collage' %}blog-articles--collage{% endif %}">
+        <div class="blog-articles">
 
     {% for link in linklists.blogs.links %}
       {% assign blog = link.object %}
@@ -27,7 +27,7 @@
           -%}
           {% if post_id == article.id %}
             {% assign found_posts = true %}
-                    <div id={{ article.id }} class="blog-articles__article article card-information-v-{{ section.settings.caption_vertical_alignment }} {% if section.settings.show_image == false %}card-info-abs{% endif %} post-layout-{{ section.settings.layout }}">
+                    <div id={{ article.id }} class="blog-articles__article article">
 
             {% render 'article-card', blog: blog, article: article, show_image: true %}
                     </div>
@@ -40,7 +40,7 @@
 
   {% if found_posts == false %}
     {% assign global_related_posts_ids = section.settings.global_related_posts_ids | split: ',' %}
-       <div class="blog-articles {% if section.settings.layout == 'collage' %}blog-articles--collage{% endif %}">
+       <div class="blog-articles">
 
     {% for link in linklists.blogs.links %}
       {% assign blog = link.object %}
