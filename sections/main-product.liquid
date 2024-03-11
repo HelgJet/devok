@@ -1834,6 +1834,8 @@
 
   {% for blog in blogs %}
     {% for article in blog.articles %}
+
+      {{ article.metafields.custom.related_products | json }}
       {% if article.metafields.custom.related_products %}
         {% assign meta_products_string = article.metafields.custom.related_products %}
         {% assign related_product_ids = meta_products_string | split: ',' %}
