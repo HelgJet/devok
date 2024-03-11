@@ -7,8 +7,8 @@
 {% endcomment %}
 
 <div class="related-blog-posts">
- 
 
+ {% comment %} 
 {% if product.metafields.custom.related_post_ids.value.size > 0 %}
    {% assign related_post_ids = product.metafields.custom.related_post_ids.value
     | remove: '['
@@ -36,7 +36,31 @@
           {% endfor %}
         {% endfor %}
       {% endfor %}
-    </div>
+    </div>{% endcomment %}
+
+  {% liquid
+  if product.metafields.custom.related_post_ids.value.size > 0
+    assign related_post_ids = product.metafields.custom.related_post_ids.value | replace: '[', '' | replace: ']', '' | replace: '"', '' | split: ','
+  elsif section.settings.global_related_posts_ids != blank
+    assign related_post_ids = section.settings.global_related_posts_ids | split: ','
+  else
+    assign related_post_ids = ''
+  endif
+%}
+
+<div class="blog-articles">
+  {% for link in linklists.blogs.links %}
+    {% assign blog = link.object %}
+    {% for article in blogs[blog.handle].articles %}
+      {% if related_post_ids contains article.id %}
+        <div id="{{ article.id }}" class="blog-articles__article article">
+          {% render 'article-card', blog: blog, article: article, show_image: true %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
+</div>
+
 </div>
 
 {% schema %}
