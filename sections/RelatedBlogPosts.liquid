@@ -36,8 +36,6 @@
 
   {% if found_posts == false %}
     {% assign global_related_posts_ids = section.settings.global_related_posts_ids | split: ',' %}
-    {% assign related_posts = '' | split: ',' %}
-
     {% for link in linklists.blogs.links %}
       {% assign blog = link.object %}
       {% for article in blogs[blog.handle].articles %}
