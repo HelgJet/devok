@@ -119,7 +119,7 @@
 
 
 <div class="related-blog-posts">
-  {% for article in related_posts %}
+  {% for article in related_posts_array %}
     <div class="blog-post" id={{ article.id }}>
       <h3>{{ article.title }}</h3>
       <img src="{{ article.image.src | img_url: '300x300' }}" alt="{{ article.title }}">
