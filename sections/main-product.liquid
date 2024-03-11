@@ -1863,7 +1863,7 @@
     })
     .then(response => response.json())
     .then(response => {
-      const articles = response.data.articles.edges;
+      const articles = response.data.query.articles.edges;
       articles.forEach(articleEdge => {
         const article = articleEdge.node;
         // Assuming the metafield value is a serialized array of product handles
