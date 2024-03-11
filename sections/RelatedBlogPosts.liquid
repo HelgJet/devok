@@ -13,11 +13,11 @@
     | remove: '"'
     | split: ','
   %}
-
+{% assign found_posts = false %}
   {% if related_post_ids.size > 0 %}
     {{ related_post_ids | json }}
 
-    {% assign found_posts = false %}
+    
     {% for link in linklists.blogs.links %}
       {% assign blog = link.object %}
       {% for article in blogs[blog.handle].articles %}
