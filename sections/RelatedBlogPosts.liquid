@@ -7,51 +7,47 @@
 {% endcomment %}
 
 <div class="related-blog-posts">
+  {% assign related_post_ids = product.metafields.custom.related_post_ids.value
+    | remove: '['
+    | remove: ']'
+    | remove: '"'
+    | split: ','
+  %}
 
-{% assign related_post_ids = product.metafields.custom.related_post_ids.value | remove: '[' | remove: ']' | remove: '"' | split: ',' %}
+  {% if related_post_ids.size > 0 %}
+    {{ related_post_ids | json }}
 
-{% if related_post_ids.size > 0 %}
-
-{{ related_post_ids | json }}
-  
-  {% assign found_posts = false %}
-   {% for link in linklists.blogs.links %}
-       {% assign blog = link.object %}
-     {% for article in blogs[blog.handle].articles %}
-    
-     {% for meta_post_id in related_post_ids %}
-            {%- liquid
-              assign post_id = meta_post_id | times: 1
-      
-            -%}
-              {% if post_id == article.id %}
-                 {% assign found_posts = true %}
-                 {% render 'article-card',  blog: blog, article: article, show_image: true %}
-                {% endif %}
-         {% endfor %}
+    {% assign found_posts = false %}
+    {% for link in linklists.blogs.links %}
+      {% assign blog = link.object %}
+      {% for article in blogs[blog.handle].articles %}
+        {% for meta_post_id in related_post_ids %}
+          {%- liquid
+            assign post_id = meta_post_id | times: 1
+          -%}
+          {% if post_id == article.id %}
+            {% assign found_posts = true %}
+            {% render 'article-card', blog: blog, article: article, show_image: true %}
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
     {% endfor %}
-  {% endfor %}
-{% endif %}
+  {% endif %}
 
+  {% if found_posts == false %}
+    {% assign global_related_posts_ids = section.settings.global_related_posts_ids | split: ',' %}
+    {% assign related_posts = '' | split: ',' %}
 
-
-{% if found_posts == false %}
-  {% assign global_related_posts_ids = section.settings.global_related_posts_ids | split: ',' %}
-  {% assign related_posts = '' | split: ',' %} 
-  
-   {% for link in linklists.blogs.links %}
-       {% assign blog = link.object %}
-     {% for article in blogs[blog.handle].articles %}
-      {% if global_related_posts_ids contains article.id %}
-          {% render 'article-card',  blog: blog, article: article, show_image: true %}
-      {% endif %}
+    {% for link in linklists.blogs.links %}
+      {% assign blog = link.object %}
+      {% for article in blogs[blog.handle].articles %}
+        {% if global_related_posts_ids contains article.id %}
+          {% render 'article-card', blog: blog, article: article, show_image: true %}
+        {% endif %}
+      {% endfor %}
     {% endfor %}
-  {% endfor %}
-{% endif %}
-
-
+  {% endif %}
 </div>
-
 
 {% schema %}
 {
