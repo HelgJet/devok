@@ -1827,31 +1827,37 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-      const storefrontAccessToken = '374602b3d4bb8103e75becaae1d47c10';
+    const storefrontAccessToken = '374602b3d4bb8103e75becaae1d47c10';
     const domain = 'devpeview.myshopify.com';
 
     const currentProductHandle = '{{ product.handle }}';
+
+
     const query = {
     query: `
-      {
-        shop {
-          articles(first: 50) {
-            edges {
-              node {
-                title
+      blogs(first: 5) { # Adjust the number of blogs as necessary
+    edges {
+      node {
+        id
+        title
+        articles(first: 10) { # Adjust the number of articles as necessary
+          edges {
+            node {
+              title
                 handle
                 metafields(namespace: "custom", key: "related_products") {
                   value
-                }
               }
             }
           }
         }
       }
+    }
+  }
     `
   };
 
-    fetch(`https://${domain}/api/2021-10/graphql.json`, { // Update API version as needed
+    fetch(`https://${domain}/api/2021-10/graphql.json`, { 
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -1859,11 +1865,11 @@
       },
         body: JSON.stringify({
                 query,
-            }),
+       }),
     })
     .then(response => response.json())
     .then(response => {
-      const articles = response.data.query.articles.edges;
+      const articles = response.data.shop.articles.edges;
       articles.forEach(articleEdge => {
         const article = articleEdge.node;
         // Assuming the metafield value is a serialized array of product handles
