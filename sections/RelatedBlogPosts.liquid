@@ -13,10 +13,10 @@
   {% assign related_posts = '' | split: ',' %} 
   
   {% for blog in blogs %}
-    {% for post in blog.articles %}
-      {% if related_post_ids contains post.id %}
+    {% for article in blog.articles %}
+      {% if related_post_ids contains article.id %}
         {% assign found_posts = true %}
-        {% assign related_posts = related_posts | append: post | split: ',' %}
+        {% assign related_posts = related_posts | append: article | split: ',' %}
       {% endif %}
     {% endfor %}
     
