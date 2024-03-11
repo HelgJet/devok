@@ -1826,41 +1826,19 @@
 
 
      
-                      
- <div class="related-blog-posts">
-  <h2>Related Posts</h2>
-  {% assign current_product_id = product.id | split: '/' | last %}
-  {% assign found_related_posts = false %}
+{% assign product_handle = product.handle %}
+{% assign articles = blogs.news.articles %} <!-- Assuming 'news' is your blog handle; adjust as needed -->
 
-  {% for blog in blogs %}
-    {% for article in blog.articles %}
-
-      {{ article.metafields.custom.related_products | json }}
-      {% if article.metafields.custom.related_products %}
-        {% assign meta_products_string = article.metafields.custom.related_products %}
-        {% assign related_product_ids = meta_products_string | split: ',' %}
-
-        {% for id in related_product_ids %}
-          {% assign cleaned_id = id | remove: 'gid://shopify/Product/' | strip %}
-          {% if cleaned_id == current_product_id %}
-            {% assign found_related_posts = true %}
-            <div class="related-post">
-              <a href="{{ article.url }}">
-                <img src="{{ article.image.src | img_url: '300x300' }}" alt="{{ article.title }}">
-                <h3>{{ article.title }}</h3>
-              </a>
-            </div>
-          {% endif %}
-        {% endfor %}
-      {% endif %}
-    {% endfor %}
-  {% endfor %}
-
-  {% if found_related_posts == false %}
-    <p>No specific related posts found. Showing global posts.</p>
-    <!-- Add logic here to display global posts. This can be a preset list of posts or other logic as per your design. -->
+{% for article in articles %}
+  {% if article.metafields.custom.related_products contains product_handle %}
+    <!-- Display the article's information here -->
+    <div class="related-article">
+      <h3>{{ article.title }}</h3>
+      <p>{{ article.excerpt | strip_html }}</p>
+      <a href="{{ article.url }}">Read more</a>
+    </div>
   {% endif %}
-</div>
+{% endfor %}
 
                   
 
