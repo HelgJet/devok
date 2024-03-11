@@ -1830,24 +1830,21 @@ document.addEventListener('DOMContentLoaded', function() {
   const storefrontAccessToken = '374602b3d4bb8103e75becaae1d47c10';
   const domain = 'devpeview.myshopify.com';
 
-  const currentProductHandle = '{{ product.handle }}'; // Ensure this is dynamically replaced
-
-  // GraphQL query string correctly defined for posting
+  // Correct GraphQL query to fetch blog posts
   const queryString = `
   {
-    blogs(first: 5) { # Adjust the number of blogs as necessary
+    blogs(first: 5) {
       edges {
         node {
           id
           title
-          articles(first: 10) { # Adjust the number of articles as necessary
+          articles(first: 10) {
             edges {
               node {
+                id
                 title
-                handle
-                metafields(namespace: "custom", key: "related_products") {
-                  value
-                }
+                contentHtml
+                // Add any other fields you need
               }
             }
           }
@@ -1856,7 +1853,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }`;
 
-  fetch(`https://${domain}/api/2021-10/graphql.json`, { 
+  fetch(`https://${domain}/api/2021-10/graphql.json`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -1866,30 +1863,23 @@ document.addEventListener('DOMContentLoaded', function() {
   })
   .then(response => response.json())
   .then(response => {
-    if (!response.data || !response.data.blogs) {
-      console.error("Error: blogs data is not available in the response.");
-      return;
-    }
-
-    const blogs = response.data.blogs.edges;
-    blogs.forEach(blogEdge => {
-      const articles = blogEdge.node.articles.edges;
-      articles.forEach(articleEdge => {
-        const article = articleEdge.node;
-        try {
-          const relatedProducts = JSON.parse(article.metafields.value);
-          if (relatedProducts.includes(currentProductHandle)) {
-            // Process the article, e.g., display on page
-            console.log(article.title);
-          }
-        } catch(e) {
-          console.error("Error parsing related products metafield:", e);
-        }
+    // Navigate the response to access blog articles
+    if (response.data && response.data.blogs) {
+      const blogs = response.data.blogs.edges;
+      blogs.forEach(blogEdge => {
+        const articles = blogEdge.node.articles.edges;
+        articles.forEach(articleEdge => {
+          const article = articleEdge.node;
+          console.log(article.title); // Log article title, or manipulate DOM as needed
+          // Here you can handle the article data, e.g., display it on your webpage
+        });
       });
-    });
+    } else {
+      console.error("Blogs data not found in the response");
+    }
   })
   .catch(error => {
-    console.error("Error fetching related articles:", error);
+    console.error("Error fetching blog posts:", error);
   });
 });
 
