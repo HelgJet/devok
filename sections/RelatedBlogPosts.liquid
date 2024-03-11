@@ -24,7 +24,6 @@
       {% if related_post_ids contains article.id %}
         {% assign found_posts = true %}
         {% assign related_posts = related_posts | append: article | split: ',' %}
-       
       {% endif %}
     {% endfor %}
     
@@ -34,28 +33,30 @@
   {% endfor %}
 {% endif %}
 
+
+
 {% for link in linklists.blogs.links %}
        {% assign blog = link.object %}
- 
+     {% for article in blogs[blog.handle].articles %}
       {% if related_post_ids contains article.id %}
       {% endif %}
 
          {% for meta_post_id in related_post_ids %}
             {%- liquid
               assign post_id = meta_post_id | times: 1
-              assign posts_obj = blogs[blog.handle].articles | where: 'id', post_id
-              assign meta_post = posts_obj[0]
+      
             -%}
-
-            <h3>{{ meta_post.title }}</h3>
-      <img src="{{ meta_post.image.src | img_url: '300x300' }}" alt="{{ meta_post.title }}">
-      <p>{{ meta_post.excerpt | strip_html | truncatewords: 20 }}</p>
-      <a href="{{ meta_post.url }}" title="{{ meta_post.title }}">Read more</a>
+              {% if post_id == article.id %}
+            <h3>{{ article.title }}</h3>
+      <img src="{{ article.image.src | img_url: '300x300' }}" alt="{{ article.title }}">
+      <p>{{ article.excerpt | strip_html | truncatewords: 20 }}</p>
+      <a href="{{ article.url }}" title="{{ article.title }}">Read more</a>
+           {% endif %}
          {% endfor %}
 
       
     {% endfor %}
-
+  {% endfor %}
 
 
 {% if found_posts == false %}
