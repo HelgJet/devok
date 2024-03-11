@@ -1831,7 +1831,11 @@
 {% for blog in blogs %}
   {% assign articles = blog.articles %}
   {% for article in articles %}
-    {% assign related_products = article.metafields.custom.related_products %}
+    {% assign related_products = article.metafields.custom.related_products | remove: 'gid://shopify/Product/'
+      | remove: '['
+      | remove: ']'
+      | remove: '"'
+    %}
     {{ related_products | json }}
     {% for related_product in related_products %}
       {% if related_product.id == current_product_id %}
