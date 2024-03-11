@@ -42,7 +42,7 @@
           {%- liquid
             assign post_id = id | times: 1
           -%}
-          {% if id == article.id %} 
+          {% if post_id == article.id %} 
             {% render 'article-card', blog: blog, article: article, show_image: true %}
           {% endif %}
         {% endfor %}
