@@ -1829,6 +1829,7 @@
   {% assign current_product_id = product.id %}
   {% for blog in blogs %}
     {% for article in blog.articles %}
+      
           {% assign meta_products_string = article.metafields.custom.related_products
       | remove: 'gid://shopify/Product/'
       | remove: '['
@@ -1838,7 +1839,7 @@
 
             {% assign related_product_ids = meta_products_string | split: ',' %}
 
-       {{ related_product_ids | json }}
+       <p>{{ related_product_ids | json }}</p>
       
       {% if related_product_ids contains current_product_id %}
         <div class="related-post">
