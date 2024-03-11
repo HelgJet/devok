@@ -23,7 +23,7 @@
             -%}
               {% if post_id == article.id %}
                  {% assign found_posts = true %}
-                 {% render 'article-card',  blog: blog, article: article %}
+                 {% render 'article-card',  blog: blog, article: article, show_image: true %}
                 {% endif %}
          {% endfor %}
     {% endfor %}
