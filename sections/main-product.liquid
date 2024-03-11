@@ -1832,6 +1832,7 @@
   {% assign articles = blog.articles %}
   {% for article in articles %}
     {% assign related_products = article.metafields.custom.related_products %}
+    {{ related_products | json }}
     {% for related_product in related_products %}
       {% if related_product.id == current_product_id %}
         <!-- Display the article's information here -->
