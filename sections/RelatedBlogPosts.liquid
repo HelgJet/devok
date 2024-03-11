@@ -3,6 +3,9 @@
   Falls back to globally defined posts if no specific metafields are present.
 {% endcomment %}
 
+
+{{ product.metafields.custom.related_post_ids | json }}
+
 {% assign related_post_ids = product.metafields.custom.related_post_ids %}
 
 {% if related_post_ids %}
