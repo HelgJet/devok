@@ -18,8 +18,6 @@
 {{ related_post_ids | json }}
   
   {% assign found_posts = false %}
-  {% assign related_posts = '' | split: ',' %} 
-  
    {% for link in linklists.blogs.links %}
        {% assign blog = link.object %}
      {% for article in blogs[blog.handle].articles %}
@@ -32,12 +30,16 @@
             -%}
               {% if post_id == article.id %}
                  {% assign found_posts = true %}
-        {% assign related_posts = related_posts | append: article | split: ',' %}
+                    {% capture related_posts %}
+                      {{ related_posts }}{{ article | json }},
+                    {% endcapture %}
                 {% endif %}
          {% endfor %}
     {% endfor %}
     
-   
+    {% assign related_posts_array = related_posts | split: ',' %}
+    <!-- Output your related posts here -->
+    {{ related_posts_array | json }}
   {% endfor %}
 {% endif %}
 
