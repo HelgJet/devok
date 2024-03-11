@@ -15,7 +15,7 @@
   
   {% for blog in blogs %}
     {% for post in blog.articles %}
-      {% if rrelated_post_ids contains post.id %}
+      {% if related_post_ids contains post.id %}
         {% assign found_posts = true %}
         {% assign related_posts = related_posts | append: post | split: ',' %}
       {% endif %}
