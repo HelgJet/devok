@@ -19,6 +19,15 @@
   {% elsif section.settings.global_related_posts_ids != blank  %}
     {% assign related_post_ids = section.settings.global_related_posts_ids | split: ',' %}
 {% endif %}
+{% for link in linklists.blogs.links %}
+        {% assign blog = link.object %}
+    {% for post_id in related_post_ids %}
+    {% assign article = blogs[blog.handle].articles | where: "id", post_id | first %}
+    {% if article %}
+      {{ article.title }}
+     {% endif %}
+   {% endfor %}
+     {% endfor %}
   
     <div class="blog-articles">
       {% for link in linklists.blogs.links %}
