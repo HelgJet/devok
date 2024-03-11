@@ -1,15 +1,6 @@
 {{ 'section-blog-post.css' | asset_url | stylesheet_tag }}
 
-  {% assign meta_products_string = article.metafields.custom.related_products
-      | remove: 'gid://shopify/Product/'
-      | remove: '['
-      | remove: ']'
-      | remove: '"'
-    %}
 
-            {% assign related_product_ids = meta_products_string | split: ',' %}
-
-       <p>{{ related_product_ids | json }}</p>
 
 <article class="article-template" itemscope itemtype="http://schema.org/BlogPosting">
   {%- for block in section.blocks -%}
