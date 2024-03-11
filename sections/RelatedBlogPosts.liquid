@@ -4,7 +4,7 @@
 {% endcomment %}
 
 
-{{ product.metafields.custom.related_post_ids | json }}
+{{ product.metafields.custom.related_post_ids.value | json }}
 
 {% assign related_post_ids = product.metafields.custom.related_post_ids %}
 
