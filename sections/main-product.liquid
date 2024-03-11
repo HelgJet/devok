@@ -1826,63 +1826,63 @@
 
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const storefrontAccessToken = '374602b3d4bb8103e75becaae1d47c10';
-  const domain = 'devpeview.myshopify.com';
+  document.addEventListener('DOMContentLoaded', function() {
+      const storefrontAccessToken = '374602b3d4bb8103e75becaae1d47c10';
+      const domain = 'devpeview.myshopify.com';
 
-  // Correct GraphQL query to fetch blog posts
-  const queryString = `
-  {
-    blogs(first: 5) {
-      edges {
-        node {
-          id
-          title
-          articles(first: 10) {
+    const currentProductHandle = '{{ product.handle }}';
+    const query = {
+    query: `
+      {
+        shop {
+          articles(first: 50) {
             edges {
               node {
-                id
                 title
-                contentHtml
-                // Add any other fields you need
+                handle
+                metafields(namespace: "custom", key: "related_products") {
+                  value
+                }
               }
             }
           }
         }
       }
-    }
-  }`;
+    `
+  };
 
-  fetch(`https://${domain}/api/2021-10/graphql.json`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Shopify-Storefront-Access-Token': storefrontAccessToken,
-    },
-    body: JSON.stringify({ query: queryString }),
-  })
-  .then(response => response.json())
-  .then(response => {
-    // Navigate the response to access blog articles
-    if (response.data && response.data.blogs) {
-      const blogs = response.data.blogs.edges;
-      blogs.forEach(blogEdge => {
-        const articles = blogEdge.node.articles.edges;
-        articles.forEach(articleEdge => {
-          const article = articleEdge.node;
-          console.log(article.title); // Log article title, or manipulate DOM as needed
-          // Here you can handle the article data, e.g., display it on your webpage
-        });
+    fetch(`https://${domain}/api/2021-10/graphql.json`, { // Update API version as needed
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Shopify-Storefront-Access-Token': storefrontAccessToken,
+      },
+        body: JSON.stringify({
+                query,
+            }),
+    })
+    .then(response => response.json())
+    .then(response => {
+      const articles = response.data.shop.articles.edges;
+      articles.forEach(articleEdge => {
+        const article = articleEdge.node;
+        // Assuming the metafield value is a serialized array of product handles
+        // Check if the metafields are already in a suitable format or need parsing.
+        try {
+          const relatedProducts = JSON.parse(article.metafields.value);
+          if (relatedProducts.includes(currentProductHandle)) {
+            // Append article details to your page
+            console.log(article.title); // Example action, replace with actual DOM manipulation
+          }
+        } catch(e) {
+          console.error("Error parsing related products metafield", e);
+        }
       });
-    } else {
-      console.error("Blogs data not found in the response");
-    }
-  })
-  .catch(error => {
-    console.error("Error fetching blog posts:", error);
+    })
+    .catch(error => {
+      console.error("Error fetching related articles:", error);
+    });
   });
-});
-
 </script>
 
 
