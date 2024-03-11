@@ -1827,34 +1827,39 @@
 
      
                       
-   <div class="related-blog-posts">
-     <h2>Related post</h2>
-  {% assign current_product_id = product.id %}
+ <div class="related-blog-posts">
+  <h2>Related Posts</h2>
+  {% assign current_product_id = product.id | split: '/' | last %}
+  {% assign found_related_posts = false %}
+
   {% for blog in blogs %}
     {% for article in blog.articles %}
-      
-     {% assign meta_products_string = article.metafields.custom.related_products
-      | remove: 'gid://shopify/Product/'
-      | remove: '['
-      | remove: ']'
-      | remove: '"'
-    %}
+      {% if article.metafields.custom.related_products %}
+        {% assign meta_products_string = article.metafields.custom.related_products %}
+        {% assign related_product_ids = meta_products_string | split: ',' %}
 
-            {% assign related_product_ids = meta_products_string | split: ',' %}
-
-       <p>{{ related_product_ids | json }}</p>
-      
-      {% if related_product_ids contains current_product_id %}
-        <div class="related-post">
-          <a href="{{ article.url }}">
-            <img src="{{ article.image.src | img_url: '300x300' }}" alt="{{ article.title }}">
-            <h3>{{ article.title }}</h3>
-          </a>
-        </div>
+        {% for id in related_product_ids %}
+          {% assign cleaned_id = id | remove: 'gid://shopify/Product/' | strip %}
+          {% if cleaned_id == current_product_id %}
+            {% assign found_related_posts = true %}
+            <div class="related-post">
+              <a href="{{ article.url }}">
+                <img src="{{ article.image.src | img_url: '300x300' }}" alt="{{ article.title }}">
+                <h3>{{ article.title }}</h3>
+              </a>
+            </div>
+          {% endif %}
+        {% endfor %}
       {% endif %}
     {% endfor %}
   {% endfor %}
+
+  {% if found_related_posts == false %}
+    <p>No specific related posts found. Showing global posts.</p>
+    <!-- Add logic here to display global posts. This can be a preset list of posts or other logic as per your design. -->
+  {% endif %}
 </div>
+
                   
 
 {% schema %}
