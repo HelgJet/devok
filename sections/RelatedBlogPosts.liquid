@@ -49,9 +49,11 @@
 %}
 
 <div class="blog-articles">
+       {% assign related_post_ids = related_post_ids | join: "," %}
   {% for link in linklists.blogs.links %}
     {% assign blog = link.object %}
     {% for article in blogs[blog.handle].articles %}
+      
       {% if related_post_ids contains article.id %}
         <div id="{{ article.id }}" class="blog-articles__article article">
           {% render 'article-card', blog: blog, article: article, show_image: true %}
