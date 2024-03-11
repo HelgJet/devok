@@ -40,16 +40,16 @@
 
   {% liquid
   if product.metafields.custom.related_post_ids.value.size > 0
-    assign related_post_ids = product.metafields.custom.related_post_ids.value | replace: '[', '' | replace: ']', '' | replace: '"', '' | split: ','
+    assign related_post_ids = product.metafields.custom.related_post_ids.value | replace: '[', '' | replace: ']', '' | replace: '"', '' 
   elsif section.settings.global_related_posts_ids != blank
-    assign related_post_ids = section.settings.global_related_posts_ids | split: ','
+    assign related_post_ids = section.settings.global_related_posts_ids
   else
     assign related_post_ids = ''
   endif
 %}
 
 <div class="blog-articles">
-       {% assign related_post_ids = related_post_ids | join: "," %}
+    
   {% for link in linklists.blogs.links %}
     {% assign blog = link.object %}
     {% for article in blogs[blog.handle].articles %}
