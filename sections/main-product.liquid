@@ -1826,14 +1826,13 @@
 
 
 <script>
- document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
   const storefrontAccessToken = '374602b3d4bb8103e75becaae1d47c10';
   const domain = 'devpeview.myshopify.com';
-  
-  // Assuming this is a placeholder and will be replaced dynamically with actual product handle
-  const currentProductHandle = '{{ product.handle }}';
 
-  // GraphQL query string
+  const currentProductHandle = '{{ product.handle }}'; // Ensure this is dynamically replaced
+
+  // GraphQL query string correctly defined for posting
   const queryString = `
   {
     blogs(first: 5) { # Adjust the number of blogs as necessary
@@ -1867,18 +1866,21 @@
   })
   .then(response => response.json())
   .then(response => {
-    // Access the nested articles structure correctly
+    if (!response.data || !response.data.blogs) {
+      console.error("Error: blogs data is not available in the response.");
+      return;
+    }
+
     const blogs = response.data.blogs.edges;
     blogs.forEach(blogEdge => {
       const articles = blogEdge.node.articles.edges;
       articles.forEach(articleEdge => {
         const article = articleEdge.node;
-        // Assuming the metafield value is a serialized array of product handles
         try {
           const relatedProducts = JSON.parse(article.metafields.value);
           if (relatedProducts.includes(currentProductHandle)) {
-            // Append article details to your page
-            console.log(article.title); // Example action, replace with actual DOM manipulation
+            // Process the article, e.g., display on page
+            console.log(article.title);
           }
         } catch(e) {
           console.error("Error parsing related products metafield:", e);
