@@ -9,7 +9,7 @@
 <div class="related-blog-posts">
  
 
-{% if product.metafields.custom.related_post_ids.value > 0 %}
+{% if product.metafields.custom.related_post_ids.value.size > 0 %}
    {% assign related_post_ids = product.metafields.custom.related_post_ids.value
     | remove: '['
     | remove: ']'
@@ -37,9 +37,6 @@
         {% endfor %}
       {% endfor %}
     </div>
-
-
-
 </div>
 
 {% schema %}
