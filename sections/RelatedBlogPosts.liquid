@@ -46,12 +46,15 @@
       {% assign blog = link.object %}
       {% for article in blogs[blog.handle].articles %}
         {% for meta_post_id in global_related_posts_ids %}
-         
+          {%- liquid
+            assign post_id = meta_post_id | times: 1
+          -%}
+          {% if post_id == article.id %}
                     <div id={{ article.id }} class="blog-articles__article article card-information-v-{{ section.settings.caption_vertical_alignment }} {% if section.settings.show_image == false %}card-info-abs{% endif %} post-layout-{{ section.settings.layout }}">
 
             {% render 'article-card', blog: blog, article: article, show_image: true %}
                     </div>
-         
+          {% endif %}
         {% endfor %}
       {% endfor %}
     {% endfor %}
