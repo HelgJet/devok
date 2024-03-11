@@ -1827,7 +1827,9 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const storefrontAccessToken = 'your_storefront_access_token';
+      const storefrontAccessToken = '374602b3d4bb8103e75becaae1d47c10';
+    const domain = 'devpeview.myshopify.com';
+
     const currentProductHandle = '{{ product.handle }}';
     const query = JSON.stringify({
       query: `
@@ -1850,7 +1852,7 @@
       `
     });
 
-    fetch('https://your-shopify-domain.myshopify.com/api/2022-01/graphql.json', { // Update API version as needed
+    fetch(`https://${domain}/api/2021-10/graphql.json`, { // Update API version as needed
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
