@@ -6,7 +6,7 @@
   Falls back to globally defined posts if no specific metafields are present.
 {% endcomment %}
 
-
+<div class="related-blog-posts">
 
 {% assign related_post_ids = product.metafields.custom.related_post_ids.value | remove: '[' | remove: ']' | remove: '"' | split: ',' %}
 
@@ -43,25 +43,13 @@
        {% assign blog = link.object %}
      {% for article in blogs[blog.handle].articles %}
       {% if global_related_posts_ids contains article.id %}
-        {% assign related_posts = related_posts | append: article | split: ',' %}
+          {% render 'article-card',  blog: blog, article: article, show_image: true %}
       {% endif %}
     {% endfor %}
   {% endfor %}
 {% endif %}
 
 
-
-<div class="related-blog-posts">
-  {% for article in related_posts %}
-    <div class="blog-post" id={{ article.id }}>
-      <h3>{{ article.title }}</h3>
-      <img src="{{ article.image.src | img_url: '300x300' }}" alt="{{ article.title }}">
-      <p>{{ article.excerpt | strip_html | truncatewords: 20 }}</p>
-      <a href="{{ article.url }}" title="{{ article.title }}">Read more</a>
-    </div>
-  {% else %}
-    <p>No related posts available.</p>
-  {% endfor %}
 </div>
 
 
