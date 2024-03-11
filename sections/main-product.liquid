@@ -1835,12 +1835,11 @@
       query: `
         {
           shop {
-            articles(first: 10) { # Adjust this query based on your needs
+            articles(first: 50) { # Adjust this query based on your needs
               edges {
                 node {
                   title
                   handle
-                  contentHtml
                   metafields(namespace: "custom", key: "related_products") {
                     value
                   }
