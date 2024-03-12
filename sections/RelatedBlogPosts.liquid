@@ -10,29 +10,19 @@
   {% liquid
     if product.metafields.custom.related_post_ids.value.size > 0
       assign related_post_ids = product.metafields.custom.related_post_ids.value | remove: '[' | remove: ']' | remove: '"'
-    elsif section.settings.global_related_posts_ids != blank
-      assign related_post_ids = section.settings.global_related_posts_ids
+      assign related_posts = ''
+
+    elsif section.settings.blog != blank
+      assign blog_handle = section.settings.blog
+      assign blog = blogs[blog_handle]
+
+      if blog.articles != blank and blog.articles.size > 0
+        assign related_posts = blog.articles | limit: section.settings.post_limit
+      endif
     else
       assign related_post_ids = ''
     endif
   %}
-  
-{% liquid
-  assign related_posts = ''
-
-  if section.settings.blog != blank
-    assign blog_handle = section.settings.blog
-    assign blog = blogs[blog_handle] 
-
-    if blog.articles != blank and blog.articles.size > 0
-      assign related_posts = blog.articles | limit: section.settings.post_limit
-    endif
-  endif
-%}
-
-  {{ related_posts | json }}
-
- 
 
   <div class="blog-articles">
     {% for link in linklists.blogs.links %}
