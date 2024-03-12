@@ -8,24 +8,26 @@
 
 <div class="related-blog-posts">
   {% liquid
+
+    assign found_posts_meta = false
     if product.metafields.custom.related_post_ids.value.size > 0
+      assign found_posts_meta = true
       assign related_post_ids = product.metafields.custom.related_post_ids.value | remove: '[' | remove: ']' | remove: '"'
      
-
-    elsif section.settings.blog != blank
-      assign blog_handle = section.settings.blog
-      assign blog = blogs[blog_handle]
-
-      if blog.articles != blank and blog.articles.size > 0
-        assign related_post_ids = blog.articles | limit: section.settings.post_limit
-      endif
     else
       assign related_post_ids = ''
     endif
   %}
 
   <div class="blog-articles">
-    {% for link in linklists.blogs.links %}
+    {% if found_posts_meta == false %}
+       {%- for article in section.settings.blog.articles limit: section.settings.post_limit -%}
+         <div id="{{ article.id }}" class="blog-articles__article article">
+            {% render 'article-card', blog: blog, article: article, show_image: true %}
+          </div>
+      {% endfor %}
+    {% else %}
+      {% for link in linklists.blogs.links %}
       {% assign blog = link.object %}
       {% for article in blogs[blog.handle].articles %}
         {% if related_post_ids contains article.id %}
@@ -35,6 +37,8 @@
         {% endif %}
       {% endfor %}
     {% endfor %}
+    {% endif %}
+    
   </div>
 </div>
 
