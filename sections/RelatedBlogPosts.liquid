@@ -25,17 +25,7 @@
     {% endif %}
   }
 {%- endstyle -%}
-
-<div id="RelatedBlogPost-{{ section.id }}">
-  <div class="section-{{ section.id }}-padding isolate{% if section.settings.use_section_width %} page-width{% endif %}">
-    <div class="swiper-hidden">
-      {%- unless section.settings.title == blank -%}
-        <h2>
-          {{ section.settings.title | escape }}
-        </h2>
-      {%- endunless -%}
-
-      {% liquid
+{% liquid
         assign found_posts_meta = false
         if product.metafields.custom.related_post_ids.value.size > 0
           assign found_posts_meta = true
@@ -44,6 +34,16 @@
           assign related_post_ids = ''
         endif
       %}
+
+      
+<div id="RelatedBlogPost-{{ section.id }}" class="blog-articles--wrapper">
+  <div class="section-{{ section.id }}-padding isolate{% if section.settings.use_section_width %} page-width{% endif %}">
+    <div class="swiper-hidden">
+      {%- unless section.settings.title == blank -%}
+        <h2>
+          {{ section.settings.title | escape }}
+        </h2>
+      {%- endunless -%}
 
       <swiper-container
         navigation-next-el="#my-next-button-{{ section.id }}"
@@ -110,6 +110,56 @@
     </div>
   </div>
 </div>
+
+
+<style>
+
+  .blog-articles--wrapper .swiper-hidden {
+  position: relative;
+  padding-left: 1.6rem;
+}
+.blog-articles--wrapper .swiper-button-next,
+.blog-articles--wrapper .swiper-button-prev {
+  width: 6.4rem;
+  height: 6.4rem;
+  background-color: #fff;
+  border-radius: 50%;
+  color: #000;
+  box-shadow: none;
+  border: none;
+  top: 42%;
+  position: absolute;
+  z-index: 10;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease;
+}
+.blog-articles--wrapper .swiper-button-next svg,
+.blog-articles--wrapper .swiper-button-prev svg {
+  width: 1.2rem;
+}
+.blog-articles--wrapper .swiper-button-next.swiper-button-prev svg path,
+.blog-articles--wrapper .swiper-button-prev.swiper-button-prev svg path {
+  transform-origin: center center;
+  transform: rotate(180deg);
+}
+.blog-articles--wrapper .swiper-button-next:hover,
+.blog-articles--wrapper .swiper-button-prev:hover {
+  opacity: 0.88;
+}
+.blog-articles--wrapper .swiper-button-next, .blog-articles--wrapper .swiper-rtl .swiper-button-prev {
+  left: auto;
+  right: 5%;
+}
+.blog-articles--wrapper .swiper-button-prev, .blog-articles--wrapper .swiper-rtl .swiper-button-next {
+  right: auto;
+  left: 5%;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js" defer></script>
 
 {% schema %}
 {
