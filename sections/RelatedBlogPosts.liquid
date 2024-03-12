@@ -58,7 +58,7 @@
            640: {slidesPerView: 1.5, spaceBetween: 16},
           }
         "
-        class="blog-articles"
+        class="related-articles"
       >
         {% if found_posts_meta == false %}
           {%- for article in section.settings.blog.articles limit: section.settings.post_limit -%}
@@ -74,7 +74,7 @@
             {% for article in blogs[blog.handle].articles %}
               {% if related_post_ids contains article.id %}
                 <swiper-slide lazy="true">
-                  <div id="{{ article.id }}" class="">
+                  <div id="{{ article.id }}" class="blog-articles__article article">
                     {% render 'article-card', blog: blog, article: article, show_image: true %}
                   </div>
                 </swiper-slide>
