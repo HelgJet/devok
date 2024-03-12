@@ -7,63 +7,28 @@
 {% endcomment %}
 
 <div class="related-blog-posts">
-
- {% comment %} 
-{% if product.metafields.custom.related_post_ids.value.size > 0 %}
-   {% assign related_post_ids = product.metafields.custom.related_post_ids.value
-    | remove: '['
-    | remove: ']'
-    | remove: '"'
-    | split: ','
-  %}
-  {% elsif section.settings.global_related_posts_ids != blank  %}
-    {% assign related_post_ids = section.settings.global_related_posts_ids | split: ',' %}
-{% endif %}
-  
-    <div class="blog-articles">
-      {% for link in linklists.blogs.links %}
-        {% assign blog = link.object %}
-        {% for article in blogs[blog.handle].articles %}
-          {% for meta_post_id in related_post_ids %}
-            {%- liquid
-              assign post_id = meta_post_id | times: 1
-            -%}
-            {% if post_id == article.id %}
-              <div id="{{ article.id }}" class="blog-articles__article article">
-                {% render 'article-card', blog: blog, article: article, show_image: true %}
-              </div>
-            {% endif %}
-          {% endfor %}
-        {% endfor %}
-      {% endfor %}
-    </div>{% endcomment %}
-
   {% liquid
-  if product.metafields.custom.related_post_ids.value.size > 0
-    assign related_post_ids = product.metafields.custom.related_post_ids.value | remove: '[' | remove: ']' | remove: '"' 
-  elsif section.settings.global_related_posts_ids != blank
-    assign related_post_ids = section.settings.global_related_posts_ids
-  else
-    assign related_post_ids = ''
-  endif
-%}
+    if product.metafields.custom.related_post_ids.value.size > 0
+      assign related_post_ids = product.metafields.custom.related_post_ids.value | remove: '[' | remove: ']' | remove: '"'
+    elsif section.settings.global_related_posts_ids != blank
+      assign related_post_ids = section.settings.global_related_posts_ids
+    else
+      assign related_post_ids = ''
+    endif
+  %}
 
-  {{ related_post_ids | json }}
-
-<div class="blog-articles">
-    
-  {% for link in linklists.blogs.links %}
-    {% assign blog = link.object %}
-    {% for article in blogs[blog.handle].articles %}
-      {% if related_post_ids contains article.id %}
-        <div id="{{ article.id }}" class="blog-articles__article article">
-          {% render 'article-card', blog: blog, article: article, show_image: true %}
-        </div>
-      {% endif %}
+  <div class="blog-articles">
+    {% for link in linklists.blogs.links %}
+      {% assign blog = link.object %}
+      {% for article in blogs[blog.handle].articles %}
+        {% if related_post_ids contains article.id %}
+          <div id="{{ article.id }}" class="blog-articles__article article">
+            {% render 'article-card', blog: blog, article: article, show_image: true %}
+          </div>
+        {% endif %}
+      {% endfor %}
     {% endfor %}
-  {% endfor %}
-</div>
-
+  </div>
 </div>
 
 {% schema %}
