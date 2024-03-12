@@ -13,7 +13,6 @@
     if product.metafields.custom.related_post_ids.value.size > 0
       assign found_posts_meta = true
       assign related_post_ids = product.metafields.custom.related_post_ids.value | remove: '[' | remove: ']' | remove: '"'
-     
     else
       assign related_post_ids = ''
     endif
