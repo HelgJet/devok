@@ -63,7 +63,7 @@
         {% if found_posts_meta == false %}
           {%- for article in section.settings.blog.articles limit: section.settings.post_limit -%}
             <swiper-slide lazy="true">
-              <div id="{{ article.id }}" class="related-posts__articles article">
+              <div id="{{ article.id }}" class="related-posts__articles">
                 {% render 'article-card', blog: blog, article: article, show_image: true %}
               </div>
             </swiper-slide>
@@ -74,7 +74,7 @@
             {% for article in blogs[blog.handle].articles %}
               {% if related_post_ids contains article.id %}
                 <swiper-slide lazy="true">
-                  <div id="{{ article.id }}" class="related-posts__articles article">
+                  <div id="{{ article.id }}" class="related-posts__articles">
                     {% render 'article-card', blog: blog, article: article, show_image: true %}
                   </div>
                 </swiper-slide>
