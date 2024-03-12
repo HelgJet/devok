@@ -13,18 +13,19 @@
   .section-{{ section.id }}-padding { padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
   padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px; }
 
-  @media screen and (min-width: 750px) { 
+  @media screen and (min-width: 750px) {
     .section-{{ section.id }}-padding {
-      padding-top: {{ section.settings.padding_top }}px; 
-      padding-bottom: {{ section.settings.padding_bottom }}px; 
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
     }
     {% if section.settings.use_section_width == blank %}
-      .swiper-hidden { 
+    #RelatedBlogPost-{{ section.id }} .swiper-hidden {
         padding: 0; margin-left: max(5rem, calc((100vw - var(--page-width) + 10rem - 2.4rem) / 2));
        }
     {% endif %}
   }
 {%- endstyle -%}
+
 <div id="RelatedBlogPost-{{ section.id }}">
   <div class="section-{{ section.id }}-padding isolate{% if section.settings.use_section_width %} page-width{% endif %}">
     <div class="swiper-hidden">
@@ -47,6 +48,16 @@
       <swiper-container
         navigation-next-el="#my-next-button-{{ section.id }}"
         navigation-prev-el="#my-prev-button-{{ section.id }}"
+        slides-per-view="2.5"
+        breakpoints="true"
+        space-between="24"
+        breakpoints-settings="
+          {
+           1240: {slidesPerView: 2.5, spaceBetween: 24},
+           1024: {slidesPerView: 2.5, spaceBetween: 24},
+           640: {slidesPerView: 1.5, spaceBetween: 16},
+          }
+        "
         class="blog-articles"
       >
         {% if found_posts_meta == false %}
