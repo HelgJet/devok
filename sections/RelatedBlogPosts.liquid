@@ -74,7 +74,7 @@
             {% for article in blogs[blog.handle].articles %}
               {% if related_post_ids contains article.id %}
                 <swiper-slide lazy="true">
-                  <div id="{{ article.id }}" class="blog-articles__article article">
+                  <div id="{{ article.id }}" class="">
                     {% render 'article-card', blog: blog, article: article, show_image: true %}
                   </div>
                 </swiper-slide>
