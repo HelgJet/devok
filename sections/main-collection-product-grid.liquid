@@ -237,7 +237,7 @@
                 <div class="facets-wrap">
                   <div class="select-dropdown">
                     <select name="{{ filter.param_name }}" id="Select-{{ filter.param_name | escape }}-{{ section.id }}">
-                       <option disabled>Select</option>
+                       <option value="" disabled selected>Select variant</option>
                       {%- for value in filter.values -%}
                         <option value="{{ value.value }}" {% if value.active %} selected {% endif %}>
                           {{- value.label | escape }}
@@ -279,8 +279,9 @@
                 <legend class="visually-hidden">{{ filter.label | escape }}</legend>
                 <div class="facets-wrap">
                   <div class="select-dropdown">
+                    
                     <select name="{{ filter.param_name }}" id="Select-{{ filter.param_name | escape }}-{{ section.id }}">
-                      <option disabled>Select</option>
+                      <option value="" disabled selected>Select variant</option>
                       {%- for value in filter.values -%}
                         <option value="{{ value.value }}" {% if value.active %} selected {% endif %}>
                           {{- value.label | escape }}
@@ -322,7 +323,7 @@
                 <div class="facets-wrap">
                   <div class="select-dropdown">
                     <select name="{{ filter.param_name }}" id="Select-{{ filter.param_name | escape }}-{{ section.id }}">
-                      <option disabled>Select</option>
+                      <option value="" disabled selected>Select variant</option>
                       {%- for value in filter.values -%}
                         <option value="{{ value.value }}" {% if value.active %} selected {% endif %}>
                           {{- value.label | escape }}
