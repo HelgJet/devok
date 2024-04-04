@@ -34,18 +34,19 @@
 {{ 'component-slider.css' | asset_url | stylesheet_tag }}
 
 {%- liquid
-  assign sort_by = results.sort_by | default: results.default_sort_by
+  assign sort_by = collection.sort_by | default: collection.default_sort_by
   assign total_active_values = 0
-  if results.url
-    assign results_url = results.url
+  if collection.url
+    assign results_url = collection.url
   else
-    assign terms = results.terms | escape
+    assign terms = collection.terms | escape
     assign results_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
   endif
    assign isPageCollection = false
   if request.page_type == 'collection'
      assign isPageCollection = true
   endif
+   assign enable_custom_filtering = true
 -%}
 {%- if  isPageCollection  -%}
   <div class="facet-container--custom">
@@ -53,13 +54,13 @@
       <form
         id="FacetFiltersFormType"
       >
-        {%- if results.terms -%}
-          <input type="hidden" name="q" value="{{ results.terms | escape }}">
+        {%- if collection.terms -%}
+          <input type="hidden" name="q" value="{{ collection.terms | escape }}">
           <input name="options[prefix]" type="hidden" value="last">
         {%- endif -%}
 
-        {%- if enable_filtering -%}
-          {%- for filter in results.filters -%}
+        {%- if enable_custom_filtering -%}
+          {%- for filter in collection.filters -%}
             {%- assign filter_option_type = filter.param_name | downcase | replace: '.', '_' -%}
             {%- assign isSlider = false -%}
             {%- for value in filter.values -%}
