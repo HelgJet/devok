@@ -107,7 +107,7 @@ class FacetFiltersForm extends HTMLElement {
     const facetForm = this.querySelector('form');  
     if (facetForm) facetForm.addEventListener('input', this.debouncedOnSubmit.bind(this));
 
-    const facetWrapper = this.querySelector('#FacetsWrapperDesktop, #FacetWrapperDesktopType');
+    const facetWrapper = this.querySelector('#FacetsWrapperDesktop, #FacetWrapperDesktopType, #FacetWrapperDesktopModel, #FacetWrapperDesktopYears, #FacetWrapperDesktopMake');
     if (facetWrapper) facetWrapper.addEventListener('keyup', onKeyUpEscape);
     
   }
@@ -197,7 +197,7 @@ class FacetFiltersForm extends HTMLElement {
     const parsedHTML = new DOMParser().parseFromString(html, 'text/html');
 
     const facetDetailsElements =
-      parsedHTML.querySelectorAll('#FacetFiltersForm .js-filter, #FacetFiltersFormType .js-filter,  #FacetFiltersFormMobile .js-filter, #FacetFiltersPillsForm .js-filter');
+      parsedHTML.querySelectorAll('#FacetFiltersForm .js-filter, #FacetFiltersFormType .js-filter, #FacetFiltersFormMake .js-filter, #FacetFiltersFormModel .js-filter,  #FacetFiltersFormYears .js-filter,  #FacetFiltersFormMobile .js-filter, #FacetFiltersPillsForm .js-filter');
     const matchesIndex = (element) => {
       const jsFilter = event ? event.target.closest('.js-filter') : undefined;
       return jsFilter ? element.dataset.index === jsFilter.dataset.index : false; 
