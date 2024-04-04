@@ -52,7 +52,7 @@
         "show_color_link": true,
         "show_countdown": true,
         "enable_filtering": true,
-        "filter_type": "vertical",
+        "filter_type": "horizontal",
         "enable_default_state_opened": true,
         "enable_sorting": true,
         "type_price_range": "default",
