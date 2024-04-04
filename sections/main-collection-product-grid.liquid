@@ -49,6 +49,7 @@
    assign enable_custom_filtering = true
 -%}
 {%- if  isPageCollection  -%}
+  {{ 'component-slider.css' | asset_url | stylesheet_tag }}
   <div class="facet-container--custom">
     <facet-filters-form class="facets facets__custom--type">
       <form
