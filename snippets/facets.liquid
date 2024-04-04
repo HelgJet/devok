@@ -1189,7 +1189,7 @@
                   {% case filter.type %}
                     {% when 'boolean', 'list' %}
              
-                  {%- unless filter_option_type contains 'product_type' and isPageCollection and filter_type != 'vertical' -%} 
+                  {%- unless filter_option_type contains 'product_type' and isPageCollection -%} 
                       <details
                         id="Details-Mobile-{{ forloop.index }}-{{ section.id }}"
                         class="mobile-facets__details js-filter"
