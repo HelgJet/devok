@@ -10,7 +10,7 @@
   Usage:
   {% render 'facets', results: collection, enable_filtering: true, enable_sorting: true, filter_type: 'vertical', paginate: paginate %}
 {% endcomment %} 
-
+{{ 'component-slider.css' | asset_url | stylesheet_tag }}
 {{ 'component-show-more.css' | asset_url | stylesheet_tag }}
 
 {%- liquid
