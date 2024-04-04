@@ -308,7 +308,8 @@
                               <label
                                 for="Filter-{{ filter.param_name | escape }}-{{ forloop.index }}"
                                 class="facet-checkbox{% if value.count == 0 and value.active == false %} facet-checkbox--disabled{% endif %} {{ filter_option_type }} {{ filter_custom_label }}"
-                              >  
+                                {% if value.count == 0 and value.active == false %} style="display: none;"{% endif %}
+                                >  
                                 <input
                                   type="checkbox"
                                   name="{{ value.param_name }}"                           
