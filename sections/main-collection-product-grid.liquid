@@ -239,7 +239,7 @@
                     <select name="{{ filter.param_name }}" id="Select-{{ filter.param_name | escape }}-{{ section.id }}">
                        <option value="" disabled selected>Years</option>
                       {%- for value in filter.values -%}
-                        <option value="{{ value.value }}" {% if value.active %} selected {% endif %}>
+                        <option value="{{ value.value }}" {% if value.active %} selected {% endif %} {% if value.count == 0 and value.active == false %} style="display: none;"{% endif %}>
                           {{- value.label | escape }}
                           {%- if value.count > 0 -%}
                             ({{ value.count }})
@@ -282,7 +282,7 @@
                     <select name="{{ filter.param_name }}" id="Select-{{ filter.param_name | escape }}-{{ section.id }}">
                       <option value="" disabled selected>Model</option>
                       {%- for value in filter.values -%}
-                        <option value="{{ value.value }}" {% if value.active %} selected {% endif %}>
+                        <option value="{{ value.value }}" {% if value.active %} selected {% endif %} {% if value.count == 0 and value.active == false %} style="display: none;"{% endif %}>
                           {{- value.label | escape }}
                           {%- if value.count > 0 -%}
                             ({{ value.count }})
@@ -324,7 +324,7 @@
                     <select name="{{ filter.param_name }}" id="Select-{{ filter.param_name | escape }}-{{ section.id }}">
                       <option value="" disabled selected>Make</option>
                       {%- for value in filter.values -%}
-                        <option value="{{ value.value }}" {% if value.active %} selected {% endif %}>
+                        <option value="{{ value.value }}" {% if value.active %} selected {% endif %} {% if value.count == 0 and value.active == false %} style="display: none;"{% endif %}>
                           {{- value.label | escape }}
                           {%- if value.count > 0 -%}
                             ({{ value.count }})
