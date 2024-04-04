@@ -326,7 +326,7 @@ class FacetFiltersForm extends HTMLElement {
 
       sortFilterForms.forEach((form) => {
         if (!isMobile) {
-          if (form.id === 'FacetSortForm' || form.id === 'FacetFiltersForm' || form.id === 'FacetFiltersFormType' || form.id === 'FacetSortDrawerForm') {
+          if (form.id === 'FacetSortForm' || form.id === 'FacetFiltersForm' || form.id === 'FacetFiltersFormType' form.id === 'FacetFiltersFormMake' || form.id === 'FacetFiltersFormModel' || form.id === 'FacetFiltersFormYears' || form.id === 'FacetSortDrawerForm') {
             const noJsElements = document.querySelectorAll('.no-js-list');
             noJsElements.forEach((el) => el.remove());
             forms.push(this.createSearchParams(form));
