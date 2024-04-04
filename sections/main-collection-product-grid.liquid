@@ -211,7 +211,132 @@
     </form>
   </facet-filters-form>
 </div>
+ <div class="facet-container--custom">
+  <facet-filters-form class="facets facets__custom--type">
+    <form id="FacetFiltersFormModel">
+      {%- if collection.terms -%}
+        <input type="hidden" name="q" value="{{ collection.terms | escape }}">
+        <input name="options[prefix]" type="hidden" value="last">
+      {%- endif -%}
 
+      {%- if enable_custom_filtering -%}
+        {%- for filter in collection.filters -%}
+          {%- assign filter_option_type = filter.param_name | downcase | replace: '.', '_' -%}
+          
+          {%- if filter_option_type contains 'model' -%}
+            {%- assign filter_option_type = filter_option_type | prepend: 'as_button_' -%}
+
+            <div id="FacetsWrapperDesktopModel" class="facet__wrapper__desktop--type">
+              <div
+                data-index="{{ forloop.index }}"
+                id="FacetModel-{{ forloop.index }}-{{ section.id }}"
+                class="js-filter"
+              >
+                <legend class="visually-hidden">{{ filter.label | escape }}</legend>
+                <div class="facets-wrap">
+                  <div class="select-dropdown">
+                    <select name="{{ filter.param_name }}" id="Select-{{ filter.param_name | escape }}-{{ section.id }}">
+                      {%- for value in filter.values -%}
+                        <option value="{{ value.value }}" {% if value.active %} selected {% endif %}>
+                          {{- value.label | escape }}
+                          {%- if value.count > 0 -%}
+                            ({{ value.count }})
+                          {%- endif -%}
+                        </option>
+                      {%- endfor -%}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </form>
+  </facet-filters-form>
+  <facet-filters-form class="facets facets__custom--type">
+    <form id="FacetFiltersFormMake">
+      {%- if collection.terms -%}
+        <input type="hidden" name="q" value="{{ collection.terms | escape }}">
+        <input name="options[prefix]" type="hidden" value="last">
+      {%- endif -%}
+
+      {%- if enable_custom_filtering -%}
+        {%- for filter in collection.filters -%}
+          {%- assign filter_option_type = filter.param_name | downcase | replace: '.', '_' -%}
+          
+          {%- if filter_option_type contains 'make' -%}
+          
+            <div id="FacetsWrapperDesktopMake" class="facet__wrapper__desktop--type">
+              <div
+                data-index="{{ forloop.index }}"
+                id="FacetMake-{{ forloop.index }}-{{ section.id }}"
+                class="js-filter"
+              >
+                <legend class="visually-hidden">{{ filter.label | escape }}</legend>
+                <div class="facets-wrap">
+                  <div class="select-dropdown">
+                    <select name="{{ filter.param_name }}" id="Select-{{ filter.param_name | escape }}-{{ section.id }}">
+                      {%- for value in filter.values -%}
+                        <option value="{{ value.value }}" {% if value.active %} selected {% endif %}>
+                          {{- value.label | escape }}
+                          {%- if value.count > 0 -%}
+                            ({{ value.count }})
+                          {%- endif -%}
+                        </option>
+                      {%- endfor -%}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </form>
+  </facet-filters-form>
+     <facet-filters-form class="facets facets__custom--type">
+    <form id="FacetFiltersFormYears">
+      {%- if collection.terms -%}
+        <input type="hidden" name="q" value="{{ collection.terms | escape }}">
+        <input name="options[prefix]" type="hidden" value="last">
+      {%- endif -%}
+
+      {%- if enable_custom_filtering -%}
+        {%- for filter in collection.filters -%}
+          {%- assign filter_option_type = filter.param_name | downcase | replace: '.', '_' -%}
+          
+          {%- if filter_option_type contains 'years' -%}
+          
+            <div id="FacetsWrapperDesktopYears" class="facet__wrapper__desktop--type">
+              <div
+                data-index="{{ forloop.index }}"
+                id="FacetYears-{{ forloop.index }}-{{ section.id }}"
+                class="js-filter"
+              >
+                <legend class="visually-hidden">{{ filter.label | escape }}</legend>
+                <div class="facets-wrap">
+                  <div class="select-dropdown">
+                    <select name="{{ filter.param_name }}" id="Select-{{ filter.param_name | escape }}-{{ section.id }}">
+                      {%- for value in filter.values -%}
+                        <option value="{{ value.value }}" {% if value.active %} selected {% endif %}>
+                          {{- value.label | escape }}
+                          {%- if value.count > 0 -%}
+                            ({{ value.count }})
+                          {%- endif -%}
+                        </option>
+                      {%- endfor -%}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </form>
+  </facet-filters-form>
+</div>
 {%- endif -%}
 
 <div id="CollesctionGrids-{{ section.id }}" class="section-{{ section.id }}-padding {{ section.settings.filter_type }}_filter_type">
