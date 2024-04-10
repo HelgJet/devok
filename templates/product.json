@@ -183,6 +183,12 @@
             "short_description": true,
             "short_description_length": 200
           }
+        },
+        "custom_liquid_EVWHe4": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "{{ product.metafields.custom.related_post_handles }}"
+          }
         }
       },
       "block_order": [
@@ -205,7 +211,8 @@
         "74507a0e-b901-4444-8987-8407f24a8043",
         "share",
         "2b6decd1-9560-4807-800b-5ca090e9dfb2",
-        "abe18ddf-4bb5-47d6-8db1-bc2219bceff5"
+        "abe18ddf-4bb5-47d6-8db1-bc2219bceff5",
+        "custom_liquid_EVWHe4"
       ],
       "settings": {
         "page_width": 1200,
