@@ -224,7 +224,7 @@
         "media_size": "medium",
         "constrain_to_viewport": false,
         "media_fit": "cover",
-        "image_zoom": "hover",
+        "image_zoom": "lightbox",
         "filter_media": true,
         "thumbs_size": 90,
         "thumbnails_list_revers": false,
