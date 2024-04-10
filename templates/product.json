@@ -187,7 +187,7 @@
         "custom_liquid_EVWHe4": {
           "type": "custom_liquid",
           "settings": {
-            "custom_liquid": "{{ product.metafields.custom.related_post_handles }}"
+            "custom_liquid": "{{ product.metafields.custom.related_post_handles.value }}"
           }
         }
       },
