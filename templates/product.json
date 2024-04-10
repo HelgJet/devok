@@ -3,6 +3,12 @@
     "main": {
       "type": "main-product",
       "blocks": {
+        "custom_liquid_EVWHe4": {
+          "type": "custom_liquid",
+          "settings": {
+            "custom_liquid": "{{ product.metafields.custom.related_post_handles }}"
+          }
+        },
         "d314344f-58a5-4c38-9d6f-31af4cbed0e3": {
           "type": "timer",
           "settings": {
@@ -183,15 +189,10 @@
             "short_description": true,
             "short_description_length": 200
           }
-        },
-        "custom_liquid_EVWHe4": {
-          "type": "custom_liquid",
-          "settings": {
-            "custom_liquid": "{{ product.metafields.custom.related_post_handles.value }}"
-          }
         }
       },
       "block_order": [
+        "custom_liquid_EVWHe4",
         "d314344f-58a5-4c38-9d6f-31af4cbed0e3",
         "title",
         "price",
@@ -211,8 +212,7 @@
         "74507a0e-b901-4444-8987-8407f24a8043",
         "share",
         "2b6decd1-9560-4807-800b-5ca090e9dfb2",
-        "abe18ddf-4bb5-47d6-8db1-bc2219bceff5",
-        "custom_liquid_EVWHe4"
+        "abe18ddf-4bb5-47d6-8db1-bc2219bceff5"
       ],
       "settings": {
         "page_width": 1200,
@@ -224,7 +224,7 @@
         "media_size": "medium",
         "constrain_to_viewport": false,
         "media_fit": "cover",
-        "image_zoom": "lightbox",
+        "image_zoom": "hover",
         "filter_media": true,
         "thumbs_size": 90,
         "thumbnails_list_revers": false,
