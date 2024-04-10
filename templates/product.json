@@ -3,12 +3,6 @@
     "main": {
       "type": "main-product",
       "blocks": {
-        "custom_liquid_EVWHe4": {
-          "type": "custom_liquid",
-          "settings": {
-            "custom_liquid": "{{ product.metafields.custom.related_post_handles }}"
-          }
-        },
         "d314344f-58a5-4c38-9d6f-31af4cbed0e3": {
           "type": "timer",
           "settings": {
@@ -192,7 +186,6 @@
         }
       },
       "block_order": [
-        "custom_liquid_EVWHe4",
         "d314344f-58a5-4c38-9d6f-31af4cbed0e3",
         "title",
         "price",
