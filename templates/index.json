@@ -168,9 +168,16 @@
         "show_text_below": false,
         "accessibility_info": "Slideshow about our brand"
       }
+    },
+    "pagefly_section_Gy7QGU": {
+      "type": "pagefly-section",
+      "settings": {
+        "section_id": "pf-526d0c27"
+      }
     }
   },
   "order": [
-    "6492533a-9ed1-4828-a275-e6479417dc49"
+    "6492533a-9ed1-4828-a275-e6479417dc49",
+    "pagefly_section_Gy7QGU"
   ]
 }
