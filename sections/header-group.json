@@ -184,10 +184,17 @@
         "padding_top": 16,
         "padding_bottom": 16
       }
+    },
+    "pagefly_section_EVgdFQ": {
+      "type": "pagefly-section",
+      "settings": {
+        "section_id": "pf-526d0c27"
+      }
     }
   },
   "order": [
     "announcement-bar",
-    "header"
+    "header",
+    "pagefly_section_EVgdFQ"
   ]
 }
