@@ -1,3 +1,12 @@
+/*
+* ------------------------------------------------------------
+* IMPORTANT: The contents of this file are auto-generated.
+*
+* This file may be updated by the Shopify admin theme editor
+* or related systems. Please exercise caution as any changes
+* made to this file may be overwritten.
+* ------------------------------------------------------------
+*/
 {
   "sections": {
     "banner": {
@@ -11,6 +20,8 @@
     "product-grid": {
       "type": "main-collection-product-grid",
       "settings": {
+        "page_width": 1200,
+        "use_section_width": true,
         "products_per_page": 16,
         "columns_desktop": 3,
         "pagination_type": "pagination_page",
@@ -25,10 +36,12 @@
         "show_color_link": true,
         "show_countdown": true,
         "enable_filtering": true,
-        "filter_type": "horizontal",
+        "filter_type": "vertical",
         "enable_default_state_opened": true,
         "enable_sorting": true,
         "type_price_range": "only_slider",
+        "enable_columnsview": true,
+        "short_columnsview": true,
         "filter_by_type": true,
         "filter_by_availability": false,
         "filter_by_vendor": true,
