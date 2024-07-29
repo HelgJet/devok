@@ -339,12 +339,22 @@
         "padding_top": 36,
         "padding_bottom": 36
       }
+    },
+    "custom_liquid_zBDrVH": {
+      "type": "custom-liquid",
+      "settings": {
+        "custom_liquid": "{% render 'buy-buttons', block: block, product: product, product_form_id: product_form_id, section_id: section.id, show_pickup_availability: true %}",
+        "color_scheme": "",
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
     }
   },
   "order": [
     "main",
     "product-details-tabs",
     "product-recommendations",
-    "related_blog_posts_dDj77p"
+    "related_blog_posts_dDj77p",
+    "custom_liquid_zBDrVH"
   ]
 }
