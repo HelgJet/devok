@@ -265,7 +265,7 @@
         "columns_desktop": 3,
         "enable_desktop_slider": false,
         "post_layout": "grid",
-        "textalign_pos": "left",
+        "textalign_pos": "center",
         "caption_vertical_alignment": "middle",
         "caption_padding": "0rem 1rem 0rem 1rem",
         "show_image": true,

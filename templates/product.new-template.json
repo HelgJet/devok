@@ -222,7 +222,7 @@
         "enable_sticky_info": true,
         "show_sticky_buttons": false,
         "media_position": "left",
-        "gallery_layout": "thumbnail_vertical_slider",
+        "gallery_layout": "columns",
         "media_size": "medium",
         "constrain_to_viewport": false,
         "media_fit": "cover",
