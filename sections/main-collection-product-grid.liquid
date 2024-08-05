@@ -185,7 +185,7 @@
                 <legend class="visually-hidden">{{ filter.label | escape }}</legend>
                 <div class="facets-wrap">
                   <div class="select-dropdown">
-             
+               {% comment %}
              <select name="{{ filter.param_name }}" id="Select-{{ filter.param_name | escape }}-{{ section.id }}">
                        <option value="" disabled selected>Years</option>
                       {%- for value in filter.values -%}
@@ -197,7 +197,7 @@
                         </option>
                       {%- endfor -%}
                     </select>
-                  {% comment %}<label for="Select-{{ filter.label | escape }}-{{ section.id }}" class="custom-label">
+                <label for="Select-{{ filter.label | escape }}-{{ section.id }}" class="custom-label">
                     Choose {{ filter.label }} from the list:
                   </label>               
    {% endcomment %}
