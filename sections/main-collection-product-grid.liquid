@@ -196,13 +196,67 @@
                         </option>
                       {%- endfor -%}
                     </select>
-                  <label for="Select-{{ filter.label | escape }}-{{ section.id }}">Choose {{ filter.label }} from the list:</label>
-                  <input list="{{ filter.param_name }}" name="{{ filter.param_name }}" id="Select-{{ filter.label | escape }}-{{ section.id }}">
-                    <datalist id="{{ filter.param_name }}">
-                       {%- for value in filter.values -%}
-                      <option value="{{ value.value }}">{{- value.label | escape }}</option>
-                             {%- endfor -%}
-                    </datalist>
+                 <label for="Select-{{ filter.label | escape }}-{{ section.id }}" class="custom-label">
+                    Choose {{ filter.label }} from the list:
+                  </label>
+                  <input list="{{ filter.param_name }}" name="{{ filter.param_name }}" id="Select-{{ filter.label | escape }}-{{ section.id }}" class="custom-input">
+                  <datalist id="{{ filter.param_name }}" class="custom-datalist">
+                    {%- for value in filter.values -%}
+                      <option value="{{ value.value }}" class="custom-option">{{- value.label | escape }}</option>
+                    {%- endfor -%}
+                  </datalist>
+
+                    <style>
+/* Style the label */
+.custom-label {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 5px;
+  display: inline-block;
+}
+
+/* Style the input field */
+.custom-input {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* Style the datalist options */
+.custom-option {
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+}
+
+/* Additional styling for hover and focus states */
+.custom-input:focus {
+  border-color: #66afe9;
+  outline: none;
+  box-shadow: 0 0 5px rgba(102, 175, 233, 0.6);
+}
+
+.custom-label {
+  color: #555;
+}
+
+.custom-input:hover {
+  border-color: #888;
+}
+
+/* Style the input field when it has a value */
+.custom-input:not(:placeholder-shown) {
+  border-color: #66afe9;
+}
+
+                      
+                    </style>
+
                   </div>
                 </div>
               </div>
