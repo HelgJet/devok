@@ -197,7 +197,7 @@
                       {%- endfor -%}
                     </select>
 
-                    <input list="Select-{{ filter.param_name | escape }}-{{ section.id }}">
+                    <input list="{{ filter.param_name }}">
                     <datalist id="Select-{{ filter.param_name | escape }}-{{ section.id }}">
                        {%- for value in filter.values -%}
                       <option value="{{ value.value }}">{{- value.label | escape }}</option>
