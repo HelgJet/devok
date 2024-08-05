@@ -185,7 +185,7 @@
                 <legend class="visually-hidden">{{ filter.label | escape }}</legend>
                 <div class="facets-wrap">
                   <div class="select-dropdown">
-                    <select name="{{ filter.param_name }}" id="Select-{{ filter.param_name | escape }}-{{ section.id }}">
+                   {% comment %} <select name="{{ filter.param_name }}" id="Select-{{ filter.param_name | escape }}-{{ section.id }}">
                        <option value="" disabled selected>Years</option>
                       {%- for value in filter.values -%}
                         <option value="{{ value.value }}" {% if value.active %} selected {% endif %} {% if value.count == 0 and value.active == false %} style="display: none;"{% endif %}>
@@ -196,11 +196,12 @@
                         </option>
                       {%- endfor -%}
                     </select>
+                    {% endcomment %}
                  <label for="Select-{{ filter.label | escape }}-{{ section.id }}" class="custom-label">
                     Choose {{ filter.label }} from the list:
                   </label>
-                  <input list="{{ filter.param_name }}" placeholder="Choose {{ filter.label }}" name="{{ filter.param_name }}" id="Select-{{ filter.label | escape }}-{{ section.id }}" class="custom-input">
-                  <datalist id="{{ filter.param_name }}" class="custom-datalist">
+                  <input list="Select-{{ filter.param_name | escape }}-{{ section.id }}" placeholder="Choose {{ filter.label }}" name="{{ filter.param_name }}" id="Select-{{ filter.label | escape }}-{{ section.id }}" class="custom-input">
+                  <datalist id="Select-{{ filter.param_name | escape }}-{{ section.id }}" class="custom-datalist">
                     {%- for value in filter.values -%}
                       <option value="{{ value.value }}" class="custom-option">{{- value.label | escape }}</option>
                     {%- endfor -%}
