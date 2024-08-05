@@ -186,20 +186,6 @@
                 <div class="facets-wrap">
                   <div class="select-dropdown">
              
-                  {% comment %}<label for="Select-{{ filter.label | escape }}-{{ section.id }}" class="custom-label">
-                    Choose {{ filter.label }} from the list:
-                  </label>               
-
-                    <input list="Select-{{ filter.param_name | escape }}-{{ section.id }}" placeholder="Choose {{ filter.label }}" name="{{ filter.param_name }}" id="Select-{{ filter.label | escape }}-{{ section.id }}" class="custom-input">
-                  <datalist id="Select-{{ filter.param_name | escape }}-{{ section.id }}" class="custom-datalist">
-                    {%- for value in filter.values -%}
-                      <option value="{{ value.value }}" {% if value.active %} selected {% endif %} class="custom-option">{{- value.label | escape }}</option>
-                    {%- endfor -%}
-                  </datalist>     {% endcomment %}
-
-                    
-             <label for="Select-{{ filter.param_name | escape }}-{{ section.id }}">Choose {{ filter.label }}:</label>
-              <input type="text" placeholder="Choose {{ filter.label }}" id="searchInput-{{ section.id }}" class="custom-input">
              <select name="{{ filter.param_name }}" id="Select-{{ filter.param_name | escape }}-{{ section.id }}">
                        <option value="" disabled selected>Years</option>
                       {%- for value in filter.values -%}
@@ -211,28 +197,18 @@
                         </option>
                       {%- endfor -%}
                     </select>
+                  {% comment %}<label for="Select-{{ filter.label | escape }}-{{ section.id }}" class="custom-label">
+                    Choose {{ filter.label }} from the list:
+                  </label>               
+   {% endcomment %}
+                    <input list="Select-{{ filter.param_name | escape }}-{{ section.id }}" placeholder="Choose {{ filter.label }}" name="{{ filter.param_name }}" id="Select-{{ filter.label | escape }}-{{ section.id }}" class="custom-input">
+                  <datalist id="Select-{{ filter.param_name | escape }}-{{ section.id }}" class="custom-datalist">
+                    {%- for value in filter.values -%}
+                      <option value="{{ value.value }}" {% if value.active %} selected {% endif %} class="custom-option">{{- value.label | escape }}</option>
+                    {%- endfor -%}
+                  </datalist>  
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const searchInput = document.getElementById('searchInput-{{ section.id }}');
-  const selectElement = document.getElementById('Select-{{ filter.param_name | escape }}-{{ section.id }}');
-
-  searchInput.addEventListener('keyup', function() {
-    const filter = searchInput.value.toLowerCase();
-    const options = selectElement.options;
-
-    for (let i = 0; i < options.length; i++) {
-      const optionText = options[i].text.toLowerCase();
-      if (optionText.indexOf(filter) > -1) {
-        options[i].style.display = "";
-      } else {
-        options[i].style.display = "none";
-      }
-    }
-  });
-});
-
-</script>
+                    
                     <style>
 /* Style the label */
 .custom-label {
