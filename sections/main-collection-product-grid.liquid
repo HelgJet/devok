@@ -196,16 +196,13 @@
                         </option>
                       {%- endfor -%}
                     </select>
-                  <label for="{{ filter.param_name }}">Choose {{ filter.label }} from the list:</label>
-                  <input list="{{ filter.param_name }}" name="{{ filter.param_name }}" id="{{ filter.param_name }}">
+                  <label for="Select-{{ filter.param_name | escape }}-{{ section.id }}">Choose {{ filter.label }} from the list:</label>
+                  <input list="{{ filter.param_name }}" name="{{ filter.param_name }}" id="Select-{{ filter.label | escape }}-{{ section.id }}">
                     <datalist id="{{ filter.param_name }}">
                        {%- for value in filter.values -%}
                       <option value="{{ value.value }}">{{- value.label | escape }}</option>
                              {%- endfor -%}
                     </datalist>
-                    <p>Filter Name: {{ filter.param_name }}</p>
-<p>Filter Label: {{ filter.label }}</p>
-<p>Filter Values: {{ filter.values }}</p>
                   </div>
                 </div>
               </div>
