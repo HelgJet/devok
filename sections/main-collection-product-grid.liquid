@@ -197,13 +197,13 @@
                       {%- endfor -%}
                     </select>
                     {% endcomment %}
-                 <label for="Select-{{ filter.label | escape }}-{{ section.id }}" class="custom-label">
+                  {% comment %}<label for="Select-{{ filter.label | escape }}-{{ section.id }}" class="custom-label">
                     Choose {{ filter.label }} from the list:
-                  </label>
+                  </label>                    {% endcomment %}
                   <input list="Select-{{ filter.param_name | escape }}-{{ section.id }}" placeholder="Choose {{ filter.label }}" name="{{ filter.param_name }}" id="Select-{{ filter.label | escape }}-{{ section.id }}" class="custom-input">
                   <datalist id="Select-{{ filter.param_name | escape }}-{{ section.id }}" class="custom-datalist">
                     {%- for value in filter.values -%}
-                      <option value="{{ value.value }}" class="custom-option">{{- value.label | escape }}</option>
+                      <option value="{{ value.value }}" {% if value.active %} selected {% endif %} class="custom-option">{{- value.label | escape }}</option>
                     {%- endfor -%}
                   </datalist>
 
