@@ -67,10 +67,12 @@
             {%- assign filter_option_type = filter.param_name | downcase | replace: '.', '_' -%}
             {%- assign is_slider = false -%}
             {%- for value in filter.values -%}
-              {% if filter.values.size > 6 %}
+             
+            {% endfor %}
+
+             {% if filter.values.size > 6 %}
                   {%- assign is_slider = true -%}
               {% endif %}
-            {% endfor %}
         
             {%- if filter_option_type contains 'product_type' -%}
               {%- assign filter_option_type = filter_option_type | prepend: 'as_button_' -%}
