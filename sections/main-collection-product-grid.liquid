@@ -49,7 +49,7 @@
    assign enable_custom_filtering = true
 -%}
 {%- if  isPageCollection  -%}
-  {% comment %}
+
   {{ 'component-slider.css' | asset_url | stylesheet_tag }}
   <div class="facet-container--custom">
     <facet-filters-form class="facets facets__custom--type">
@@ -211,7 +211,7 @@
       {%- endif -%}
     </form>
   </facet-filters-form>
-</div>{% endcomment %}
+</div>
   <div class="page-width">
  <div class="facet-container--custom" style="display: flex; align-items: center; justify-content: space-evenly;">
   <facet-filters-form class="facets facets__custom--type">
