@@ -203,6 +203,9 @@
                       <option value="{{ value.value }}">{{- value.label | escape }}</option>
                              {%- endfor -%}
                     </datalist>
+                    <p>Filter Name: {{ filter.param_name }}</p>
+<p>Filter Label: {{ filter.label }}</p>
+<p>Filter Values: {{ filter.values | json }}</p>
                   </div>
                 </div>
               </div>
