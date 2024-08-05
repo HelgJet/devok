@@ -185,18 +185,7 @@
                 <legend class="visually-hidden">{{ filter.label | escape }}</legend>
                 <div class="facets-wrap">
                   <div class="select-dropdown">
-                   {% comment %} <select name="{{ filter.param_name }}" id="Select-{{ filter.param_name | escape }}-{{ section.id }}">
-                       <option value="" disabled selected>Years</option>
-                      {%- for value in filter.values -%}
-                        <option value="{{ value.value }}" {% if value.active %} selected {% endif %} {% if value.count == 0 and value.active == false %} style="display: none;"{% endif %}>
-                          {{- value.label | escape }}
-                          {%- if value.count > 0 -%}
-                            ({{ value.count }})
-                          {%- endif -%}
-                        </option>
-                      {%- endfor -%}
-                    </select>
-                    {% endcomment %}
+             
                   {% comment %}<label for="Select-{{ filter.label | escape }}-{{ section.id }}" class="custom-label">
                     Choose {{ filter.label }} from the list:
                   </label>               
@@ -211,11 +200,17 @@
                     
              <label for="Select-{{ filter.param_name | escape }}-{{ section.id }}">Choose {{ filter.label }}:</label>
               <input type="text" placeholder="Choose {{ filter.label }}" id="searchInput-{{ section.id }}" class="custom-input">
-              <select id="Select-{{ filter.param_name | escape }}-{{ section.id }}" name="{{ filter.param_name }}" class="custom-select">
-                {%- for value in filter.values -%}
-                  <option value="{{ value.value }}" {% if value.active %} selected {% endif %} class="custom-option">{{- value.label | escape }}</option>
-                {%- endfor -%}
-              </select>
+             <select name="{{ filter.param_name }}" id="Select-{{ filter.param_name | escape }}-{{ section.id }}">
+                       <option value="" disabled selected>Years</option>
+                      {%- for value in filter.values -%}
+                        <option value="{{ value.value }}" {% if value.active %} selected {% endif %} {% if value.count == 0 and value.active == false %} style="display: none;"{% endif %}>
+                          {{- value.label | escape }}
+                          {%- if value.count > 0 -%}
+                            ({{ value.count }})
+                          {%- endif -%}
+                        </option>
+                      {%- endfor -%}
+                    </select>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
