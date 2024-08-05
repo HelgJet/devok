@@ -51,6 +51,7 @@
 {%- if  isPageCollection  -%}
 
   {{ 'component-slider.css' | asset_url | stylesheet_tag }}
+  {% comment %}
   <div class="facet-container--custom">
     <facet-filters-form class="facets facets__custom--type">
       <form
@@ -167,6 +168,7 @@
       </form>
     </facet-filters-form>
   </div>
+   {% endcomment %}
   <div class="facet-container--custom">
   <facet-filters-form class="facets facets__custom--type">
     <form id="FacetFiltersFormType">
