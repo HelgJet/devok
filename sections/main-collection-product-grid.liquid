@@ -50,8 +50,6 @@
 -%}
 {%- if  isPageCollection  -%}
 
-  {{ 'component-slider.css' | asset_url | stylesheet_tag }}
-
   <div class="facet-container--custom">
     <facet-filters-form class="facets facets__custom--type">
       <form
@@ -71,7 +69,7 @@
                   {%- assign is_slider = true -%}
               {% endif %}
             {% endfor %}
-            {%- assign is_slider = true -%}
+        
             {%- if filter_option_type contains 'product_type' -%}
               {%- assign filter_option_type = filter_option_type | prepend: 'as_button_' -%}
               
@@ -141,12 +139,7 @@
                         >
                           {% render 'icon-caret' %}
                         </button>
-                        <div class="slider-counter caption hidden">
-                          <span class="slider-counter--current">1</span>
-                          <span aria-hidden="true"> / </span>
-                          <span class="visually-hidden">{{ 'general.slider.of' | t }}</span>
-                          <span class="slider-counter--total">{{ products_to_display }}</span>
-                        </div>
+                        
                         <button
                           type="button"
                           class="slider-button slider-button--next"
