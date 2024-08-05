@@ -65,10 +65,10 @@
         {%- if enable_custom_filtering -%}
           {%- for filter in collection.filters -%}
             {%- assign filter_option_type = filter.param_name | downcase | replace: '.', '_' -%}
-            {%- assign isSlider = false -%}
+            {%- assign is_slider = false -%}
             {%- for value in filter.values -%}
               {% if filter.values.size > 6 %}
-                  {%- assign isSlider = true -%}
+                  {%- assign is_slider = true -%}
               {% endif %}
             {% endfor %}
         
@@ -130,7 +130,7 @@
                           </li>
                         {%- endfor -%}
                       </ul>
-                      {%- if isSlider -%}
+                      {%- if is_slider -%}
                       <div class="slider-buttons no-js-hidden">
                         <button
                           type="button"
