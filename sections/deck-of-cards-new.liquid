@@ -5,8 +5,7 @@
   margin: 3rem auto;
     min-height: 382px;
 }
-
-  .card-game-section .buttons {
+.card-game-section .buttons {
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
@@ -28,28 +27,20 @@
 }
 
 .flip-card {
-  width: 300px; /* Збільшення розміру карт в два рази */
-  height: 440px; /* Збільшення розміру карт в два рази */
+  width: 100px; /* Зменшений розмір карти */
+  height: 140px; /* Зменшений розмір карти */
   margin: 0 auto;
   perspective: 1000px; /* Необхідне для фліп-анімації */
-}
-
-#shuffle-canvas {
-  display: block;
-  margin: 20px auto;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  width: 800px; /* Збільшення розміру canvas в два рази */
-  height: 800px; /* Збільшення розміру canvas в два рази */
+  position: relative;
 }
 
 .flip-card-inner {
-  position: relative;
   width: 100%;
   height: 100%;
-  text-align: center;
   transition: transform 0.8s;
   transform-style: preserve-3d;
+  transform-origin: center right;
+  position: relative;
 }
 
 .flip-card.flipped .flip-card-inner {
@@ -58,14 +49,20 @@
 
 .flip-card-front,
 .flip-card-back {
-  position: absolute;
   width: 100%;
   height: 100%;
-  backface-visibility: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.flip-card-back {
-  transform: rotateY(180deg);
+#shuffle-canvas {
+  display: block;
+  margin: 20px auto;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  width: 300px; /* Зменшений розмір canvas */
+  height: 380px; /* Зменшений розмір canvas */
 }
 
 #result-message {
@@ -79,9 +76,9 @@
 
 <div id="card-game-section" class="card-game-section">
   <div class="buttons">
-    <button class="step-btn" data-step="1">Step 1: Choose a Card</button>
+    <button class="step-btn" data-step="1" disabled>Step 1: Choose a Card</button>
     <button class="step-btn" data-step="2" onclick="startShuffle()">Step 2: Shuffle Deck</button>
-    <button class="step-btn" data-step="3">Step 3: Find the Card</button>
+    <button class="step-btn" data-step="3" disabled>Step 3: Find the Card</button>
   </div>
 
   <div class="step-content step-1 active">
@@ -98,7 +95,11 @@
   </div>
 
   <div class="step-content step-2">
-    <canvas id="shuffle-canvas" width="800" height="800"></canvas>
+    <canvas id="shuffle-canvas" width="300" height="380"></canvas>
+    <div id="chosen-card-thumbnail" class="thumbnail" style="display: none;">
+      <p>Chosen Card:</p>
+      <img id="chosen-card-image" src="" alt="Chosen Card" style="width: 50px;">
+    </div>
   </div>
 
   <div class="step-content step-3">
@@ -112,6 +113,7 @@
         </div>
       </div>
     </div>
+    <button id="restart-button" onclick="restartGame()" style="display: none;">Start Again</button>
   </div>
 
   <div id="result-message" style="display: none;">
@@ -131,6 +133,9 @@ document.addEventListener('DOMContentLoaded', function() {
   const ctx = canvas.getContext('2d');
   const resultMessage = document.getElementById('result-message');
   const resultText = document.getElementById('result-text');
+  const chosenCardImage = document.getElementById('chosen-card-image');
+  const chosenCardThumbnail = document.getElementById('chosen-card-thumbnail');
+  const restartButton = document.getElementById('restart-button');
 
   let selectedCard = null;
   let cards = [];
@@ -150,9 +155,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
       document.querySelector(`.step-${step}`).classList.add('active');
 
-      // Автоматичний перехід на крок 3 після перетасовки на кроці 2
+      // Включити кнопку "Step 3" і "Step 2" під час переходу до відповідних кроків
       if (step === "2") {
+        buttons[0].disabled = true;
         startShuffle();
+      } else if (step === "3") {
+        buttons[2].disabled = false;
+        restartButton.style.display = "block";
       }
     });
   });
@@ -165,7 +174,10 @@ document.addEventListener('DOMContentLoaded', function() {
     fetchCard(step1Card).then(data => {
       selectedCard = data.cards[0];
       element.classList.toggle('flipped');
+      chosenCardImage.src = selectedCard.image;
+      chosenCardThumbnail.style.display = "block";
       isCardFlipping = false;
+      buttons[1].disabled = false; // Включити кнопку "Step 2" після вибору карти
     });
   };
 
@@ -215,8 +227,8 @@ document.addEventListener('DOMContentLoaded', function() {
       .then(data => {
         cards = data.cards.map(card => ({
           image: new Image(),
-          x: Math.random() * (canvas.width - 280),
-          y: Math.random() * (canvas.height - 400),
+          x: Math.random() * (canvas.width - 70),
+          y: Math.random() * (canvas.height - 100),
           rotation: Math.random() * 360,
         }));
 
@@ -238,26 +250,43 @@ document.addEventListener('DOMContentLoaded', function() {
 
     cards.forEach(card => {
       ctx.save();
-      ctx.translate(card.x + 140, card.y + 200);
+      ctx.translate(card.x + 35, card.y + 50);
       ctx.rotate(card.rotation * Math.PI / 180);
-      ctx.translate(-140, -200);
-      ctx.drawImage(card.image, 0, 0, 280, 400);
+      ctx.translate(-35, -50);
+      ctx.drawImage(card.image, 0, 0, 70, 100); // Розмір картки 70x100 пікселів
       ctx.restore();
     });
 
     cards.forEach(card => {
-      card.x += (canvas.width / 2 - card.x - 140) * 0.1;
-      card.y += (canvas.height / 2 - card.y - 200) * 0.1;
+      card.x += (canvas.width / 2 - card.x - 35) * 0.1;
+      card.y += (canvas.height / 2 - card.y - 50) * 0.1;
       card.rotation += (0 - card.rotation) * 0.1;
     });
 
-    if (Math.abs(cards[0].x - canvas.width / 2 + 140) > 1 || Math.abs(cards[0].y - canvas.height / 2 + 200) > 1) {
+    if (Math.abs(cards[0].x - canvas.width / 2 + 35) > 1 || Math.abs(cards[0].y - canvas.height / 2 + 50) > 1) {
       animationFrameId = requestAnimationFrame(() => animateShuffling(callback));
     } else {
       cancelAnimationFrame(animationFrameId);
       callback();
     }
-  } 
+  }
+
+  // Почати гру знову
+  window.restartGame = function() {
+    selectedCard = null;
+    attempts = 0;
+    isCardFlipping = false;
+    buttons[0].disabled = false;
+    buttons[2].disabled = true;
+    resultMessage.style.display = "none";
+    restartButton.style.display = "none";
+    chosenCardThumbnail.style.display = "none";
+    step1Card.src = "https://deckofcardsapi.com/static/img/back.png";
+    step3Card.src = "https://deckofcardsapi.com/static/img/back.png";
+
+    // Повернутися на перший крок
+    buttons[0].click();
+  };
 });
 
 </script>
