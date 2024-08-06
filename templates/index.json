@@ -9,6 +9,11 @@
 */
 {
   "sections": {
+    "deck_of_cards_RgUW6y": {
+      "type": "deck-of-cards",
+      "settings": {
+      }
+    },
     "6492533a-9ed1-4828-a275-e6479417dc49": {
       "type": "slideshow",
       "blocks": {
@@ -285,6 +290,7 @@
     }
   },
   "order": [
+    "deck_of_cards_RgUW6y",
     "6492533a-9ed1-4828-a275-e6479417dc49",
     "pagefly_section_Gy7QGU",
     "new_section_Jfhh6E",
