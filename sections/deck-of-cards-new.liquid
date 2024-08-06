@@ -95,7 +95,7 @@
     <div class="card flip-card" onclick="flipCard(this, 1)">
       <div class="flip-card-inner">
         <div class="flip-card-front">
-          <img src="{{ 'card-back.png' | asset_url }}" alt="Card Back">
+             <img src="https://deckofcardsapi.com/static/img/back.png" alt="Card back" class="card-back">
         </div>
         <div class="flip-card-back">
           <img id="step1-card" src="" alt="Card Front">
@@ -114,7 +114,7 @@
     <div class="card flip-card" onclick="flipCard(this, 3)">
       <div class="flip-card-inner">
         <div class="flip-card-front">
-          <img src="{{ 'card-back.png' | asset_url }}" alt="Card Back">
+      <img src="https://deckofcardsapi.com/static/img/back.png" alt="Card back" class="card-back">
         </div>
         <div class="flip-card-back">
           <img id="step3-card" src="" alt="Card Front">
@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', function() {
           cardElement.innerHTML = `
             <div class="flip-card-inner">
               <div class="flip-card-front">
-                <img src="{{ 'card-back.png' | asset_url }}" alt="Card Back">
+      <img src="https://deckofcardsapi.com/static/img/back.png" alt="Card back" class="card-back">
               </div>
             </div>`;
           shuffleContainer.appendChild(cardElement);
