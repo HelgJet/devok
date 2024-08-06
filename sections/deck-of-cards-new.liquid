@@ -142,16 +142,18 @@
     if (isCardFlipping) return; // Якщо перевертання вже відбувається, ігноруємо наступні кліки
     isCardFlipping = true;
 
-    element.classList.toggle('flipped');
     const cardElement = step === 1 ? step1Card : step3Card;
+
+    // Зміна зображення до перевертання
+    fetchCard(cardElement).then(() => {
+      element.classList.toggle('flipped'); // Початок перевертання після зміни зображення
+    });
 
     // Після завершення анімації дозволити наступне перевертання
     element.querySelector('.flip-card-inner').addEventListener('transitionend', function() {
-      fetchCard(cardElement).finally(() => {
-        setTimeout(() => {
-          isCardFlipping = false; // Дозволити перевертання після завершення тайм-ауту
-        }, 300); // Тривалість тайм-ауту (300 мс) може бути змінена під ваші потреби
-      });
+      setTimeout(() => {
+        isCardFlipping = false; // Дозволити перевертання після завершення анімації
+      }, 300); // Тривалість тайм-ауту (300 мс) може бути змінена під ваші потреби
     }, { once: true });
   };
 
