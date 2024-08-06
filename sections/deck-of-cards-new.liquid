@@ -49,11 +49,10 @@
 
 .flip-card-front,
 .flip-card-back {
+  position: absolute;
   width: 100%;
   height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  backface-visibility: hidden;
 }
 
 #shuffle-canvas {
