@@ -68,9 +68,11 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
   const buttons = document.querySelectorAll('.step-btn');
   const stepContents = document.querySelectorAll('.step-content');
+  let currentCardIndex = 0;
+  let deck = [];
 
   // Handle step navigation
   buttons.forEach(button => {
@@ -87,34 +89,57 @@
     });
   });
 
-  // Function to toggle card content in Step 1 and Step 3
-  window.toggleCardContent = function(step) {
-    const card = document.querySelector(`.step-${step} .card`);
-    if (card.innerHTML.includes('Card 1 Content')) {
-      card.innerHTML = `<p>Step ${step}: Card 2 Content</p>`;
-    } else {
-      card.innerHTML = `<p>Step ${step}: Card 1 Content</p>`;
-    }
+  // Function to change card content in Step 1 and Step 3
+  window.changeCard = function(cardId) {
+    const card = document.getElementById(cardId);
+    fetch('https://deckofcardsapi.com/api/deck/new/draw/?count=1')
+      .then(response => response.json())
+      .then(data => {
+        card.innerHTML = `<img src="${data.cards[0].image}" alt="${data.cards[0].value} of ${data.cards[0].suit}" />`;
+      })
+      .catch(error => console.error('Error fetching card:', error));
   };
 
-  // Function to fetch and display deck of cards from Deck of Cards API
+  // Fetch deck of cards for Step 2
   window.fetchDeckOfCards = function() {
     fetch('https://deckofcardsapi.com/api/deck/new/draw/?count=54')
       .then(response => response.json())
       .then(data => {
-        const cardsContainer = document.getElementById('cards-container');
-        cardsContainer.innerHTML = ''; // Clear previous cards if any
-
-        data.cards.forEach(card => {
-          const cardElement = document.createElement('div');
-          cardElement.className = 'card';
-          cardElement.innerHTML = `<img src="${card.image}" alt="${card.value} of ${card.suit}" />`;
-          cardsContainer.appendChild(cardElement);
-        });
+        deck = data.cards;
+        displayCard(currentCardIndex);
       })
-      .catch(error => console.error('Error fetching cards:', error));
+      .catch(error => console.error('Error fetching deck:', error));
   };
+
+  // Display the current card in Step 2
+  function displayCard(index) {
+    const cardsContainer = document.getElementById('cards-container');
+    cardsContainer.innerHTML = `<div class="card">
+      <img src="${deck[index].image}" alt="${deck[index].value} of ${deck[index].suit}" />
+    </div>`;
+  }
+
+  // Navigate to the previous card in Step 2
+  window.prevCard = function() {
+    if (currentCardIndex > 0) {
+      currentCardIndex--;
+      displayCard(currentCardIndex);
+    }
+  };
+
+  // Navigate to the next card in Step 2
+  window.nextCard = function() {
+    if (currentCardIndex < deck.length - 1) {
+      currentCardIndex++;
+      displayCard(currentCardIndex);
+    }
+  };
+
+  // Initialize first card for Step 1 and Step 3
+  changeCard('step1-card');
+  changeCard('step3-card');
 });
+
 
 </script>
 
