@@ -113,7 +113,7 @@
 <script>
 
   document.addEventListener('DOMContentLoaded', function() {
-    const buttons = document.querySelectorAll('.step-btn');
+  const buttons = document.querySelectorAll('.step-btn');
   const stepContents = document.querySelectorAll('.step-content');
   const step1Card = document.getElementById('step1-card');
   const step3Card = document.getElementById('step3-card');
@@ -122,7 +122,6 @@
 
   let cards = [];
   let animationFrameId;
-  let isCardFlipping = false; // Для запобігання швидкому кліканню
 
   // Навігація між кроками
   buttons.forEach(button => {
@@ -139,29 +138,13 @@
 
   // Перевертання карт на кроках 1 і 3
   window.flipCard = function(element, step) {
-    if (isCardFlipping) return; // Якщо перевертання вже відбувається, ігноруємо наступні кліки
-    isCardFlipping = true;
-
     element.classList.toggle('flipped');
-    const cardElement = step === 1 ? step1Card : step3Card;
-
-    fetchCard(cardElement).finally(() => {
-      setTimeout(() => {
-        isCardFlipping = false; // Дозволити перевертання через 1 секунду
-      }, 1000);
-    });
+    if (step === 1) {
+      fetchCard(step1Card);
+    } else if (step === 3) {
+      fetchCard(step3Card);
+    }
   };
-
-  // Отримання нової карти
-  function fetchCard(cardElement) {
-    return fetch('https://deckofcardsapi.com/api/deck/new/draw/?count=1')
-      .then(response => response.json())
-      .then(data => {
-        cardElement.src = data.cards[0].image;
-      })
-      .catch(error => console.error('Error fetching card:', error));
-  }
-
   // Перетасовка колоди карт з анімацією на canvas
   window.shuffleDeck = function() {
     fetch('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
