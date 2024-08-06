@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Перевірка карти на третьому кроці
   step3Btn.addEventListener('click', function() {
     console.log('Step 3 button clicked');
-    switchToStep(3);
+    switchToStep(3); // Переключення на третій крок
   });
 
   window.checkCard = function() {
@@ -277,8 +277,9 @@ document.addEventListener('DOMContentLoaded', function() {
     restartBtn.style.display = 'block';
   }
 
-  switchToStep(1);
+  switchToStep(1); // Перший крок активний при завантаженні сторінки
 });
+
 
 </script>
 
