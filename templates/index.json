@@ -11,6 +11,7 @@
   "sections": {
     "deck_of_cards_RgUW6y": {
       "type": "deck-of-cards",
+      "disabled": true,
       "settings": {
       }
     },
