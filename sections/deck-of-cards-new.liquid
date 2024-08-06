@@ -1,6 +1,192 @@
-{% schema %}
-  {
-    "name": "Section name",
-    "settings": []
+<div id="deck-of-cards-section" class="deck-of-cards-section">
+  <div class="buttons">
+    <button class="step-btn" data-step="1">Step 1</button>
+    <button class="step-btn" data-step="2" onclick="fetchAndShuffleDeck()">Step 2: Swipe Deck</button>
+    <button class="step-btn" data-step="3">Step 3</button>
+  </div>
+<style>
+  .deck-of-cards-section .buttons {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.deck-of-cards-section .step-btn {
+  padding: 10px 20px;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.deck-of-cards-section .step-content {
+  display: none;
+  text-align: center;
+}
+
+.deck-of-cards-section .step-content.active {
+  display: block;
+}
+
+.deck-of-cards-section .card-container {
+  width: 150px;
+  height: 210px;
+  margin: 0 auto;
+  cursor: pointer;
+}
+
+.deck-of-cards-section .card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.deck-of-cards-section .cards-container {
+  display: flex;
+  overflow-x: scroll;
+  gap: 10px;
+  justify-content: center;
+  cursor: grab;
+  padding: 10px;
+}
+
+.deck-of-cards-section .cards-container.active {
+  cursor: grabbing;
+}
+
+.deck-of-cards-section .card {
+  flex: 0 0 150px;
+  height: 210px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.deck-of-cards-section .card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+</style>
+  
+  <div class="step-content step-1 active">
+    <div class="card-container" onclick="toggleCardContent(1)">
+      <img src="https://deckofcardsapi.com/static/img/AS.png" alt="Card 1" class="card-image" />
+    </div>
+  </div>
+
+  <div class="step-content step-2">
+    <div class="cards-container" id="cards-container">
+      <!-- Сюди будуть додані карти після їх отримання з API -->
+    </div>
+  </div>
+
+  <div class="step-content step-3">
+    <div class="card-container" onclick="toggleCardContent(3)">
+      <img src="https://deckofcardsapi.com/static/img/2H.png" alt="Card 1" class="card-image" />
+    </div>
+  </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const buttons = document.querySelectorAll('.step-btn');
+  const stepContents = document.querySelectorAll('.step-content');
+
+  // Перемикання між кроками
+  buttons.forEach(button => {
+    button.addEventListener('click', function() {
+      const step = this.dataset.step;
+
+      // Приховуємо всі кроки
+      stepContents.forEach(content => {
+        content.classList.remove('active');
+      });
+
+      // Відображаємо вибраний крок
+      document.querySelector(`.step-${step}`).classList.add('active');
+    });
+  });
+
+  // Функція для зміни карт в кроках 1 та 3
+  window.toggleCardContent = function(step) {
+    const cardImage = document.querySelector(`.step-${step} .card-image`);
+    const currentSrc = cardImage.src;
+    const newSrc = currentSrc.includes('AS.png') ? 'https://deckofcardsapi.com/static/img/2H.png' : 'https://deckofcardsapi.com/static/img/AS.png';
+    cardImage.src = newSrc;
+  };
+
+  // Функція для перетасовки масиву карт
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
   }
+
+  // Функція для отримання та перетасовки колоди карт
+  window.fetchAndShuffleDeck = function() {
+    fetch('https://deckofcardsapi.com/api/deck/new/draw/?count=54')
+      .then(response => response.json())
+      .then(data => {
+        const shuffledCards = shuffleArray(data.cards);
+        const cardsContainer = document.getElementById('cards-container');
+        cardsContainer.innerHTML = ''; // Очищаємо контейнер перед додаванням нових карт
+
+        shuffledCards.forEach(card => {
+          const cardElement = document.createElement('div');
+          cardElement.className = 'card';
+          cardElement.innerHTML = `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card-image" />`;
+          cardsContainer.appendChild(cardElement);
+        });
+
+        initializeSwiper();
+      })
+      .catch(error => console.error('Помилка отримання карт:', error));
+  };
+
+  // Ініціалізація функціоналу свайпу
+  function initializeSwiper() {
+    const swiperContainer = document.getElementById('cards-container');
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    swiperContainer.addEventListener('mousedown', (e) => {
+      isDown = true;
+      swiperContainer.classList.add('active');
+      startX = e.pageX - swiperContainer.offsetLeft;
+      scrollLeft = swiperContainer.scrollLeft;
+    });
+
+    swiperContainer.addEventListener('mouseleave', () => {
+      isDown = false;
+      swiperContainer.classList.remove('active');
+    });
+
+    swiperContainer.addEventListener('mouseup', () => {
+      isDown = false;
+      swiperContainer.classList.remove('active');
+    });
+
+    swiperContainer.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - swiperContainer.offsetLeft;
+      const walk = (x - startX) * 3; // швидкість прокрутки
+      swiperContainer.scrollLeft = scrollLeft - walk;
+    });
+  }
+});
+
+</script>
+
+{% schema %}
+{
+  "name": "Deck of Cards New Section",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Deck of Cards New Section"
+    }
+  ]
+}
 {% endschema %}
