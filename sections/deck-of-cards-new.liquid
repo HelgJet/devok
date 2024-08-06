@@ -113,7 +113,7 @@
 <script>
 
   document.addEventListener('DOMContentLoaded', function() {
-  const buttons = document.querySelectorAll('.step-btn');
+    const buttons = document.querySelectorAll('.step-btn');
   const stepContents = document.querySelectorAll('.step-content');
   const step1Card = document.getElementById('step1-card');
   const step3Card = document.getElementById('step3-card');
@@ -142,19 +142,14 @@
     if (isCardFlipping) return; // Якщо перевертання вже відбувається, ігноруємо наступні кліки
     isCardFlipping = true;
 
+    element.classList.toggle('flipped');
     const cardElement = step === 1 ? step1Card : step3Card;
 
-    // Зміна зображення до перевертання
-    fetchCard(cardElement).then(() => {
-      element.classList.toggle('flipped'); // Початок перевертання після зміни зображення
-    });
-
-    // Після завершення анімації дозволити наступне перевертання
-    element.querySelector('.flip-card-inner').addEventListener('transitionend', function() {
+    fetchCard(cardElement).finally(() => {
       setTimeout(() => {
-        isCardFlipping = false; // Дозволити перевертання після завершення анімації
-      }, 300); // Тривалість тайм-ауту (300 мс) може бути змінена під ваші потреби
-    }, { once: true });
+        isCardFlipping = false; // Дозволити перевертання через 1 секунду
+      }, 1000);
+    });
   };
 
   // Отримання нової карти
