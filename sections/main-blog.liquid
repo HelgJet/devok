@@ -143,9 +143,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Функція для отримання всіх статей блогу
   async function fetchBlogPosts() {
-    const response = await fetch('/blogs/blog_handle_here/articles.json?limit=250'); // Замініть blog_handle_here на ваш фактичний хендл блогу
-    const data = await response.json();
-    return data.articles;
+    try {
+      const response = await fetch('/blogs/blog_handle_here/articles.json?limit=250'); // Замініть blog_handle_here на ваш фактичний хендл блогу
+      if (!response.ok) throw new Error('Помилка при завантаженні статей блогу');
+      const data = await response.json();
+      return data.articles;
+    } catch (error) {
+      console.error('Помилка:', error);
+      return []; // Повертаємо порожній масив, якщо виникла помилка
+    }
   }
 
   // Функція для відображення статей
@@ -165,6 +171,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Функція для сортування статей
   function sortArticles(articles, sortBy) {
+    if (!Array.isArray(articles)) {
+      console.error('Очікувався масив статей для сортування, але отримано:', articles);
+      return [];
+    }
+
     return articles.sort((a, b) => {
       if (sortBy === 'title-asc') {
         return a.title.localeCompare(b.title);
