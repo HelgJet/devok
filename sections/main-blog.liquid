@@ -75,21 +75,65 @@
     </div>
 
     {%- if paginate.pages > 1 -%}
-      <nav class="pagination">
-        {%- if paginate.previous.is_link -%}
-          <a href="{{ paginate.previous.url | append: '?sort_by=' | append: request.params.sort_by }}">Попередня</a>
+      {%- if paginate.parts.size > 0 -%}
+  <div class="pagination-wrapper">
+    <nav class="pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
+      <ul class="pagination__list list-unstyled" role="list">
+        {%- if paginate.previous -%}
+          <li>
+            <a
+              href="{{ paginate.previous.url }}{{ anchor }}"
+              class="pagination__item pagination__item--next pagination__item-arrow link motion-reduce"
+              aria-label="{{ 'general.pagination.previous' | t }}"
+            >
+              {% render 'icon-caret' %}
+            </a>
+          </li>
         {%- endif -%}
+
         {%- for part in paginate.parts -%}
-          {%- if part.is_link -%}
-            <a href="{{ part.url | append: '?sort_by=' | append: request.params.sort_by }}">{{ part.title }}</a>
-          {%- else -%}
-            <span>{{ part.title }}</span>
-          {%- endif -%}
+          <li>
+            {%- if part.is_link -%}
+              <a
+                href="{{ part.url }}{{ anchor }}"
+                class="pagination__item link"
+                aria-label="{{ 'general.pagination.page' | t: number: part.title }}"
+              >
+                {{- part.title -}}
+              </a>
+            {%- else -%}
+              {%- if part.title == paginate.current_page -%}
+                <a
+                  role="link"
+                  aria-disabled="true"
+                  class="pagination__item pagination__item--current light"
+                  aria-current="page"
+                  aria-label="{{ 'general.pagination.page' | t: number: part.title }}"
+                >
+                  {{- part.title -}}
+                </a>
+              {%- else -%}
+                <span class="pagination__item">{{ part.title }}</span>
+              {%- endif -%}
+            {%- endif -%}
+          </li>
         {%- endfor -%}
-        {%- if paginate.next.is_link -%}
-          <a href="{{ paginate.next.url | append: '?sort_by=' | append: request.params.sort_by }}">Наступна</a>
+
+        {%- if paginate.next -%}
+          <li>
+            <a
+              href="{{ paginate.next.url }}{{ anchor }}"
+              class="pagination__item pagination__item--prev pagination__item-arrow link motion-reduce"
+              aria-label="{{ 'general.pagination.next' | t }}"
+            >
+              {%- render 'icon-caret' -%}
+            </a>
+          </li>
         {%- endif -%}
-      </nav>
+      </ul>
+    </nav>
+  </div>
+{%- endif -%}
     {%- endif -%}
   </div>
 
