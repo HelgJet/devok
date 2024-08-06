@@ -38,8 +38,8 @@
     }
 {%- endstyle -%}
 
-<blog-articles-sorter>
-{%- paginate blog.articles by 2 -%}
+
+{%- paginate blog.articles by 6 -%}
   <div class="main-blog page-width section-{{ section.id }}-padding">
     <h1 class="title--primary">{{ blog.title | escape }}</h1>
 
@@ -53,9 +53,9 @@
       </select>
     </div>
 
-    <div class="blog-articles" data-blog-handle="{{ blog.handle }}" {% if section.settings.layout == 'collage' %}blog-articles--collage{% endif %}">
+    <div class="blog-articles {% if section.settings.layout == 'collage' %}blog-articles--collage{% endif %}">
       {%- for article in blog.articles -%}
-        <div id="{{ article.id }}"  data-title="{{ article.title }}" data-time="{{ article.published_at | date: "%Y-%m-%d %H:%M" }}" class="blog-articles__article article card-information-v-{{ section.settings.caption_vertical_alignment }} {% if section.settings.show_image == false %}card-info-abs{% endif %} post-layout-{{ section.settings.layout }}">
+        <div id="{{ article.id }}" data-title="{{ article.title }}" data-next-url="{{ paginate.next.url }}" data-time="{{ article.published_at | date: "%Y-%m-%d %H:%M" }}" class="blog-articles__article article card-information-v-{{ section.settings.caption_vertical_alignment }} {% if section.settings.show_image == false %}card-info-abs{% endif %} post-layout-{{ section.settings.layout }}">
           {%- render 'article-card',
             article: article,
             media_height: section.settings.image_height,
@@ -73,172 +73,64 @@
         </div>
       {%- endfor -%}
     </div>
+
     {%- if paginate.pages > 1 -%}
-    {%- if paginate.parts.size > 0 -%}
-      <div class="pagination-wrapper">
-        <nav class="pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
-          <ul class="pagination__list list-unstyled" role="list">
-            {%- if paginate.previous -%}
-              <li>
-                <a
-                  href="{{ paginate.previous.url }}{{ anchor }}"
-                  class="pagination__item pagination__item--next pagination__item-arrow link motion-reduce"
-                  aria-label="{{ 'general.pagination.previous' | t }}"
-                >
-                  {% render 'icon-caret' %}
-                </a>
-              </li>
-            {%- endif -%}
-
-            {%- for part in paginate.parts -%}
-              <li>
-                {%- if part.is_link -%}
-                  <a
-                    href="{{ part.url }}{{ anchor }}"
-                    class="pagination__item link"
-                    aria-label="{{ 'general.pagination.page' | t: number: part.title }}"
-                  >
-                    {{- part.title -}}
-                  </a>
-                {%- else -%}
-                  {%- if part.title == paginate.current_page -%}
-                    <a
-                      role="link"
-                      aria-disabled="true"
-                      class="pagination__item pagination__item--current light"
-                      aria-current="page"
-                      aria-label="{{ 'general.pagination.page' | t: number: part.title }}"
-                    >
-                      {{- part.title -}}
-                    </a>
-                  {%- else -%}
-                    <span class="pagination__item">{{ part.title }}</span>
-                  {%- endif -%}
-                {%- endif -%}
-              </li>
-            {%- endfor -%}
-
-            {%- if paginate.next -%}
-              <li>
-                <a
-                  href="{{ paginate.next.url }}{{ anchor }}"
-                  class="pagination__item pagination__item--prev pagination__item-arrow link motion-reduce"
-                  aria-label="{{ 'general.pagination.next' | t }}"
-                >
-                  {%- render 'icon-caret' -%}
-                </a>
-              </li>
-            {%- endif -%}
-          </ul>
-        </nav>
-      </div>
-    {%- endif -%}
+      <nav class="pagination">
+        {%- if paginate.previous.is_link -%}
+          <a href="{{ paginate.previous.url | append: '?sort_by=' | append: request.params.sort_by }}">Попередня</a>
+        {%- endif -%}
+        {%- for part in paginate.parts -%}
+          {%- if part.is_link -%}
+            <a href="{{ part.url | append: '?sort_by=' | append: request.params.sort_by }}">{{ part.title }}</a>
+          {%- else -%}
+            <span>{{ part.title }}</span>
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if paginate.next.is_link -%}
+          <a href="{{ paginate.next.url | append: '?sort_by=' | append: request.params.sort_by }}">Наступна</a>
+        {%- endif -%}
+      </nav>
     {%- endif -%}
   </div>
-{%- endpaginate -%}
-</blog-articles-sorter>
-<script>
-class BlogArticlesSorter extends HTMLElement {
-  constructor() {
-    super();
 
-    this.articlesContainer = this.querySelector('.blog-articles');
-    this.selectors = {
-      itemArticle: '[article-template-js]', 
-      blogHandle: this.articlesContainer.dataset.blogHandle,
-    };   
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const sortSelect = document.getElementById('sort-by');
+      const currentSort = new URLSearchParams(window.location.search).get('sort_by');
+      if (currentSort) {
+        sortSelect.value = currentSort;
+      }
 
-    this.sortSelect = document.getElementById('sort-by');
-    this.sortSelect.addEventListener('change', this.handleSortChange.bind(this));
-  }
+      const articlesContainer = document.querySelector('.blog-articles');
+      const articles = Array.from(articlesContainer.children);
 
-  connectedCallback() { 
-    const handleIntersection = (entries, observer) => {
-      if (!entries[0].isIntersecting) return;
-      observer.unobserve(this);
-      this.loadBlogArticles();  
-    }
-    new IntersectionObserver(handleIntersection.bind(this), {rootMargin: '0px 0px 400px 0px'}).observe(this);
-  }
+      sortSelect.addEventListener('change', function() {
+        const sortBy = this.value;
+        const params = new URLSearchParams(window.location.search);
+        params.set('sort_by', sortBy);
+        window.location.search = params.toString();
+      });
 
-  handleSortChange() {
-    this.loadBlogArticles();
-  }
+      if (currentSort) {
+        articles.sort((a, b) => {
+          if (currentSort === 'title-asc') {
+            return a.dataset.title.localeCompare(b.dataset.title);
+          } else if (currentSort === 'title-desc') {
+            return b.dataset.title.localeCompare(a.dataset.title);
+          } else if (currentSort === 'date-asc') {
+            return new Date(a.dataset.time) - new Date(b.dataset.time);
+          } else if (currentSort === 'date-desc') {
+            return new Date(b.dataset.time) - new Date(a.dataset.time);
+          }
+        });
 
-  async loadBlogArticles() {
-    const articleHandles = await this.fetchArticleHandles();
-    if (articleHandles.length > 0) {
-      const sortedHandles = this.sortArticles(articleHandles);
-      this.setTemplate(sortedHandles);  
-    } 
-  } 
-
-  async fetchArticleHandles() {
-    try {
-      const response = await fetch(`/blogs/${this.selectors.blogHandle}/articles.json?limit=50`);
-      if (!response.ok) throw new Error('Помилка при завантаженні статей блогу');
-      const data = await response.json();
-      return data.articles.map(article => article.handle); // Повертаємо масив хендлів
-    } catch (error) {
-      console.error('Помилка:', error);
-      return []; // Повертаємо порожній масив, якщо виникла помилка
-    }
-  }
-
-  fetchArticleHTML = (handle) => {
-    const articleUrl = `/articles/${handle}?view=card`; 
-    return fetch(articleUrl)
-      .then((res) => res.text())  
-      .then((res) => {
-        const parser = new DOMParser(); 
-        const htmlDocument = parser.parseFromString(res, 'text/html');
-        const itemArticle = htmlDocument.documentElement.querySelector(this.selectors.itemArticle); 
-        if (itemArticle) {
-          return itemArticle.outerHTML;
-        } else {
-          console.error(`[Blog Article] Елемент не знайдено для handle: ${handle}`);
-          return '';
-        } 
-      }) 
-      .catch((err) => console.error(`[Blog Article] Не вдалося завантажити вміст для handle: ${handle}`, err));
-  }  
-
-  sortArticles(handles) {
-    const sortBy = this.sortSelect.value;
-
-    // Сортування на основі критерію сортування
-    handles.sort((a, b) => {
-      if (sortBy === 'title-asc') {
-        return a.localeCompare(b);
-      } else if (sortBy === 'title-desc') {
-        return b.localeCompare(a);
-      } else if (sortBy === 'date-asc' || sortBy === 'date-desc') {
-        // Тут ми припускаємо, що ми маємо доступ до `article.published_at`
-        // Потрібно відповідно налаштувати
-        return new Date(a.published_at) - new Date(b.published_at);
+        articles.forEach(article => articlesContainer.appendChild(article));
       }
     });
+  </script>
+{%- endpaginate -%}
 
-    if (sortBy === 'date-desc') {
-      handles.reverse();
-    }
 
-    return handles;
-  }
-
-  async setTemplate(handles) { 
-    const requests = handles.map(this.fetchArticleHTML); 
-    const responses = await Promise.all(requests); 
-    const itemArticles = responses.map((item, index) => `<div id="Article-${index + 1}" class="article">${item}</div>`).join('');
-    this.articlesContainer.innerHTML = '';
-    this.articlesContainer.innerHTML = itemArticles;
-    this.classList.add('articles--loaded');
-  }  
-}
-
-customElements.define('blog-articles-sorter', BlogArticlesSorter);
-
-</script>
 {% schema %}
 {
   "name": "t:sections.main-blog.name",
