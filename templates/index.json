@@ -20,7 +20,7 @@
         "template--15842706555055__6492533a-9ed1-4828-a275-e6479417dc49-16764779592660d88a-0": {
           "type": "slide",
           "settings": {
-            "subtitle": "<strong>2023 COLLECTION<strong><\/strong><\/strong>",
+            "subtitle": "2023 COLLECTION",
             "subtitle_color": "#222222",
             "section_subtitle_scale": 100,
             "title": "New Arrivals",
@@ -94,6 +94,7 @@
         "9348455f-b0dd-475c-b206-162a178f1a92": {
           "type": "slide-video",
           "settings": {
+            "video": "shopify:\/\/files\/videos\/SampleVideo_1280x720_1mb.mp4",
             "enable_video_looping": true,
             "subtitle": "Devok",
             "subtitle_color": "#ec3f19",
@@ -132,7 +133,7 @@
         "936a93db-751a-4dc9-8fba-fa7c88f8ae9c": {
           "type": "slide",
           "settings": {
-            "subtitle": "<strong>2023 COLLECTION<\/strong>",
+            "subtitle": "2023 COLLECTION",
             "subtitle_color": "#222222",
             "section_subtitle_scale": 100,
             "title": "New Arrivals",
