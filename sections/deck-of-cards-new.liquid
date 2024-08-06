@@ -111,7 +111,8 @@
 
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+
+  document.addEventListener('DOMContentLoaded', function() {
   const buttons = document.querySelectorAll('.step-btn');
   const stepContents = document.querySelectorAll('.step-content');
   const step1Card = document.getElementById('step1-card');
@@ -144,11 +145,14 @@ document.addEventListener('DOMContentLoaded', function() {
     element.classList.toggle('flipped');
     const cardElement = step === 1 ? step1Card : step3Card;
 
-    fetchCard(cardElement).finally(() => {
-      setTimeout(() => {
-        isCardFlipping = false; // Дозволити перевертання через 1 секунду
-      }, 1000);
-    });
+    // Після завершення анімації дозволити наступне перевертання
+    element.querySelector('.flip-card-inner').addEventListener('transitionend', function() {
+      fetchCard(cardElement).finally(() => {
+        setTimeout(() => {
+          isCardFlipping = false; // Дозволити перевертання після завершення тайм-ауту
+        }, 300); // Тривалість тайм-ауту (300 мс) може бути змінена під ваші потреби
+      });
+    }, { once: true });
   };
 
   // Отримання нової карти
@@ -187,31 +191,32 @@ document.addEventListener('DOMContentLoaded', function() {
   };
 
   // Анімація перетасовки карт
-  function animateShuffling() {
+function animateShuffling() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     cards.forEach(card => {
       ctx.save();
-      ctx.translate(card.x + 100, card.y + 300); // Збільшення розміру карт
+      ctx.translate(card.x + 140, card.y + 200); // Збільшення розміру карт в два рази
       ctx.rotate(card.rotation * Math.PI / 180);
-      ctx.translate(-100, -300); // Збільшення розміру карт
-      ctx.drawImage(card.image, 0, 0, 200, 300); // Збільшення розміру карт
+      ctx.translate(-140, -200); // Збільшення розміру карт в два рази
+      ctx.drawImage(card.image, 0, 0, 280, 400); // Збільшення розміру карт в два рази
       ctx.restore();
     });
 
     cards.forEach(card => {
-      card.x += (canvas.width / 2 - card.x - 70) * 0.1;
-      card.y += (canvas.height / 2 - card.y - 100) * 0.1;
+      card.x += (canvas.width / 2 - card.x - 140) * 0.1;
+      card.y += (canvas.height / 2 - card.y - 200) * 0.1;
       card.rotation += (0 - card.rotation) * 0.1;
     });
 
-    if (Math.abs(cards[0].x - canvas.width / 2 + 70) > 1 || Math.abs(cards[0].y - canvas.height / 2 + 100) > 1) {
+    if (Math.abs(cards[0].x - canvas.width / 2 + 140) > 1 || Math.abs(cards[0].y - canvas.height / 2 + 200) > 1) {
       animationFrameId = requestAnimationFrame(animateShuffling);
     } else {
       cancelAnimationFrame(animationFrameId);
     }
   }
 });
+
 
 </script>
 
