@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Deck shuffled, starting animation');
         animateShuffling().then(() => {
           console.log('Shuffling animation complete');
-          step3Btn.disabled = false;
+          step3Btn.disabled = false; // Робимо кнопку активною після завершення перетасовки
           alert('Shuffling complete! You can now proceed to Step 3.');
         });
       })
@@ -208,7 +208,12 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Вибір карти на третьому кроці
+  // Перевірка карти на третьому кроці
+  step3Btn.addEventListener('click', function() {
+    console.log('Step 3 button clicked');
+    switchToStep(3);
+  });
+
   window.checkCard = function() {
     console.log('checkCard function called');
     if (tries >= 3) return;
@@ -274,7 +279,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   switchToStep(1);
 });
-
 
 </script>
 
