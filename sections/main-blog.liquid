@@ -190,6 +190,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+  // Встановлюємо дефолтне сортування при завантаженні сторінки
+  sortSelect.value = 'date-desc';
+
   // При зміні сортування завантажуємо і сортуємо статті
   sortSelect.addEventListener('change', async function() {
     let articles = await fetchBlogPosts();
