@@ -135,6 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     step1Btn.disabled = true;
     step1Btn.innerHTML = `<img src="${selectedCard}" alt="Selected Card" class="mini-card">`;
+    switchToStep(2); // Переключення на другий крок
     shuffleDeck();
   });
 
