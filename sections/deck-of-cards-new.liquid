@@ -19,70 +19,107 @@
   display: block;
 }
 
-.deck-of-cards-section .cards-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-}
-
-.deck-of-cards-section .card {
-  position: relative;
-  width: 100px;
-  height: 140px;
-  cursor: pointer;
+.flip-card {
   perspective: 1000px;
+  width: 150px;
+  height: 220px;
+  margin: 0 auto;
 }
 
-.deck-of-cards-section .card img {
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+}
+
+.flip-card.flipped .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
   position: absolute;
   width: 100%;
   height: 100%;
   backface-visibility: hidden;
-  transition: transform 0.6s;
 }
 
-.deck-of-cards-section .card .card-back {
-  transform: rotateY(0deg);
-}
-
-.deck-of-cards-section .card .card-front {
+.flip-card-back {
   transform: rotateY(180deg);
 }
 
-.deck-of-cards-section .card .card-front.hidden {
-  display: none;
+.shuffle-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.shuffle-container .card {
+  flex: 1 1 calc(10% - 10px);
+  box-sizing: border-box;
+}
+
+.shuffle-animation {
+  animation: shuffle 1s ease-in-out;
+}
+
+@keyframes shuffle {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(20px);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
 
 </style>
 
 
-
 <div id="deck-of-cards-section" class="deck-of-cards-section">
   <div class="buttons">
     <button class="step-btn" data-step="1">Step 1</button>
-    <button class="step-btn" data-step="2" onclick="shuffleDeck()">Step 2: Shuffle and Show</button>
+    <button class="step-btn" data-step="2" onclick="shuffleDeck()">Step 2: Shuffle Deck</button>
     <button class="step-btn" data-step="3">Step 3</button>
   </div>
 
   <div class="step-content step-1 active">
-    <div class="card" onclick="flipCard(this)">
-      <img src="https://deckofcardsapi.com/static/img/back.png" alt="Card back" class="card-back">
-      <img src="" alt="Card front" class="card-front hidden">
+    <div class="card flip-card" onclick="flipCard(this, 1)">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <img src="{{ 'card-back.png' | asset_url }}" alt="Card Back">
+        </div>
+        <div class="flip-card-back">
+          <img id="step1-card" src="" alt="Card Front">
+        </div>
+      </div>
     </div>
   </div>
 
   <div class="step-content step-2">
-    <div class="cards-container" id="cards-container">
-      <!-- Карти будуть вставлені сюди -->
+    <div id="shuffle-container" class="shuffle-container">
+      <!-- Cards will be displayed here -->
     </div>
   </div>
 
   <div class="step-content step-3">
-    <div class="card" onclick="flipCard(this)">
-      <img src="https://deckofcardsapi.com/static/img/back.png" alt="Card back" class="card-back">
-      <img src="" alt="Card front" class="card-front hidden">
+    <div class="card flip-card" onclick="flipCard(this, 3)">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <img src="{{ 'card-back.png' | asset_url }}" alt="Card Back">
+        </div>
+        <div class="flip-card-back">
+          <img id="step3-card" src="" alt="Card Front">
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -92,57 +129,75 @@
 document.addEventListener('DOMContentLoaded', function() {
   const buttons = document.querySelectorAll('.step-btn');
   const stepContents = document.querySelectorAll('.step-content');
+  const step1Card = document.getElementById('step1-card');
+  const step3Card = document.getElementById('step3-card');
+  const shuffleContainer = document.getElementById('shuffle-container');
 
-  // Перемикання між кроками
+  // Навігація між кроками
   buttons.forEach(button => {
     button.addEventListener('click', function() {
       const step = this.dataset.step;
 
-      // Сховати всі кроки
       stepContents.forEach(content => {
         content.classList.remove('active');
       });
 
-      // Показати вибраний крок
       document.querySelector(`.step-${step}`).classList.add('active');
     });
   });
 
-  // Функція для перевертання карти
-  window.flipCard = function(cardElement) {
-    const cardBack = cardElement.querySelector('.card-back');
-    const cardFront = cardElement.querySelector('.card-front');
-    if (cardFront.classList.contains('hidden')) {
-      cardFront.classList.remove('hidden');
-      cardBack.classList.add('hidden');
-    } else {
-      cardFront.classList.add('hidden');
-      cardBack.classList.remove('hidden');
+  // Перевертання карт на кроках 1 і 3
+  window.flipCard = function(element, step) {
+    element.classList.toggle('flipped');
+    if (step === 1) {
+      fetchCard(step1Card);
+    } else if (step === 3) {
+      fetchCard(step3Card);
     }
   };
 
-  // Функція для перетасовки колоди та відображення карт
-  window.shuffleDeck = function() {
-    fetch('https://deckofcardsapi.com/api/deck/new/draw/?count=54')
+  // Отримання нової карти
+  function fetchCard(cardElement) {
+    fetch('https://deckofcardsapi.com/api/deck/new/draw/?count=1')
       .then(response => response.json())
       .then(data => {
-        const cardsContainer = document.getElementById('cards-container');
-        cardsContainer.innerHTML = ''; // Очищення попередніх карток, якщо вони були
+        cardElement.src = data.cards[0].image;
+      })
+      .catch(error => console.error('Error fetching card:', error));
+  }
 
+  // Перетасовка колоди карт
+  window.shuffleDeck = function() {
+    fetch('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
+      .then(response => response.json())
+      .then(data => {
+        return fetch(`https://deckofcardsapi.com/api/deck/${data.deck_id}/draw/?count=54`);
+      })
+      .then(response => response.json())
+      .then(data => {
+        shuffleContainer.innerHTML = '';
         data.cards.forEach(card => {
           const cardElement = document.createElement('div');
-          cardElement.className = 'card';
-          cardElement.setAttribute('onclick', 'flipCard(this)');
+          cardElement.className = 'card flip-card';
           cardElement.innerHTML = `
-            <img src="https://deckofcardsapi.com/static/img/back.png" alt="Card back" class="card-back">
-            <img src="${card.image}" alt="${card.value} of ${card.suit}" class="card-front hidden">
-          `;
-          cardsContainer.appendChild(cardElement);
+            <div class="flip-card-inner">
+              <div class="flip-card-front">
+                <img src="{{ 'card-back.png' | asset_url }}" alt="Card Back">
+              </div>
+            </div>`;
+          shuffleContainer.appendChild(cardElement);
         });
+
+        // Анімація перетасовки
+        shuffleContainer.classList.add('shuffle-animation');
+        setTimeout(() => {
+          shuffleContainer.classList.remove('shuffle-animation');
+        }, 1000);
       })
-      .catch(error => console.error('Error fetching cards:', error));
+      .catch(error => console.error('Error shuffling deck:', error));
   };
 });
+
 
 </script>
 
