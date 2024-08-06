@@ -1,9 +1,4 @@
-<div id="deck-of-cards-section" class="deck-of-cards-section">
-  <div class="buttons">
-    <button class="step-btn" data-step="1">Step 1</button>
-    <button class="step-btn" data-step="2" onclick="fetchAndShuffleDeck()">Step 2: Swipe Deck</button>
-    <button class="step-btn" data-step="3">Step 3</button>
-  </div>
+
 <style>
   .deck-of-cards-section .buttons {
   display: flex;
@@ -66,6 +61,13 @@
 }
 
 </style>
+<div id="deck-of-cards-section" class="deck-of-cards-section">
+  <div class="buttons">
+    <button class="step-btn" data-step="1">Step 1</button>
+    <button class="step-btn" data-step="2" onclick="fetchAndShuffleDeck()">Step 2: Swipe Deck</button>
+    <button class="step-btn" data-step="3">Step 3</button>
+  </div>
+
   
   <div class="step-content step-1 active">
     <div class="card-container" onclick="toggleCardContent(1)">
