@@ -1,5 +1,5 @@
 <style>
-  .deck-of-cards-section .buttons {
+.deck-of-cards-section .buttons {
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
@@ -50,10 +50,6 @@
   transform: rotateY(180deg);
 }
 
-.deck-of-cards-section .card .card-front.hidden {
-  display: none;
-}
-
 .deck-of-cards-section .card.flip .card-back {
   transform: rotateY(180deg);
 }
@@ -62,23 +58,14 @@
   transform: rotateY(0deg);
 }
 
-.deck-of-cards-section .shuffle-animation {
-  animation: shuffle 0.5s ease-out;
+.deck-of-cards-section .card .card-front.hidden {
+  display: none;
 }
 
-@keyframes shuffle {
-  0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-20px);
-  }
-  100% {
-    transform: translateY(0);
-  }
-}
 
 </style>
+
+
 
 <div id="deck-of-cards-section" class="deck-of-cards-section">
   <div class="buttons">
@@ -89,29 +76,25 @@
 
   <div class="step-content step-1 active">
     <div class="card" onclick="flipCard(this)">
-      <img src="{{ 'back.png' | asset_url }}" alt="Card back" class="card-back">
+      <img src="https://deckofcardsapi.com/static/img/back.png" alt="Card back" class="card-back">
       <img src="" alt="Card front" class="card-front hidden">
     </div>
   </div>
 
   <div class="step-content step-2">
     <div class="cards-container" id="cards-container">
-      {% for i in (1..54) %}
-        <div class="card" onclick="flipCard(this)">
-          <img src="{{ 'back.png' | asset_url }}" alt="Card back" class="card-back">
-          <img src="" alt="Card front" class="card-front hidden">
-        </div>
-      {% endfor %}
+      <!-- Карти будуть вставлені сюди -->
     </div>
   </div>
 
   <div class="step-content step-3">
     <div class="card" onclick="flipCard(this)">
-      <img src="{{ 'back.png' | asset_url }}" alt="Card back" class="card-back">
+      <img src="https://deckofcardsapi.com/static/img/back.png" alt="Card back" class="card-back">
       <img src="" alt="Card front" class="card-front hidden">
     </div>
   </div>
 </div>
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -148,34 +131,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Функція для перетасовки колоди
   window.shuffleDeck = function() {
-    const cardsContainer = document.getElementById('cards-container');
-    const cards = Array.from(cardsContainer.children);
-    const shuffledCards = cards.sort(() => Math.random() - 0.5);
+    fetch('https://deckofcardsapi.com/api/deck/new/draw/?count=54')
+      .then(response => response.json())
+      .then(data => {
+        const cardsContainer = document.getElementById('cards-container');
+        cardsContainer.innerHTML = ''; // Очищення попередніх карток, якщо вони були
 
-    // Очистити контейнер і додати перетасовані карти з анімацією
-    cardsContainer.innerHTML = '';
-    shuffledCards.forEach(card => {
-      card.classList.add('shuffle-animation');
-      cardsContainer.appendChild(card);
-      setTimeout(() => card.classList.remove('shuffle-animation'), 1000);
-    });
-
-    // Додати зображення карт
-    shuffledCards.forEach((card, index) => {
-      const cardFront = card.querySelector('.card-front');
-      cardFront.src = `https://deckofcardsapi.com/static/img/${getCardCode(index)}.png`;
-    });
+        data.cards.forEach(card => {
+          const cardElement = document.createElement('div');
+          cardElement.className = 'card';
+          cardElement.setAttribute('onclick', 'flipCard(this)');
+          cardElement.innerHTML = `
+            <img src="https://deckofcardsapi.com/static/img/back.png" alt="Card back" class="card-back">
+            <img src="${card.image}" alt="${card.value} of ${card.suit}" class="card-front hidden">
+          `;
+          cardsContainer.appendChild(cardElement);
+        });
+      })
+      .catch(error => console.error('Error fetching cards:', error));
   };
-
-  // Функція для отримання коду карти
-  function getCardCode(index) {
-    const suits = ['C', 'D', 'H', 'S'];
-    const values = ['2', '3', '4', '5', '6', '7', '8', '9', '0', 'J', 'Q', 'K', 'A'];
-    const suit = suits[Math.floor(index / 13)];
-    const value = values[index % 13];
-    return value + suit;
-  }
 });
+
 
 </script>
 
