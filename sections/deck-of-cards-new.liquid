@@ -30,9 +30,12 @@
 }
 
 .card {
-  width: 100px;
-  height: 140px;
   margin: 20px auto;
+}
+
+.card img {
+  width: 100px; /* Розмір карти */
+  height: 140px; /* Розмір карти */
 }
 
 #shuffle-canvas {
@@ -63,7 +66,6 @@
 
 </style>
 
-
 <div id="card-game-section" class="card-game-section">
   <div class="buttons">
     <button class="step-btn" data-step="1" id="step1-btn">Step 1</button>
@@ -72,26 +74,23 @@
   </div>
 
   <div class="step-content step-1 active" id="step1-content">
-    <div class="card" onclick="selectCard(this)">
-      <img id="step1-card" src="" alt="Select a card">
+    <div class="card" onclick="selectCard()">
+      <img id="step1-card" src="https://deckofcardsapi.com/static/img/back.png" alt="Card back">
     </div>
   </div>
 
   <div class="step-content step-2" id="step2-content">
     <canvas id="shuffle-canvas" width="300" height="300"></canvas>
-    <p id="shuffle-attempts">Attempts left: 3</p>
   </div>
 
   <div class="step-content step-3" id="step3-content">
-    <div id="step3-cards-container">
-      <div class="card" onclick="checkCard(this)">
-        <img id="step3-card" src="" alt="Select a card">
-      </div>
+    <div class="card" onclick="checkCard()">
+      <img id="step3-card" src="https://deckofcardsapi.com/static/img/back.png" alt="Card back">
     </div>
     <p id="result-message"></p>
     <button id="restart-btn" onclick="restartGame()">Play Again</button>
   </div>
-</div>
+</div
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -103,25 +102,19 @@ document.addEventListener('DOMContentLoaded', function() {
   const canvas = document.getElementById('shuffle-canvas');
   const ctx = canvas.getContext('2d');
   const stepContents = document.querySelectorAll('.step-content');
-  const shuffleAttemptsText = document.getElementById('shuffle-attempts');
   const resultMessage = document.getElementById('result-message');
   const restartBtn = document.getElementById('restart-btn');
 
   let selectedCard;
-  let shuffleAttempts = 3;
   let tries = 0;
   let cards = [];
   let animationFrameId;
-  let isShuffling = false;
 
   // Вибір карти на першому кроці
-  window.selectCard = function(element) {
-    if (selectedCard) return; // Вибір лише однієї карти
-
+  window.selectCard = function() {
     fetchCard(step1Card).then(() => {
       selectedCard = step1Card.src;
-      step1Btn.disabled = true;
-      step1Btn.innerHTML = `<img src="${selectedCard}" alt="Selected Card" class="mini-card">`;
+      step1Card.onclick = null; // Заборонити подальші кліки після вибору карти
     });
   };
 
@@ -131,14 +124,14 @@ document.addEventListener('DOMContentLoaded', function() {
       alert('Please select a card first.');
       return;
     }
-    switchToStep(2);
+
+    step1Btn.disabled = true;
+    step1Btn.innerHTML = `<img src="${selectedCard}" alt="Selected Card" class="mini-card">`;
+    shuffleDeck();
   });
 
   // Перетасовка колоди карт з анімацією на canvas
   window.shuffleDeck = function() {
-    if (isShuffling || shuffleAttempts <= 0) return;
-    isShuffling = true;
-
     fetch('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
       .then(response => response.json())
       .then(data => {
@@ -158,14 +151,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         animateShuffling().then(() => {
-          shuffleAttempts--;
-          shuffleAttemptsText.textContent = `Attempts left: ${shuffleAttempts}`;
-          isShuffling = false;
-
-          if (shuffleAttempts === 0) {
-            step3Btn.disabled = false;
-            switchToStep(3);
-          }
+          step3Btn.disabled = false;
+          switchToStep(3);
         });
       })
       .catch(error => console.error('Error shuffling deck:', error));
@@ -206,17 +193,17 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // Вибір карти на третьому кроці
-  window.checkCard = function(element) {
+  window.checkCard = function() {
     if (tries >= 3) return;
 
     fetchCard(step3Card).then(() => {
       tries++;
       if (step3Card.src === selectedCard) {
         resultMessage.textContent = 'You win!';
-        step3Btn.disabled = true;
+        step3Card.onclick = null; // Заборонити подальші кліки після виграшу
       } else if (tries >= 3) {
         resultMessage.textContent = 'You lose!';
-        step3Btn.disabled = true;
+        step3Card.onclick = null; // Заборонити подальші кліки після трьох спроб
       }
     });
   };
@@ -242,12 +229,12 @@ document.addEventListener('DOMContentLoaded', function() {
   // Перезапуск гри
   window.restartGame = function() {
     selectedCard = null;
-    shuffleAttempts = 3;
     tries = 0;
-    shuffleAttemptsText.textContent = `Attempts left: ${shuffleAttempts}`;
     resultMessage.textContent = '';
     step1Btn.disabled = false;
     step1Btn.innerHTML = 'Step 1';
+    step3Card.src = "https://deckofcardsapi.com/static/img/back.png";
+    step3Card.onclick = checkCard;
     step3Btn.disabled = true;
     switchToStep(1);
   };
