@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   window.checkCard = function() {
     console.log('checkCard function called');
-    if (tries >= 3) return;
+    if (tries >= 10) return;
 
     fetchCard(step3Card).then(() => {
       tries++;
