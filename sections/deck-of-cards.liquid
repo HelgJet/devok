@@ -1,5 +1,5 @@
 <style>
-  .deck-of-cards-section .buttons {
+.deck-of-cards-section .buttons {
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
@@ -19,21 +19,30 @@
   display: block;
 }
 
+.deck-of-cards-section .card {
+  padding: 20px;
+  border: 1px solid #ccc;
+  margin: 10px auto;
+  cursor: pointer;
+  text-align: center;
+  max-width: 200px;
+}
+
 .deck-of-cards-section .cards-container {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
   justify-content: center;
 }
 
-.deck-of-cards-section .card {
-  flex: 1 1 calc(10% - 10px);
-  box-sizing: border-box;
+.deck-of-cards-section .swiper-navigation {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }
 
-.deck-of-cards-section .card img {
-  max-width: 100%;
-  display: block;
+.deck-of-cards-section .swiper-navigation button {
+  padding: 10px;
+  margin: 0 5px;
+  cursor: pointer;
 }
 
 </style>
