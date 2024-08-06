@@ -55,7 +55,7 @@
 
     <div class="blog-articles {% if section.settings.layout == 'collage' %}blog-articles--collage{% endif %}">
       {%- for article in blog.articles -%}
-        <div id="{{ article.id }}" data-title="{{ article.title }}" data-next-url="{{ paginate.next.url }}" data-time="{{ article.published_at | date: "%Y-%m-%d %H:%M" }}" class="blog-articles__article article card-information-v-{{ section.settings.caption_vertical_alignment }} {% if section.settings.show_image == false %}card-info-abs{% endif %} post-layout-{{ section.settings.layout }}">
+        <div id="{{ article.id }}" data-title="{{ article.title }}" data-time="{{ article.published_at | date: "%Y-%m-%d %H:%M" }}" class="blog-articles__article article card-information-v-{{ section.settings.caption_vertical_alignment }} {% if section.settings.show_image == false %}card-info-abs{% endif %} post-layout-{{ section.settings.layout }}">
           {%- render 'article-card',
             article: article,
             media_height: section.settings.image_height,
@@ -74,63 +74,125 @@
       {%- endfor -%}
     </div>
 
-    {%- if paginate.pages > 1 -%}
-      <nav class="pagination">
-        {%- if paginate.previous.is_link -%}
-          <a href="{{ paginate.previous.url | append: '?sort_by=' | append: request.params.sort_by }}">Попередня</a>
-        {%- endif -%}
-        {%- for part in paginate.parts -%}
-          {%- if part.is_link -%}
-            <a href="{{ part.url | append: '?sort_by=' | append: request.params.sort_by }}">{{ part.title }}</a>
-          {%- else -%}
-            <span>{{ part.title }}</span>
-          {%- endif -%}
-        {%- endfor -%}
-        {%- if paginate.next.is_link -%}
-          <a href="{{ paginate.next.url | append: '?sort_by=' | append: request.params.sort_by }}">Наступна</a>
-        {%- endif -%}
-      </nav>
+    {%- if paginate.parts.size > 0 -%}
+      <div class="pagination-wrapper">
+        <nav class="pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
+          <ul class="pagination__list list-unstyled" role="list">
+            {%- if paginate.previous -%}
+              <li>
+                <a
+                  href="{{ paginate.previous.url }}{{ anchor }}"
+                  class="pagination__item pagination__item--next pagination__item-arrow link motion-reduce"
+                  aria-label="{{ 'general.pagination.previous' | t }}"
+                >
+                  {% render 'icon-caret' %}
+                </a>
+              </li>
+            {%- endif -%}
+
+            {%- for part in paginate.parts -%}
+              <li>
+                {%- if part.is_link -%}
+                  <a
+                    href="{{ part.url }}{{ anchor }}"
+                    class="pagination__item link"
+                    aria-label="{{ 'general.pagination.page' | t: number: part.title }}"
+                  >
+                    {{- part.title -}}
+                  </a>
+                {%- else -%}
+                  {%- if part.title == paginate.current_page -%}
+                    <a
+                      role="link"
+                      aria-disabled="true"
+                      class="pagination__item pagination__item--current light"
+                      aria-current="page"
+                      aria-label="{{ 'general.pagination.page' | t: number: part.title }}"
+                    >
+                      {{- part.title -}}
+                    </a>
+                  {%- else -%}
+                    <span class="pagination__item">{{ part.title }}</span>
+                  {%- endif -%}
+                {%- endif -%}
+              </li>
+            {%- endfor -%}
+
+            {%- if paginate.next -%}
+              <li>
+                <a
+                  href="{{ paginate.next.url }}{{ anchor }}"
+                  class="pagination__item pagination__item--prev pagination__item-arrow link motion-reduce"
+                  aria-label="{{ 'general.pagination.next' | t }}"
+                >
+                  {%- render 'icon-caret' -%}
+                </a>
+              </li>
+            {%- endif -%}
+          </ul>
+        </nav>
+      </div>
     {%- endif -%}
   </div>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const sortSelect = document.getElementById('sort-by');
-      const currentSort = new URLSearchParams(window.location.search).get('sort_by');
-      if (currentSort) {
-        sortSelect.value = currentSort;
-      }
-
-      const articlesContainer = document.querySelector('.blog-articles');
-      const articles = Array.from(articlesContainer.children);
-
-      sortSelect.addEventListener('change', function() {
-        const sortBy = this.value;
-        const params = new URLSearchParams(window.location.search);
-        params.set('sort_by', sortBy);
-        window.location.search = params.toString();
-      });
-
-      if (currentSort) {
-        articles.sort((a, b) => {
-          if (currentSort === 'title-asc') {
-            return a.dataset.title.localeCompare(b.dataset.title);
-          } else if (currentSort === 'title-desc') {
-            return b.dataset.title.localeCompare(a.dataset.title);
-          } else if (currentSort === 'date-asc') {
-            return new Date(a.dataset.time) - new Date(b.dataset.time);
-          } else if (currentSort === 'date-desc') {
-            return new Date(b.dataset.time) - new Date(a.dataset.time);
-          }
-        });
-
-        articles.forEach(article => articlesContainer.appendChild(article));
-      }
-    });
-  </script>
 {%- endpaginate -%}
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const sortSelect = document.getElementById('sort-by');
+  const articlesContainer = document.querySelector('.blog-articles');
 
+  // Функція для отримання всіх статей блогу
+  async function fetchBlogPosts() {
+    const response = await fetch('/blogs/blog_handle_here/articles.json?limit=250'); // Замініть blog_handle_here на ваш фактичний хендл блогу
+    const data = await response.json();
+    return data.articles;
+  }
+
+  // Функція для відображення статей
+  function renderArticles(articles) {
+    articlesContainer.innerHTML = ''; // Очищення контейнера перед новим відображенням
+    articles.forEach(article => {
+      const articleElement = document.createElement('div');
+      articleElement.className = 'blog-articles__article article card-information-v-layout-class';
+      articleElement.innerHTML = `
+        <h2>${article.title}</h2>
+        <p>${new Date(article.published_at).toLocaleDateString('uk-UA', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+        <a href="${article.url}">Читати більше</a>
+      `;
+      articlesContainer.appendChild(articleElement);
+    });
+  }
+
+  // Функція для сортування статей
+  function sortArticles(articles, sortBy) {
+    return articles.sort((a, b) => {
+      if (sortBy === 'title-asc') {
+        return a.title.localeCompare(b.title);
+      } else if (sortBy === 'title-desc') {
+        return b.title.localeCompare(a.title);
+      } else if (sortBy === 'date-asc') {
+        return new Date(a.published_at) - new Date(b.published_at);
+      } else if (sortBy === 'date-desc') {
+        return new Date(b.published_at) - new Date(a.published_at);
+      }
+    });
+  }
+
+  // При зміні сортування завантажуємо і сортуємо статті
+  sortSelect.addEventListener('change', async function() {
+    let articles = await fetchBlogPosts();
+    const sortBy = this.value;
+    articles = sortArticles(articles, sortBy);
+    renderArticles(articles);
+
+    // Оновлення URL для збереження сортування при навігації
+    const params = new URLSearchParams(window.location.search);
+    params.set('sort_by', sortBy);
+    window.history.replaceState({}, '', `${window.location.pathname}?${params}`);
+  });
+});
+
+</script>
 {% schema %}
 {
   "name": "t:sections.main-blog.name",
