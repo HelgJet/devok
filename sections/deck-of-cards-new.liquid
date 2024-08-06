@@ -5,32 +5,42 @@
   margin: 3rem auto;
     min-height: 382px;
 }
-.deck-of-cards-section .buttons {
+
+  .card-game-section .buttons {
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
 }
 
-.deck-of-cards-section .step-btn {
+.card-game-section .step-btn {
   padding: 10px 20px;
   margin: 0 5px;
   cursor: pointer;
 }
 
-.deck-of-cards-section .step-content {
+.card-game-section .step-content {
   display: none;
   text-align: center;
 }
 
-.deck-of-cards-section .step-content.active {
+.card-game-section .step-content.active {
   display: block;
 }
 
 .flip-card {
-  /* width: 150px; */
-  height: 220px;
+  width: 300px; /* Збільшення розміру карт в два рази */
+  height: 440px; /* Збільшення розміру карт в два рази */
   margin: 0 auto;
   perspective: 1000px; /* Необхідне для фліп-анімації */
+}
+
+#shuffle-canvas {
+  display: block;
+  margin: 20px auto;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  width: 800px; /* Збільшення розміру canvas в два рази */
+  height: 800px; /* Збільшення розміру canvas в два рази */
 }
 
 .flip-card-inner {
@@ -58,70 +68,76 @@
   transform: rotateY(180deg);
 }
 
-#shuffle-canvas {
-  display: block;
-  margin: 20px auto;
-  background-color: #fff;
-  border: none;
-  width: 400px;
-  height: 400px;
+#result-message {
+  text-align: center;
+  margin-top: 20px;
 }
 
 
 </style>
 
 
-<div id="deck-of-cards-section" class="deck-of-cards-section">
+<div id="card-game-section" class="card-game-section">
   <div class="buttons">
-    <button class="step-btn" data-step="1">Step 1</button>
-    <button class="step-btn" data-step="2" onclick="shuffleDeck()">Step 2: Shuffle Deck</button>
-    <button class="step-btn" data-step="3">Step 3</button>
+    <button class="step-btn" data-step="1">Step 1: Choose a Card</button>
+    <button class="step-btn" data-step="2" onclick="startShuffle()">Step 2: Shuffle Deck</button>
+    <button class="step-btn" data-step="3">Step 3: Find the Card</button>
   </div>
 
   <div class="step-content step-1 active">
-    <div class="card flip-card" onclick="flipCard(this, 1)">
+    <div class="card flip-card" onclick="chooseCard(this)">
       <div class="flip-card-inner">
         <div class="flip-card-front">
-             <img src="https://deckofcardsapi.com/static/img/back.png" alt="Card back" class="card-back">
+          <img src="https://deckofcardsapi.com/static/img/back.png" alt="Card back" class="card-back">
         </div>
         <div class="flip-card-back">
-          <img id="step1-card" src="" alt="Card Front">
+          <img id="step1-card" src="" alt="Card front">
         </div>
       </div>
     </div>
   </div>
 
- <div class="step-content step-2">
-    <canvas id="shuffle-canvas" width="400" height="450"></canvas>
+  <div class="step-content step-2">
+    <canvas id="shuffle-canvas" width="800" height="800"></canvas>
   </div>
 
   <div class="step-content step-3">
-    <div class="card flip-card" onclick="flipCard(this, 3)">
+    <div class="card flip-card" onclick="tryCard(this)">
       <div class="flip-card-inner">
         <div class="flip-card-front">
-      <img src="https://deckofcardsapi.com/static/img/back.png" alt="Card back" class="card-back">
+          <img src="https://deckofcardsapi.com/static/img/back.png" alt="Card back" class="card-back">
         </div>
         <div class="flip-card-back">
-          <img id="step3-card" src="" alt="Card Front">
+          <img id="step3-card" src="" alt="Card front">
         </div>
       </div>
     </div>
+  </div>
+
+  <div id="result-message" style="display: none;">
+    <h3 id="result-text"></h3>
   </div>
 </div>
 
 
 <script>
 
-  document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
   const buttons = document.querySelectorAll('.step-btn');
   const stepContents = document.querySelectorAll('.step-content');
   const step1Card = document.getElementById('step1-card');
   const step3Card = document.getElementById('step3-card');
   const canvas = document.getElementById('shuffle-canvas');
   const ctx = canvas.getContext('2d');
+  const resultMessage = document.getElementById('result-message');
+  const resultText = document.getElementById('result-text');
 
+  let selectedCard = null;
   let cards = [];
+  let attempts = 0;
+  let maxAttempts = 3;
   let animationFrameId;
+  let isCardFlipping = false;
 
   // Навігація між кроками
   buttons.forEach(button => {
@@ -133,30 +149,63 @@
       });
 
       document.querySelector(`.step-${step}`).classList.add('active');
+
+      // Автоматичний перехід на крок 3 після перетасовки на кроці 2
+      if (step === "2") {
+        startShuffle();
+      }
     });
   });
 
-  // Перевертання карт на кроках 1 і 3
-  window.flipCard = function(element, step) {
-    element.classList.toggle('flipped');
-    if (step === 1) {
-      fetchCard(step1Card);
-    } else if (step === 3) {
-      fetchCard(step3Card);
-    }
+  // Вибір карти на першому кроці
+  window.chooseCard = function(element) {
+    if (isCardFlipping) return;
+    isCardFlipping = true;
+
+    fetchCard(step1Card).then(data => {
+      selectedCard = data.cards[0];
+      element.classList.toggle('flipped');
+      isCardFlipping = false;
+    });
   };
 
-      // Отримання нової карти
+  // Перевертання карт на кроці 3
+  window.tryCard = function(element) {
+    if (isCardFlipping || attempts >= maxAttempts) return;
+    isCardFlipping = true;
+    attempts++;
+
+    fetchCard(step3Card).then(data => {
+      const chosenCard = data.cards[0];
+      element.classList.toggle('flipped');
+
+      if (chosenCard.code === selectedCard.code) {
+        resultText.textContent = "You won! The card matches!";
+        resultMessage.style.display = "block";
+      } else if (attempts >= maxAttempts) {
+        resultText.textContent = "You lost! No more attempts left.";
+        resultMessage.style.display = "block";
+      }
+
+      setTimeout(() => {
+        isCardFlipping = false;
+      }, 300);
+    });
+  };
+
+  // Отримання нової карти
   function fetchCard(cardElement) {
-    fetch('https://deckofcardsapi.com/api/deck/new/draw/?count=1')
+    return fetch('https://deckofcardsapi.com/api/deck/new/draw/?count=1')
       .then(response => response.json())
       .then(data => {
         cardElement.src = data.cards[0].image;
+        return data;
       })
       .catch(error => console.error('Error fetching card:', error));
   }
-  // Перетасовка колоди карт з анімацією на canvas
-  window.shuffleDeck = function() {
+
+  // Перетасовка колоди карт і автоматичний перехід на крок 3
+  window.startShuffle = function() {
     fetch('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
       .then(response => response.json())
       .then(data => {
@@ -166,8 +215,8 @@
       .then(data => {
         cards = data.cards.map(card => ({
           image: new Image(),
-          x: Math.random() * (canvas.width - 100), // Збільшення розміру карт
-          y: Math.random() * (canvas.height - 180), // Збільшення розміру карт
+          x: Math.random() * (canvas.width - 280),
+          y: Math.random() * (canvas.height - 400),
           rotation: Math.random() * 360,
         }));
 
@@ -175,38 +224,41 @@
           card.image.src = "https://deckofcardsapi.com/static/img/back.png";
         });
 
-        animateShuffling();
+        animateShuffling(() => {
+          // Після завершення анімації автоматично переходимо на крок 3
+          buttons[2].click();
+        });
       })
       .catch(error => console.error('Error shuffling deck:', error));
   };
 
   // Анімація перетасовки карт
-function animateShuffling() {
+  function animateShuffling(callback) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     cards.forEach(card => {
       ctx.save();
-      ctx.translate(card.x + 100, card.y + 180); // Збільшення розміру карт в два рази
+      ctx.translate(card.x + 140, card.y + 200);
       ctx.rotate(card.rotation * Math.PI / 180);
-      ctx.translate(-100, -200); // Збільшення розміру карт в два рази
-      ctx.drawImage(card.image, 0, 0, 200, 360); // Збільшення розміру карт в два рази
+      ctx.translate(-140, -200);
+      ctx.drawImage(card.image, 0, 0, 280, 400);
       ctx.restore();
     });
 
     cards.forEach(card => {
-      card.x += (canvas.width / 2 - card.x - 100) * 0.1;
-      card.y += (canvas.height / 2 - card.y - 180) * 0.1;
+      card.x += (canvas.width / 2 - card.x - 140) * 0.1;
+      card.y += (canvas.height / 2 - card.y - 200) * 0.1;
       card.rotation += (0 - card.rotation) * 0.1;
     });
 
-    if (Math.abs(cards[0].x - canvas.width / 2 + 100) > 1 || Math.abs(cards[0].y - canvas.height / 2 + 180) > 1) {
-      animationFrameId = requestAnimationFrame(animateShuffling);
+    if (Math.abs(cards[0].x - canvas.width / 2 + 140) > 1 || Math.abs(cards[0].y - canvas.height / 2 + 200) > 1) {
+      animationFrameId = requestAnimationFrame(() => animateShuffling(callback));
     } else {
       cancelAnimationFrame(animationFrameId);
+      callback();
     }
   }
 });
-
 
 </script>
 
