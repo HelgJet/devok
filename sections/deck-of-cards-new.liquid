@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   };
 
-  // Функція для перетасовки колоди
+  // Функція для перетасовки колоди та відображення карт
   window.shuffleDeck = function() {
     fetch('https://deckofcardsapi.com/api/deck/new/draw/?count=54')
       .then(response => response.json())
@@ -151,6 +151,7 @@ document.addEventListener('DOMContentLoaded', function() {
       .catch(error => console.error('Error fetching cards:', error));
   };
 });
+
 
 
 </script>
