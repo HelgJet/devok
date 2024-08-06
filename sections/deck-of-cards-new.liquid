@@ -1,6 +1,6 @@
 
 <style>
-  .deck-of-cards-section .buttons {
+.deck-of-cards-section .buttons {
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
@@ -60,15 +60,31 @@
   object-fit: cover;
 }
 
+.shuffle-card {
+  animation: shuffle 1s ease forwards;
+}
+
+@keyframes shuffle {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+
 </style>
 <div id="deck-of-cards-section" class="deck-of-cards-section">
   <div class="buttons">
     <button class="step-btn" data-step="1">Step 1</button>
-    <button class="step-btn" data-step="2" onclick="fetchAndShuffleDeck()">Step 2: Swipe Deck</button>
+    <button class="step-btn" data-step="2" onclick="shuffleDeck()">Step 2: Shuffle & Swipe Deck</button>
     <button class="step-btn" data-step="3">Step 3</button>
   </div>
 
-  
   <div class="step-content step-1 active">
     <div class="card-container" onclick="toggleCardContent(1)">
       <img src="https://deckofcardsapi.com/static/img/AS.png" alt="Card 1" class="card-image" />
@@ -77,7 +93,7 @@
 
   <div class="step-content step-2">
     <div class="cards-container" id="cards-container">
-      <!-- Сюди будуть додані карти після їх отримання з API -->
+      <!-- Cards will be displayed here after fetching from API -->
     </div>
   </div>
 
@@ -91,23 +107,24 @@
 document.addEventListener('DOMContentLoaded', function() {
   const buttons = document.querySelectorAll('.step-btn');
   const stepContents = document.querySelectorAll('.step-content');
+  let cardsData = []; // To store the cards data
 
-  // Перемикання між кроками
+  // Handle step navigation
   buttons.forEach(button => {
     button.addEventListener('click', function() {
       const step = this.dataset.step;
 
-      // Приховуємо всі кроки
+      // Hide all step content
       stepContents.forEach(content => {
         content.classList.remove('active');
       });
 
-      // Відображаємо вибраний крок
+      // Show selected step content
       document.querySelector(`.step-${step}`).classList.add('active');
     });
   });
 
-  // Функція для зміни карт в кроках 1 та 3
+  // Function to toggle card content in Step 1 and Step 3
   window.toggleCardContent = function(step) {
     const cardImage = document.querySelector(`.step-${step} .card-image`);
     const currentSrc = cardImage.src;
@@ -115,37 +132,55 @@ document.addEventListener('DOMContentLoaded', function() {
     cardImage.src = newSrc;
   };
 
-  // Функція для перетасовки масиву карт
+  // Function to fetch and shuffle deck of cards from Deck of Cards API
+  window.shuffleDeck = function() {
+    fetch('https://deckofcardsapi.com/api/deck/new/draw/?count=54')
+      .then(response => response.json())
+      .then(data => {
+        cardsData = data.cards;
+        animateShuffle(cardsData);
+      })
+      .catch(error => console.error('Error fetching cards:', error));
+  };
+
+  // Function to shuffle array
   function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
     }
-    return array;
   }
 
-  // Функція для отримання та перетасовки колоди карт
-  window.fetchAndShuffleDeck = function() {
-    fetch('https://deckofcardsapi.com/api/deck/new/draw/?count=54')
-      .then(response => response.json())
-      .then(data => {
-        const shuffledCards = shuffleArray(data.cards);
-        const cardsContainer = document.getElementById('cards-container');
-        cardsContainer.innerHTML = ''; // Очищаємо контейнер перед додаванням нових карт
+  // Function to animate the shuffle and then display the cards
+  function animateShuffle(cards) {
+    const cardsContainer = document.getElementById('cards-container');
+    cardsContainer.innerHTML = ''; // Clear previous cards if any
 
-        shuffledCards.forEach(card => {
-          const cardElement = document.createElement('div');
-          cardElement.className = 'card';
-          cardElement.innerHTML = `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card-image" />`;
-          cardsContainer.appendChild(cardElement);
-        });
+    cards.forEach((card, index) => {
+      const cardElement = document.createElement('div');
+      cardElement.className = 'card shuffle-card';
+      cardElement.style.animationDelay = `${index * 0.05}s`;
+      cardElement.innerHTML = `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card-image" />`;
+      cardsContainer.appendChild(cardElement);
+    });
 
-        initializeSwiper();
-      })
-      .catch(error => console.error('Помилка отримання карт:', error));
-  };
+    // Shuffle cards after animation completes
+    setTimeout(() => {
+      shuffleArray(cardsData);
+      cardsContainer.innerHTML = ''; // Clear the cards
 
-  // Ініціалізація функціоналу свайпу
+      cardsData.forEach(card => {
+        const cardElement = document.createElement('div');
+        cardElement.className = 'card';
+        cardElement.innerHTML = `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card-image" />`;
+        cardsContainer.appendChild(cardElement);
+      });
+
+      initializeSwiper();
+    }, cards.length * 50 + 1000); // Adjust timing based on animation duration
+  }
+
+  // Initialize swiper functionality
   function initializeSwiper() {
     const swiperContainer = document.getElementById('cards-container');
     let isDown = false;
@@ -173,11 +208,12 @@ document.addEventListener('DOMContentLoaded', function() {
       if (!isDown) return;
       e.preventDefault();
       const x = e.pageX - swiperContainer.offsetLeft;
-      const walk = (x - startX) * 3; // швидкість прокрутки
+      const walk = (x - startX) * 3; //scroll-fast
       swiperContainer.scrollLeft = scrollLeft - walk;
     });
   }
 });
+
 
 </script>
 
