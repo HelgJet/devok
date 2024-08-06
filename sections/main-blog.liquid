@@ -38,7 +38,7 @@
     }
 {%- endstyle -%}
 
-
+<blog-articles-sorter>
 {%- paginate blog.articles by 2 -%}
   <div class="main-blog page-width section-{{ section.id }}-padding">
     <h1 class="title--primary">{{ blog.title | escape }}</h1>
@@ -136,83 +136,107 @@
     {%- endif -%}
   </div>
 {%- endpaginate -%}
-
+</blog-articles-sorter>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const sortSelect = document.getElementById('sort-by');
-  const articlesContainer = document.querySelector('.blog-articles');
-  const blogId = articlesContainer.dataset.blogId; // Отримання blog.id через data-attribute
+class BlogArticlesSorter extends HTMLElement {
+  constructor() {
+    super();
 
-  // Функція для отримання всіх статей блогу
-  async function fetchBlogPosts() {
+    this.articlesContainer = this.querySelector('.blog-articles');
+    this.selectors = {
+      itemArticle: '[article-template-js]', 
+      blogId: this.articlesContainer.dataset.blogId,
+    };   
+
+    this.sortSelect = document.getElementById('sort-by');
+    this.sortSelect.addEventListener('change', this.handleSortChange.bind(this));
+  }
+
+  connectedCallback() { 
+    const handleIntersection = (entries, observer) => {
+      if (!entries[0].isIntersecting) return;
+      observer.unobserve(this);
+      this.loadBlogArticles();  
+    }
+    new IntersectionObserver(handleIntersection.bind(this), {rootMargin: '0px 0px 400px 0px'}).observe(this);
+  }
+
+  handleSortChange() {
+    this.loadBlogArticles();
+  }
+
+  async loadBlogArticles() {
+    const articleHandles = await this.fetchArticleHandles();
+    if (articleHandles.length > 0) {
+      const sortedHandles = this.sortArticles(articleHandles);
+      this.setTemplate(sortedHandles);  
+    } 
+  } 
+
+  async fetchArticleHandles() {
     try {
-      const response = await fetch(`/blogs/${blogId}/articles.json?limit=250`);
+      const response = await fetch(`/blogs/${this.selectors.blogId}/articles.json?limit=250`);
       if (!response.ok) throw new Error('Помилка при завантаженні статей блогу');
       const data = await response.json();
-      return data.articles;
+      return data.articles.map(article => article.handle); // Повертаємо масив хендлів
     } catch (error) {
       console.error('Помилка:', error);
       return []; // Повертаємо порожній масив, якщо виникла помилка
     }
   }
 
-  // Функція для рендерингу статей за допомогою Liquid шаблону
-  function renderArticles(articles) {
-    articlesContainer.innerHTML = ''; // Очищення контейнера перед новим відображенням
-    articles.forEach(article => {
-      // Для кожної статті ми робимо рендеринг за допомогою Liquid шаблону 'article-card'
-      const articleElement = document.createElement('div');
-      articleElement.id = article.id;
-      articleElement.dataset.title = article.title;
-      articleElement.dataset.time = new Date(article.published_at).toISOString();
-      articleElement.className = 'blog-articles__article article';
-      
-      const articleHTML = `
-        <div data-title="${article.title}" data-time="${new Date(article.published_at).toISOString()}" class="blog-articles__article article card-information-v-layout-class">
-          {% render 'article-card', article: article %}
-        </div>`;
-      
-      articleElement.innerHTML = articleHTML;
-      articlesContainer.appendChild(articleElement);
-    });
-  }
+  fetchArticleHTML = (handle) => {
+    const articleUrl = `/articles/${handle}?view=card`; 
+    return fetch(articleUrl)
+      .then((res) => res.text())  
+      .then((res) => {
+        const parser = new DOMParser(); 
+        const htmlDocument = parser.parseFromString(res, 'text/html');
+        const itemArticle = htmlDocument.documentElement.querySelector(this.selectors.itemArticle); 
+        if (itemArticle) {
+          return itemArticle.outerHTML;
+        } else {
+          console.error(`[Blog Article] Елемент не знайдено для handle: ${handle}`);
+          return '';
+        } 
+      }) 
+      .catch((err) => console.error(`[Blog Article] Не вдалося завантажити вміст для handle: ${handle}`, err));
+  }  
 
-  // Функція для сортування статей
-  function sortArticles(articles, sortBy) {
-    if (!Array.isArray(articles)) {
-      console.error('Очікувався масив статей для сортування, але отримано:', articles);
-      return [];
-    }
+  sortArticles(handles) {
+    const sortBy = this.sortSelect.value;
 
-    return articles.sort((a, b) => {
+    // Сортування на основі критерію сортування
+    handles.sort((a, b) => {
       if (sortBy === 'title-asc') {
-        return a.title.localeCompare(b.title);
+        return a.localeCompare(b);
       } else if (sortBy === 'title-desc') {
-        return b.title.localeCompare(a.title);
-      } else if (sortBy === 'date-asc') {
+        return b.localeCompare(a);
+      } else if (sortBy === 'date-asc' || sortBy === 'date-desc') {
+        // Тут ми припускаємо, що ми маємо доступ до `article.published_at`
+        // Потрібно відповідно налаштувати
         return new Date(a.published_at) - new Date(b.published_at);
-      } else if (sortBy === 'date-desc') {
-        return new Date(b.published_at) - new Date(a.published_at);
       }
     });
+
+    if (sortBy === 'date-desc') {
+      handles.reverse();
+    }
+
+    return handles;
   }
 
-  // Встановлюємо дефолтне сортування при завантаженні сторінки
-  sortSelect.value = 'date-desc';
+  async setTemplate(handles) { 
+    const requests = handles.map(this.fetchArticleHTML); 
+    const responses = await Promise.all(requests); 
+    const itemArticles = responses.map((item, index) => `<div id="Article-${index + 1}" class="article">${item}</div>`).join('');
+    this.articlesContainer.innerHTML = '';
+    this.articlesContainer.innerHTML = itemArticles;
+    this.classList.add('articles--loaded');
+  }  
+}
 
-  // При зміні сортування завантажуємо і сортуємо статті
-  sortSelect.addEventListener('change', async function() {
-    let articles = await fetchBlogPosts();
-    const sortBy = this.value;
-    articles = sortArticles(articles, sortBy);
-    renderArticles(articles);
-
-    // Оновлення URL для збереження сортування при навігації
-    const params = new URLSearchParams(window.location.search);
-    params.set('sort_by', sortBy);
-    window.history.replaceState({}, '', `${window.location.pathname}?${params}`);
-  });
-});
+customElements.define('blog-articles-sorter', BlogArticlesSorter);
 
 </script>
 {% schema %}
