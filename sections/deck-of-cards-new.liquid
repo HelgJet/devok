@@ -59,10 +59,11 @@
 }
 
 #restart-btn {
-  margin-top: 20px;
   padding: 10px 20px;
   cursor: pointer;
-  display: none; /* Сховати кнопку перезапуску гри спочатку */
+  display: none; 
+  max-width: 120px;
+  margin: 15px auto;
 }
 
 
@@ -222,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function() {
         resultMessage.textContent = 'You win!';
         step3Card.onclick = null; // Заборонити подальші кліки після виграшу
         showRestartButton();
-      } else if (tries >= 3) {
+      } else if (tries >= 10) {
         resultMessage.textContent = 'You lose!';
         step3Card.onclick = null; // Заборонити подальші кліки після трьох спроб
         showRestartButton();
