@@ -62,6 +62,7 @@
   margin-top: 20px;
   padding: 10px 20px;
   cursor: pointer;
+  display: none; /* Сховати кнопку перезапуску гри спочатку */
 }
 
 
@@ -154,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         animateShuffling().then(() => {
           step3Btn.disabled = false;
-          switchToStep(3);
+          alert('Shuffling complete! You can now proceed to Step 3.');
         });
       })
       .catch(error => console.error('Error shuffling deck:', error));
@@ -203,9 +204,11 @@ document.addEventListener('DOMContentLoaded', function() {
       if (step3Card.src === selectedCard) {
         resultMessage.textContent = 'You win!';
         step3Card.onclick = null; // Заборонити подальші кліки після виграшу
+        showRestartButton();
       } else if (tries >= 3) {
         resultMessage.textContent = 'You lose!';
         step3Card.onclick = null; // Заборонити подальші кліки після трьох спроб
+        showRestartButton();
       }
     });
   };
@@ -240,8 +243,14 @@ document.addEventListener('DOMContentLoaded', function() {
     step3Card.src = "https://deckofcardsapi.com/static/img/back.png";
     step3Card.onclick = checkCard;
     step3Btn.disabled = true;
+    restartBtn.style.display = 'none'; // Сховати кнопку перезапуску гри
     switchToStep(1);
   };
+
+  // Відображення кнопки перезапуску гри
+  function showRestartButton() {
+    restartBtn.style.display = 'block';
+  }
 
   switchToStep(1);
 });
