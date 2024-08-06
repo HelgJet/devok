@@ -113,8 +113,6 @@ document.addEventListener('DOMContentLoaded', function() {
   let cards = [];
   let animationFrameId;
 
-  console.log('DOM fully loaded and parsed');
-
   // Вибір карти на першому кроці
   window.selectCard = function() {
     console.log('selectCard function called');
@@ -166,8 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Deck shuffled, starting animation');
         animateShuffling().then(() => {
           console.log('Shuffling animation complete');
-          step3Btn.disabled = false; // Робимо кнопку активною після завершення перетасовки
-          alert('Shuffling complete! You can now proceed to Step 3.');
+          step3Btn.disabled = false;
         });
       })
       .catch(error => console.error('Error shuffling deck:', error));
