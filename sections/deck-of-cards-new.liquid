@@ -113,16 +113,21 @@ document.addEventListener('DOMContentLoaded', function() {
   let cards = [];
   let animationFrameId;
 
+  console.log('DOM fully loaded and parsed');
+
   // Вибір карти на першому кроці
   window.selectCard = function() {
+    console.log('selectCard function called');
     fetchCard(step1Card).then(() => {
       selectedCard = step1Card.src;
+      console.log('Card selected:', selectedCard);
       step1Card.onclick = null; // Заборонити подальші кліки після вибору карти
     });
   };
 
   // Перехід на другий крок
   step2Btn.addEventListener('click', function() {
+    console.log('Step 2 button clicked');
     if (!selectedCard) {
       alert('Please select a card first.');
       return;
@@ -135,8 +140,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Перетасовка колоди карт з анімацією на canvas
   window.shuffleDeck = function() {
+    console.log('shuffleDeck function called');
     fetch('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
-      .then(response => response.json())
+      .then(response => {
+        console.log('Shuffling deck');
+        return response.json();
+      })
       .then(data => {
         return fetch(`https://deckofcardsapi.com/api/deck/${data.deck_id}/draw/?count=54`);
       })
@@ -153,7 +162,9 @@ document.addEventListener('DOMContentLoaded', function() {
           card.image.src = "https://deckofcardsapi.com/static/img/back.png";
         });
 
+        console.log('Deck shuffled, starting animation');
         animateShuffling().then(() => {
+          console.log('Shuffling animation complete');
           step3Btn.disabled = false;
           alert('Shuffling complete! You can now proceed to Step 3.');
         });
@@ -163,6 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Анімація перетасовки карт
   function animateShuffling() {
+    console.log('animateShuffling function called');
     return new Promise((resolve) => {
       let frameCount = 0;
       function drawFrame() {
@@ -197,10 +209,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Вибір карти на третьому кроці
   window.checkCard = function() {
+    console.log('checkCard function called');
     if (tries >= 3) return;
 
     fetchCard(step3Card).then(() => {
       tries++;
+      console.log('Tries:', tries);
       if (step3Card.src === selectedCard) {
         resultMessage.textContent = 'You win!';
         step3Card.onclick = null; // Заборонити подальші кліки після виграшу
@@ -215,16 +229,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Отримання нової карти
   function fetchCard(cardElement) {
+    console.log('fetchCard function called');
     return fetch('https://deckofcardsapi.com/api/deck/new/draw/?count=1')
       .then(response => response.json())
       .then(data => {
         cardElement.src = data.cards[0].image;
+        console.log('Card fetched:', cardElement.src);
       })
       .catch(error => console.error('Error fetching card:', error));
   }
 
   // Переключення між кроками
   function switchToStep(stepNumber) {
+    console.log('switchToStep called for step', stepNumber);
     stepContents.forEach(content => {
       content.classList.remove('active');
     });
@@ -233,6 +250,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Перезапуск гри
   window.restartGame = function() {
+    console.log('restartGame function called');
     selectedCard = null;
     tries = 0;
     resultMessage.textContent = '';
@@ -249,11 +267,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Відображення кнопки перезапуску гри
   function showRestartButton() {
+    console.log('showRestartButton function called');
     restartBtn.style.display = 'block';
   }
 
   switchToStep(1);
 });
+
 
 </script>
 
