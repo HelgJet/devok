@@ -1,5 +1,5 @@
 <style>
-.deck-of-cards-section .buttons {
+  .deck-of-cards-section .buttons {
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
@@ -13,52 +13,28 @@
 
 .deck-of-cards-section .step-content {
   display: none;
-  text-align: center;
 }
 
 .deck-of-cards-section .step-content.active {
   display: block;
 }
 
-.deck-of-cards-section .card-container {
-  width: 150px;
-  height: 210px;
-  margin: 0 auto;
-  cursor: pointer;
-}
-
-.deck-of-cards-section .card-image {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
 .deck-of-cards-section .cards-container {
   display: flex;
-  overflow-x: scroll;
+  flex-wrap: wrap;
   gap: 10px;
   justify-content: center;
-  cursor: grab;
-  padding: 10px;
-}
-
-.deck-of-cards-section .cards-container.active {
-  cursor: grabbing;
 }
 
 .deck-of-cards-section .card {
-  flex: 0 0 150px;
-  height: 210px;
+  flex: 1 1 calc(10% - 10px);
   box-sizing: border-box;
-  overflow: hidden;
 }
 
 .deck-of-cards-section .card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  max-width: 100%;
+  display: block;
 }
-
 
 </style>
 <div id="deck-of-cards-section" class="deck-of-cards-section">
@@ -69,26 +45,30 @@
   </div>
 
   <div class="step-content step-1 active">
-    <div class="card-container" onclick="toggleCardContent(1)">
-      <img src="https://deckofcardsapi.com/static/img/AS.png" alt="Card 1" class="card-image" />
+    <div id="step1-card" class="card" onclick="changeCard('step1-card')">
+      <p>Loading...</p>
     </div>
   </div>
 
   <div class="step-content step-2">
     <div class="cards-container" id="cards-container">
-      <!-- Cards will be displayed here after fetching from API -->
+      <!-- Cards will be displayed here -->
+    </div>
+    <div class="swiper-navigation">
+      <button class="swiper-button-prev" onclick="prevCard()">Previous</button>
+      <button class="swiper-button-next" onclick="nextCard()">Next</button>
     </div>
   </div>
 
   <div class="step-content step-3">
-    <div class="card-container" onclick="toggleCardContent(3)">
-      <img src="https://deckofcardsapi.com/static/img/2H.png" alt="Card 1" class="card-image" />
+    <div id="step3-card" class="card" onclick="changeCard('step3-card')">
+      <p>Loading...</p>
     </div>
   </div>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function() {
   const buttons = document.querySelectorAll('.step-btn');
   const stepContents = document.querySelectorAll('.step-content');
 
@@ -109,10 +89,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Function to toggle card content in Step 1 and Step 3
   window.toggleCardContent = function(step) {
-    const cardImage = document.querySelector(`.step-${step} .card-image`);
-    const currentSrc = cardImage.src;
-    const newSrc = currentSrc.includes('AS.png') ? 'https://deckofcardsapi.com/static/img/2H.png' : 'https://deckofcardsapi.com/static/img/AS.png';
-    cardImage.src = newSrc;
+    const card = document.querySelector(`.step-${step} .card`);
+    if (card.innerHTML.includes('Card 1 Content')) {
+      card.innerHTML = `<p>Step ${step}: Card 2 Content</p>`;
+    } else {
+      card.innerHTML = `<p>Step ${step}: Card 1 Content</p>`;
+    }
   };
 
   // Function to fetch and display deck of cards from Deck of Cards API
@@ -126,49 +108,13 @@ document.addEventListener('DOMContentLoaded', function() {
         data.cards.forEach(card => {
           const cardElement = document.createElement('div');
           cardElement.className = 'card';
-          cardElement.innerHTML = `<img src="${card.image}" alt="${card.value} of ${card.suit}" class="card-image" />`;
+          cardElement.innerHTML = `<img src="${card.image}" alt="${card.value} of ${card.suit}" />`;
           cardsContainer.appendChild(cardElement);
         });
-
-        initializeSwiper();
       })
       .catch(error => console.error('Error fetching cards:', error));
   };
-
-  // Initialize swiper functionality
-  function initializeSwiper() {
-    const swiperContainer = document.getElementById('cards-container');
-    let isDown = false;
-    let startX;
-    let scrollLeft;
-
-    swiperContainer.addEventListener('mousedown', (e) => {
-      isDown = true;
-      swiperContainer.classList.add('active');
-      startX = e.pageX - swiperContainer.offsetLeft;
-      scrollLeft = swiperContainer.scrollLeft;
-    });
-
-    swiperContainer.addEventListener('mouseleave', () => {
-      isDown = false;
-      swiperContainer.classList.remove('active');
-    });
-
-    swiperContainer.addEventListener('mouseup', () => {
-      isDown = false;
-      swiperContainer.classList.remove('active');
-    });
-
-    swiperContainer.addEventListener('mousemove', (e) => {
-      if (!isDown) return;
-      e.preventDefault();
-      const x = e.pageX - swiperContainer.offsetLeft;
-      const walk = (x - startX) * 3; //scroll-fast
-      swiperContainer.scrollLeft = scrollLeft - walk;
-    });
-  }
 });
-
 
 </script>
 
