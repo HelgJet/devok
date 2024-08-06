@@ -31,6 +31,7 @@
 
 .card {
   margin: 20px auto;
+  align-items: center;
 }
 
 .card img {
@@ -234,6 +235,8 @@ document.addEventListener('DOMContentLoaded', function() {
     resultMessage.textContent = '';
     step1Btn.disabled = false;
     step1Btn.innerHTML = 'Step 1';
+    step1Card.src = "https://deckofcardsapi.com/static/img/back.png"; // Повернення карти на першому кроці до "рубашки"
+    step1Card.onclick = selectCard;
     step3Card.src = "https://deckofcardsapi.com/static/img/back.png";
     step3Card.onclick = checkCard;
     step3Btn.disabled = true;
