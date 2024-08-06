@@ -31,8 +31,8 @@
 
 .flip-card {
   perspective: 1000px;
-  width: 100px; /* Зменшений розмір карти */
-  height: 140px; /* Зменшений розмір карти */
+  /* width: 100px;  */
+  height: 140px; 
   margin: 20px auto;
 }
 
@@ -160,12 +160,12 @@ document.addEventListener('DOMContentLoaded', function() {
   const step1Card = document.getElementById('step1-card');
   const canvas = document.getElementById('shuffle-canvas');
   const ctx = canvas.getContext('2d');
+  const stepContents = document.querySelectorAll('.step-content');
   const resultMessage = document.getElementById('result-message');
   const restartBtn = document.getElementById('restart-btn');
 
   let selectedCard;
   let tries = 0;
-
   let cards = [];
   let animationFrameId;
   let isCardFlipping = false; 
