@@ -38,7 +38,7 @@
     }
 {%- endstyle -%}
 
-<blog-articles-sorter>
+
 {%- paginate blog.articles by 2 -%}
   <div class="main-blog page-width section-{{ section.id }}-padding">
     <h1 class="title--primary">{{ blog.title | escape }}</h1>
@@ -53,7 +53,7 @@
       </select>
     </div>
 
-    <div class="blog-articles" data-blog-id="{{ blog.id }}"{% if section.settings.layout == 'collage' %}blog-articles--collage{% endif %}">
+    <blog-articles-sorter class="blog-articles" data-blog-id="{{ blog.id }}"{% if section.settings.layout == 'collage' %}blog-articles--collage{% endif %}">
       {%- for article in blog.articles -%}
         <div id="{{ article.id }}"  data-title="{{ article.title }}" data-time="{{ article.published_at | date: "%Y-%m-%d %H:%M" }}" class="blog-articles__article article card-information-v-{{ section.settings.caption_vertical_alignment }} {% if section.settings.show_image == false %}card-info-abs{% endif %} post-layout-{{ section.settings.layout }}">
           {%- render 'article-card',
@@ -134,9 +134,9 @@
       </div>
     {%- endif -%}
     {%- endif -%}
-  </div>
-{%- endpaginate -%}
 </blog-articles-sorter>
+{%- endpaginate -%}
+
 <script>
 class BlogArticlesSorter extends HTMLElement {
   constructor() {
