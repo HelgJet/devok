@@ -1,8 +1,14 @@
 <style>
+
+  .deck-of-cards-section {
+      max-width: 670px;
+  margin: 3rem auto;
+}
 .deck-of-cards-section .buttons {
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
+
 }
 
 .deck-of-cards-section .step-btn {
@@ -17,6 +23,13 @@
 
 .deck-of-cards-section .step-content.active {
   display: block;
+}
+
+#shuffle-canvas {
+  display: block;
+  margin: 0 auto;
+  background-color: #fff;
+  border: 1px solid #ccc;
 }
 
 .flip-card {
@@ -49,20 +62,6 @@
 
 .flip-card-back {
   transform: rotateY(180deg);
-}
-
-.shuffle-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-  align-items: center;
-}
-
-.shuffle-container .card {
-  flex: 1 1 calc(10% - 10px);
-  box-sizing: border-box;
-  transition: transform 0.5s ease-in-out;
 }
 
 
@@ -114,7 +113,11 @@ document.addEventListener('DOMContentLoaded', function() {
   const stepContents = document.querySelectorAll('.step-content');
   const step1Card = document.getElementById('step1-card');
   const step3Card = document.getElementById('step3-card');
-  const shuffleContainer = document.getElementById('shuffle-container');
+  const canvas = document.getElementById('shuffle-canvas');
+  const ctx = canvas.getContext('2d');
+
+  let cards = [];
+  let animationFrameId;
 
   // Навігація між кроками
   buttons.forEach(button => {
@@ -149,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
       .catch(error => console.error('Error fetching card:', error));
   }
 
-  // Перетасовка колоди карт з анімацією
+  // Перетасовка колоди карт з анімацією на canvas
   window.shuffleDeck = function() {
     fetch('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
       .then(response => response.json())
@@ -158,40 +161,33 @@ document.addEventListener('DOMContentLoaded', function() {
       })
       .then(response => response.json())
       .then(data => {
-        shuffleContainer.innerHTML = '';
+        cards = data.cards.map(card => ({
+          image: new Image(),
+          x: Math.random() * (canvas.width - 70),
+          y: Math.random() * (canvas.height - 100),
+          rotation: Math.random() * 360,
+        }));
 
-        data.cards.forEach(card => {
-          const cardElement = document.createElement('div');
-          cardElement.className = 'card flip-card';
-          cardElement.innerHTML = `
-            <div class="flip-card-inner">
-              <div class="flip-card-front">
-                <img src="https://deckofcardsapi.com/static/img/back.png" alt="Card back" class="card-back">
-              </div>
-            </div>`;
-          shuffleContainer.appendChild(cardElement);
+        cards.forEach((card, index) => {
+          card.image.src = "https://deckofcardsapi.com/static/img/back.png";
         });
 
-        // Анімація перетасовки
-        const cards = shuffleContainer.children;
-        let delay = 0;
-
-        for (let i = 0; i < cards.length; i++) {
-          setTimeout(() => {
-            cards[i].style.transform = `translate(${Math.random() * 20 - 10}px, ${Math.random() * 20 - 10}px) rotate(${Math.random() * 360}deg)`;
-          }, delay);
-          delay += 50;
-        }
-        
-        setTimeout(() => {
-          for (let i = 0; i < cards.length; i++) {
-            cards[i].style.transform = 'translate(0, 0) rotate(0)';
-          }
-        }, delay + 1000);
+        animateShuffling();
       })
       .catch(error => console.error('Error shuffling deck:', error));
   };
-});
+
+  // Анімація перетасовки карт
+  function animateShuffling() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    cards.forEach(card => {
+      ctx.save();
+      ctx.translate(card.x + 35, card.y + 50);
+      ctx.rotate(card.rotation * Math.PI / 180);
+      ctx.translate(-35, -50);
+      ctx.drawImage(card.image,
+
 
 </script>
 
