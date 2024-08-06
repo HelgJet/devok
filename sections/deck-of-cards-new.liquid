@@ -204,12 +204,12 @@ function animateShuffling() {
     });
 
     cards.forEach(card => {
-      card.x += (canvas.width / 2 - card.x - 140) * 0.1;
+      card.x += (canvas.width / 2 - card.x - 100) * 0.1;
       card.y += (canvas.height / 2 - card.y - 200) * 0.1;
       card.rotation += (0 - card.rotation) * 0.1;
     });
 
-    if (Math.abs(cards[0].x - canvas.width / 2 + 140) > 1 || Math.abs(cards[0].y - canvas.height / 2 + 200) > 1) {
+    if (Math.abs(cards[0].x - canvas.width / 2 + 100) > 1 || Math.abs(cards[0].y - canvas.height / 2 + 200) > 1) {
       animationFrameId = requestAnimationFrame(animateShuffling);
     } else {
       cancelAnimationFrame(animationFrameId);
