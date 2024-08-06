@@ -53,7 +53,7 @@
       </select>
     </div>
 
-    <div class="blog-articles" data-blog-id="{{ blog.id }}" {% if section.settings.layout == 'collage' %}blog-articles--collage{% endif %}">
+    <div class="blog-articles" data-blog-handle="{{ blog.handle }}" {% if section.settings.layout == 'collage' %}blog-articles--collage{% endif %}">
       {%- for article in blog.articles -%}
         <div id="{{ article.id }}"  data-title="{{ article.title }}" data-time="{{ article.published_at | date: "%Y-%m-%d %H:%M" }}" class="blog-articles__article article card-information-v-{{ section.settings.caption_vertical_alignment }} {% if section.settings.show_image == false %}card-info-abs{% endif %} post-layout-{{ section.settings.layout }}">
           {%- render 'article-card',
@@ -145,7 +145,7 @@ class BlogArticlesSorter extends HTMLElement {
     this.articlesContainer = this.querySelector('.blog-articles');
     this.selectors = {
       itemArticle: '[article-template-js]', 
-      blogId: this.articlesContainer.dataset.blogId,
+      blogHandle: this.articlesContainer.dataset.blogHandle,
     };   
 
     this.sortSelect = document.getElementById('sort-by');
@@ -175,7 +175,7 @@ class BlogArticlesSorter extends HTMLElement {
 
   async fetchArticleHandles() {
     try {
-      const response = await fetch(`/blogs/${this.selectors.blogId}/articles.json?limit=250`);
+      const response = await fetch(`/blogs/${this.selectors.blogHandle}/articles.json?limit=50`);
       if (!response.ok) throw new Error('Помилка при завантаженні статей блогу');
       const data = await response.json();
       return data.articles.map(article => article.handle); // Повертаємо масив хендлів
