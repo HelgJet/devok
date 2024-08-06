@@ -145,6 +145,16 @@
       fetchCard(step3Card);
     }
   };
+
+      // Отримання нової карти
+  function fetchCard(cardElement) {
+    fetch('https://deckofcardsapi.com/api/deck/new/draw/?count=1')
+      .then(response => response.json())
+      .then(data => {
+        cardElement.src = data.cards[0].image;
+      })
+      .catch(error => console.error('Error fetching card:', error));
+  }
   // Перетасовка колоди карт з анімацією на canvas
   window.shuffleDeck = function() {
     fetch('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1')
