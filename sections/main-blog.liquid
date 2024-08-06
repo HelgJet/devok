@@ -53,9 +53,9 @@
       </select>
     </div>
 
-    <div class="blog-articles {% if section.settings.layout == 'collage' %}blog-articles--collage{% endif %}">
+    <div class="blog-articles" data-blog-id="{{ blog.id }}"{% if section.settings.layout == 'collage' %}blog-articles--collage{% endif %}">
       {%- for article in blog.articles -%}
-        <div id="{{ article.id }}" data-title="{{ article.title }}" data-time="{{ article.published_at | date: "%Y-%m-%d %H:%M" }}" class="blog-articles__article article card-information-v-{{ section.settings.caption_vertical_alignment }} {% if section.settings.show_image == false %}card-info-abs{% endif %} post-layout-{{ section.settings.layout }}">
+        <div id="{{ article.id }}"  data-title="{{ article.title }}" data-time="{{ article.published_at | date: "%Y-%m-%d %H:%M" }}" class="blog-articles__article article card-information-v-{{ section.settings.caption_vertical_alignment }} {% if section.settings.show_image == false %}card-info-abs{% endif %} post-layout-{{ section.settings.layout }}">
           {%- render 'article-card',
             article: article,
             media_height: section.settings.image_height,
@@ -141,11 +141,12 @@
 document.addEventListener('DOMContentLoaded', function() {
   const sortSelect = document.getElementById('sort-by');
   const articlesContainer = document.querySelector('.blog-articles');
+  const blogId = articlesContainer.dataset.blogId; // Отримання blog.id через data-attribute
 
   // Функція для отримання всіх статей блогу
   async function fetchBlogPosts() {
     try {
-      const response = await fetch('/blogs/blog_handle_here/articles.json?limit=250'); // Замініть blog_handle_here на ваш фактичний хендл блогу
+      const response = await fetch(`/blogs/${blogId}/articles.json?limit=250`);
       if (!response.ok) throw new Error('Помилка при завантаженні статей блогу');
       const data = await response.json();
       return data.articles;
@@ -155,17 +156,23 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // Функція для відображення статей
+  // Функція для рендерингу статей за допомогою Liquid шаблону
   function renderArticles(articles) {
     articlesContainer.innerHTML = ''; // Очищення контейнера перед новим відображенням
     articles.forEach(article => {
+      // Для кожної статті ми робимо рендеринг за допомогою Liquid шаблону 'article-card'
       const articleElement = document.createElement('div');
-      articleElement.className = 'blog-articles__article article card-information-v-layout-class';
-      articleElement.innerHTML = `
-        <h2>${article.title}</h2>
-        <p>${new Date(article.published_at).toLocaleDateString('uk-UA', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
-        <a href="${article.url}">Читати більше</a>
-      `;
+      articleElement.id = article.id;
+      articleElement.dataset.title = article.title;
+      articleElement.dataset.time = new Date(article.published_at).toISOString();
+      articleElement.className = 'blog-articles__article article';
+      
+      const articleHTML = `
+        <div data-title="${article.title}" data-time="${new Date(article.published_at).toISOString()}" class="blog-articles__article article card-information-v-layout-class">
+          {% render 'article-card', article: article %}
+        </div>`;
+      
+      articleElement.innerHTML = articleHTML;
       articlesContainer.appendChild(articleElement);
     });
   }
