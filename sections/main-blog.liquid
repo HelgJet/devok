@@ -39,53 +39,21 @@
 {%- endstyle -%}
 
 
-<div class="sort-options">
-  <label for="sort-by">Сортувати за:</label>
-  <select id="sort-by">
-    <option value="date-desc">Нові спочатку</option>
-    <option value="date-asc">Старі спочатку</option>
-    <option value="title-asc">Назва (A-Z)</option>
-    <option value="title-desc">Назва (Z-A)</option>
-  </select>
-</div>
-
-<script>
-document.getElementById('sort-by').addEventListener('change', function() {
-  const sortBy = this.value;
-  const articlesContainer = document.querySelector('.blog-articles');
-  const articles = Array.from(articlesContainer.querySelectorAll('.blog-articles__article'));
-
-  articles.sort((a, b) => {
-    const titleA = a.querySelector('.article-title').innerText.toUpperCase();
-    const titleB = b.querySelector('.article-title').innerText.toUpperCase();
-    const dateA = new Date(a.querySelector('.article-date').innerText);
-    const dateB = new Date(b.querySelector('.article-date').innerText);
-
-    if (sortBy === 'date-asc') {
-      return dateA - dateB;
-    } else if (sortBy === 'date-desc') {
-      return dateB - dateA;
-    } else if (sortBy === 'title-asc') {
-      return titleA.localeCompare(titleB);
-    } else if (sortBy === 'title-desc') {
-      return titleB.localeCompare(titleA);
-    }
-  });
-
-  // Очистка контейнера та додавання відсортованих елементів
-  articlesContainer.innerHTML = '';
-  articles.forEach(article => articlesContainer.appendChild(article));
-});
-</script>
-
-
 {%- paginate blog.articles by 6 -%}
   <div class="main-blog page-width section-{{ section.id }}-padding">
     <h1 class="title--primary">{{ blog.title | escape }}</h1>
 
+    <div class="sort-options">
+      <label for="sort-posts">Сортувати за:</label>
+      <select id="sort-posts">
+        <option value="time">Дата</option>
+        <option value="title">Назва</option>
+      </select>
+    </div>
+
     <div class="blog-articles {% if section.settings.layout == 'collage' %}blog-articles--collage{% endif %}">
       {%- for article in blog.articles -%}
-        <div id="{{ article.id }}" class="blog-articles__article article card-information-v-{{ section.settings.caption_vertical_alignment }} {% if section.settings.show_image == false %}card-info-abs{% endif %} post-layout-{{ section.settings.layout }}">
+        <div id="{{ article.id }}" data-title="{{ article.title }}" data-time="{{ article.published_at | date: "%Y-%m-%d" }}" class="blog-articles__article article card-information-v-{{ section.settings.caption_vertical_alignment }} {% if section.settings.show_image == false %}card-info-abs{% endif %} post-layout-{{ section.settings.layout }}">
           {%- render 'article-card',
             article: article,
             media_height: section.settings.image_height,
@@ -108,7 +76,30 @@ document.getElementById('sort-by').addEventListener('change', function() {
       {%- render 'pagination', paginate: paginate -%}
     {%- endif -%}
   </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const sortSelect = document.getElementById('sort-posts');
+      const articlesContainer = document.querySelector('.blog-articles');
+      const articles = Array.from(articlesContainer.children);
+
+      sortSelect.addEventListener('change', function() {
+        const sortBy = this.value;
+
+        articles.sort((a, b) => {
+          if (sortBy === 'title') {
+            return a.dataset.title.localeCompare(b.dataset.title);
+          } else if (sortBy === 'time') {
+            return new Date(b.dataset.time) - new Date(a.dataset.time);
+          }
+        });
+
+        articles.forEach(article => articlesContainer.appendChild(article));
+      });
+    });
+  </script>
 {%- endpaginate -%}
+
 
 {% schema %}
 {
