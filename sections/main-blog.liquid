@@ -44,10 +44,12 @@
     <h1 class="title--primary">{{ blog.title | escape }}</h1>
 
     <div class="sort-options">
-      <label for="sort-posts">Сортувати за:</label>
-      <select id="sort-posts">
-        <option value="time">Дата</option>
-        <option value="title">Назва</option>
+      <label for="sort-by">Сортувати за:</label>
+      <select id="sort-by">
+        <option value="date-desc">Нові спочатку</option>
+        <option value="date-asc">Старі спочатку</option>
+        <option value="title-asc">Назва (A-Z)</option>
+        <option value="title-desc">Назва (Z-A)</option>
       </select>
     </div>
 
@@ -79,7 +81,7 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      const sortSelect = document.getElementById('sort-posts');
+      const sortSelect = document.getElementById('sort-by');
       const articlesContainer = document.querySelector('.blog-articles');
       const articles = Array.from(articlesContainer.children);
 
@@ -87,9 +89,13 @@
         const sortBy = this.value;
 
         articles.sort((a, b) => {
-          if (sortBy === 'title') {
+          if (sortBy === 'title-asc') {
             return a.dataset.title.localeCompare(b.dataset.title);
-          } else if (sortBy === 'time') {
+          } else if (sortBy === 'title-desc') {
+            return b.dataset.title.localeCompare(a.dataset.title);
+          } else if (sortBy === 'date-asc') {
+            return new Date(a.dataset.time) - new Date(b.dataset.time);
+          } else if (sortBy === 'date-desc') {
             return new Date(b.dataset.time) - new Date(a.dataset.time);
           }
         });
@@ -99,6 +105,7 @@
     });
   </script>
 {%- endpaginate -%}
+
 
 
 {% schema %}
