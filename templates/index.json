@@ -175,6 +175,7 @@
         "9348455f-b0dd-475c-b206-162a178f1a92",
         "936a93db-751a-4dc9-8fba-fa7c88f8ae9c"
       ],
+      "disabled": true,
       "settings": {
         "layout": "full_bleed",
         "slide_height": "adapt_image",
@@ -187,13 +188,9 @@
     },
     "pagefly_section_Gy7QGU": {
       "type": "pagefly-section",
+      "disabled": true,
       "settings": {
         "section_id": "pf-526d0c27"
-      }
-    },
-    "new_section_Jfhh6E": {
-      "type": "new_section",
-      "settings": {
       }
     },
     "devok_img_compare_part_CU7Az4": {
@@ -210,6 +207,7 @@
       "block_order": [
         "heading_PgjLnr"
       ],
+      "disabled": true,
       "settings": {
         "page_width": 1200,
         "image": "shopify:\/\/shop_images\/phone_dark-1_480x480_07755acf-af32-40e0-9d78-3077a072b38c.webp",
@@ -228,6 +226,7 @@
     },
     "devok_blog_post_GAmqki": {
       "type": "devok-blog-post",
+      "disabled": true,
       "settings": {
         "box_type": "box",
         "section_width": 1200,
@@ -260,6 +259,7 @@
     },
     "devok_blog_post_wedgyx": {
       "type": "devok-blog-post",
+      "disabled": true,
       "settings": {
         "box_type": "box",
         "section_width": 1200,
@@ -295,7 +295,6 @@
     "deck_of_cards_RgUW6y",
     "6492533a-9ed1-4828-a275-e6479417dc49",
     "pagefly_section_Gy7QGU",
-    "new_section_Jfhh6E",
     "devok_img_compare_part_CU7Az4",
     "devok_blog_post_GAmqki",
     "devok_blog_post_wedgyx"
