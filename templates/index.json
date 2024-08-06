@@ -93,6 +93,7 @@
         },
         "9348455f-b0dd-475c-b206-162a178f1a92": {
           "type": "slide-video",
+          "disabled": true,
           "settings": {
             "video": "shopify:\/\/files\/videos\/SampleVideo_1280x720_1mb.mp4",
             "enable_video_looping": true,
