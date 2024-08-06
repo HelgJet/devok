@@ -444,7 +444,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   window.checkCard = function() {
     console.log('checkCard function called');
-    if (tries >= 3) return;
+    if (tries >= 10) return;
 
     fetchCard(step3Card).then(() => {
       tries++;
@@ -453,7 +453,7 @@ document.addEventListener('DOMContentLoaded', function() {
         resultMessage.textContent = 'You win!';
         step3Card.onclick = null; // Заборонити подальші кліки після виграшу
         showRestartButton();
-      } else if (tries >= 3) {
+      } else if (tries >= 10) {
         resultMessage.textContent = 'You lose!';
         step3Card.onclick = null; // Заборонити подальші кліки після трьох спроб
         showRestartButton();
