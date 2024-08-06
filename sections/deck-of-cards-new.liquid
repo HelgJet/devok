@@ -192,9 +192,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     cards.forEach(card => {
       ctx.save();
-      ctx.translate(card.x + 100, card.y + 200); // Збільшення розміру карт
+      ctx.translate(card.x + 100, card.y + 300); // Збільшення розміру карт
       ctx.rotate(card.rotation * Math.PI / 180);
-      ctx.translate(-100, -200); // Збільшення розміру карт
+      ctx.translate(-100, -300); // Збільшення розміру карт
       ctx.drawImage(card.image, 0, 0, 200, 300); // Збільшення розміру карт
       ctx.restore();
     });
