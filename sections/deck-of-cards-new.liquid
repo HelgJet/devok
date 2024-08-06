@@ -88,8 +88,10 @@
     </div>
   </div>
 
-<div class="step-content step-2">
-    <canvas id="shuffle-canvas" width="400" height="400"></canvas>
+  <div class="step-content step-2">
+    <div id="shuffle-container" class="shuffle-container">
+      <!-- Cards will be displayed here -->
+    </div>
   </div>
 
   <div class="step-content step-3">
@@ -186,7 +188,24 @@ document.addEventListener('DOMContentLoaded', function() {
       ctx.translate(card.x + 35, card.y + 50);
       ctx.rotate(card.rotation * Math.PI / 180);
       ctx.translate(-35, -50);
-      ctx.drawImage(card.image,
+      ctx.drawImage(card.image, 0, 0, 70, 100);
+      ctx.restore();
+    });
+
+    // Зменьшення розкиду карт і зведення їх в одну колоду
+    cards.forEach(card => {
+      card.x += (canvas.width / 2 - card.x - 35) * 0.1;
+      card.y += (canvas.height / 2 - card.y - 50) * 0.1;
+      card.rotation += (0 - card.rotation) * 0.1;
+    });
+
+    if (Math.abs(cards[0].x - canvas.width / 2 + 35) > 1 || Math.abs(cards[0].y - canvas.height / 2 + 50) > 1) {
+      animationFrameId = requestAnimationFrame(animateShuffling);
+    } else {
+      cancelAnimationFrame(animationFrameId);
+    }
+  }
+});
 
 
 </script>
