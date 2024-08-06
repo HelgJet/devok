@@ -360,7 +360,7 @@ window.theme.initWhenVisible = function(options) {
 
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js" defer></script>
 {% endif %}
-
+{% comment %}
 <div class="page-width">
   <h2>Related blogs API</h2>
 <related-posts id="related-posts-container" class="related-posts grid" product-id="{{ product.id }}"></related-posts>
@@ -478,7 +478,7 @@ class RelatedPosts extends HTMLElement {
 // Define the 'related-posts' custom element
 customElements.define('related-posts', RelatedPosts);
 </script>
-
+{% endcomment %}
 
 
 {% schema %}
