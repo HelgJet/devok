@@ -73,7 +73,7 @@
         </div>
       {%- endfor -%}
     </div>
-
+    {%- if paginate.pages > 1 -%}
     {%- if paginate.parts.size > 0 -%}
       <div class="pagination-wrapper">
         <nav class="pagination" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
@@ -132,6 +132,7 @@
           </ul>
         </nav>
       </div>
+    {%- endif -%}
     {%- endif -%}
   </div>
 {%- endpaginate -%}
