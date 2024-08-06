@@ -8,7 +8,6 @@
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
-
 }
 
 .deck-of-cards-section .step-btn {
@@ -19,24 +18,18 @@
 
 .deck-of-cards-section .step-content {
   display: none;
+  text-align: center;
 }
 
 .deck-of-cards-section .step-content.active {
   display: block;
 }
 
-#shuffle-canvas {
-  display: block;
-  margin: 0 auto;
-  background-color: #fff;
-  border: 1px solid #ccc;
-}
-
 .flip-card {
-  perspective: 1000px;
   width: 150px;
   height: 220px;
   margin: 0 auto;
+  perspective: 1000px; /* Необхідне для фліп-анімації */
 }
 
 .flip-card-inner {
@@ -64,9 +57,9 @@
   transform: rotateY(180deg);
 }
 
-  #shuffle-canvas {
+#shuffle-canvas {
   display: block;
-  margin: 0 auto;
+  margin: 20px auto;
   background-color: #fff;
   border: 1px solid #ccc;
   width: 400px;
