@@ -62,22 +62,7 @@
 .shuffle-container .card {
   flex: 1 1 calc(10% - 10px);
   box-sizing: border-box;
-}
-
-.shuffle-animation {
-  animation: shuffle 1s ease-in-out;
-}
-
-@keyframes shuffle {
-  0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(20px);
-  }
-  100% {
-    transform: translateY(0);
-  }
+  transition: transform 0.5s ease-in-out;
 }
 
 
