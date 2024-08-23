@@ -573,145 +573,68 @@
                               </div>
                             </div>
                             {% unless type_price_range == 'only_input' %}
-                           <div class="price-slider-container">
+                      <div class="price-slider-container">
+    {%- assign filterMinValue = filter.min_value.value | money_without_currency -%}
+    {%- assign filterMaxValue = filter.max_value.value | money_without_currency -%}
+    {%- assign filterRangeMax = filter.range_max | money_without_currency -%}
+    {%- assign filterRangeMin = filter.range_min | money_without_currency -%}
 
-                              
-                              {%- capture minValue -%}
-                                {%- if uses_comma_decimals -%}
-                                   {%- if filter.min_value.value -%}
-                                     {{ filter.min_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' }}
-                                   {%- else -%}
-                                     {{ 0 | money_without_currency | replace: '.', '' | replace: ',', '.' }}
-                                   {%- endif -%}
-                                 {%- else -%}
-                                    {%- if filter.min_value.value -%}
-                                     {{ filter.min_value.value | money_without_currency | replace: ',', '' }}
-                                   {%- else -%}
-                                     {{ 0 | money_without_currency | replace: ',', '' }}
-                                   {%- endif -%}
-                                 {%- endif -%} 
-                               {%- endcapture -%}
+    {%- capture minValue -%}
+        {{ filterMinValue | default: 0 | replace: uses_comma_decimals ? '.' : ',', uses_comma_decimals ? ',' : '' }}
+    {%- endcapture -%}
 
-                                {%- capture maxValue -%}
-                                 {%- if uses_comma_decimals -%}
-                                   {%- if filter.max_value.value -%}
-                                     {{ filter.max_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' }}
-                                   {%- else -%}
-                                     {{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}
-                                   {%- endif -%}
-                                 {%- else -%}
-                                   {%- if filter.max_value.value -%}
-                                     {{ filter.max_value.value | money_without_currency | replace: ',', '' }}
-                                   {%- else -%}
-                                     {{ filter.range_max | money_without_currency | replace: ',', '' }}
-                                   {%- endif -%} 
-                                 {%- endif -%}
-                               {%- endcapture -%}
-                               
-                               {%- capture progressValueLeft -%}
-                                 {%- if uses_comma_decimals -%}
-                                      {%- assign filterMaxRange = filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' -%}
-                                      {%- assign filterMinRange = filter.range_min | money_without_currency | replace: '.', '' | replace: ',', '.' -%}
-                                   {%- else -%}
-                                      {%- assign filterMaxRange = filter.range_max | money_without_currency | replace: ',', '' -%}
-                                      {%- assign filterMinRange = filter.range_min | money_without_currency | replace: ',', '' -%}
-                                  {%- endif -%} 
+    {%- capture maxValue -%}
+        {{ filterMaxValue | default: filterRangeMax | replace: uses_comma_decimals ? '.' : ',', uses_comma_decimals ? ',' : '' }}
+    {%- endcapture -%}
 
-                                  {%- if filterMinRange == minValue -%}  
-                                    0
-                                    {%- else -%}
-                                    {{- minValue | divided_by: filterMaxRange | times: 100 | append: '%' -}} 
-                                  {%- endif -%}
-                               {%- endcapture -%} 
+    {%- capture progressValueLeft -%}
+        {%- assign minRangeAdjusted = filterRangeMin | replace: uses_comma_decimals ? '.' : ',', uses_comma_decimals ? ',' : '' -%}
+        {%- assign minValueAdjusted = minValue | replace: uses_comma_decimals ? '.' : ',', uses_comma_decimals ? ',' : '' -%}
+        {{ minValueAdjusted == minRangeAdjusted ? '0' : (minValueAdjusted | divided_by: filterRangeMax | times: 100) | append: '%' }}
+    {%- endcapture -%}
 
-                              {%- capture progressValueRight -%} 
-                                  {%- if uses_comma_decimals -%}
-                                      {%- assign filterMaxRange = filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' -%}
-                                   {%- else -%}
-                                      {%- assign filterMaxRange = filter.range_max | money_without_currency | replace: ',', '' -%}
-                                  {%- endif -%} 
-                                  {%- if maxValue == filterMaxRange -%}   
-                                    {%- assign currentMaxVal = 100 -%} 
-                                    {%- else -%} 
-                                    {%- assign currentMaxVal =  maxValue | divided_by: filterMaxRange | times: 100 -%} 
-                                  {%- endif -%}
-                                  {{ 100 | minus: currentMaxVal | append: '%' }}  
-                              {%- endcapture -%}
+    {%- capture progressValueRight -%}
+        {%- assign maxRangeAdjusted = filterRangeMax | replace: uses_comma_decimals ? '.' : ',', uses_comma_decimals ? ',' : '' -%}
+        {%- assign maxValueAdjusted = maxValue | replace: uses_comma_decimals ? '.' : ',', uses_comma_decimals ? ',' : '' -%}
+        {{ 100 | minus: (maxValueAdjusted == maxRangeAdjusted ? 100 : (maxValueAdjusted | divided_by: maxRangeAdjusted | times: 100)) | append: '%' }}
+    {%- endcapture -%}
 
-                               {%- assign step_value = maxValue | minus: minValue | divided_by: 100.0 | ceil | at_least: 1 -%}
+    {%- assign step_value = (maxValue | minus: minValue | divided_by: 100.0) | ceil | at_least: 1 -%}
 
-                            <div class="price-slider">
-                              <div class="slider">
-                                <div class="progress d-block" style="left:{{ progressValueLeft }}; right:{{ progressValueRight }};"></div>
-                              </div>
-                              <div class="range-input" 
-                              {%- if uses_comma_decimals -%}
-                                    data-maxprice-value="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' | ceil }}"
-                              {%- else -%}
-                                    data-maxprice-value="{{ filter.range_max | money_without_currency | replace: ',', '' | ceil }}"
-                              {%- endif -%}
-                              >
-                               {%- assign maxValueNumber = maxValue | floor -%}
-                                <input
-                                  class="range range__min"
-                                  min="0"
-                                  step="{{ step_value }}"
-                                  type="range"
-                                  {%- if uses_comma_decimals -%}
-                                    max="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' | ceil }}"
-                                  {%- else -%}
-                                    max="{{ filter.range_max | money_without_currency | replace: ',', '' | ceil }}"
-                                  {%- endif -%}
-                                  {%- if filter.min_value.value -%}
-                                    {%- if uses_comma_decimals -%}
-                                      value="{{ filter.min_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' | ceil }}"
-                                    {%- else -%}
-                                      value="{{ filter.min_value.value | money_without_currency | replace: ',', '' | ceil }}"
-                                    {%- endif -%}
-                                  {%- else -%}
-                                   {%- if uses_comma_decimals -%}
-                                      value="{{ 0 | money_without_currency | replace: '.', '' | replace: ',', '.' | ceil }}"
-                                    {%- else -%}
-                                      value="{{ 0 | money_without_currency | replace: ',', '' | ceil }}"
-                                    {%- endif -%}
-                                  {%- endif -%}
-                               />
+    <div class="price-slider">
+        <div class="slider">
+            <div class="progress d-block" style="left:{{ progressValueLeft }}; right:{{ progressValueRight }};"></div>
+        </div>
+        <div class="range-input" 
+            data-maxprice-value="{{ filterRangeMax | replace: uses_comma_decimals ? '.' : ',', uses_comma_decimals ? ',' : '' }}">
+            <input
+                class="range range__min"
+                min="0"
+                step="{{ step_value }}"
+                type="range"
+                max="{{ filterRangeMax | replace: uses_comma_decimals ? '.' : ',', uses_comma_decimals ? ',' : '' }}"
+                value="{{ filterMinValue | default: 0 | replace: uses_comma_decimals ? '.' : ',', uses_comma_decimals ? ',' : '' }}"
+            />
+            <input
+                class="range range__max"
+                min="0"
+                step="{{ step_value }}"
+                type="range"
+                max="{{ filterRangeMax | replace: uses_comma_decimals ? '.' : ',', uses_comma_decimals ? ',' : '' }}"
+                value="{{ filterMaxValue | default: filterRangeMax | replace: uses_comma_decimals ? '.' : ',', uses_comma_decimals ? ',' : '' }}"
+            />
+        </div>
+    </div>
+    
+    <div class="price-range-wrapper facets__header-vertical">
+        {{ 'products.facets.price' | t }}
+        {{ cart.currency.symbol }}:
+        <span class="price-bubble" data-price-min>{{ minValue | ceil }}</span>
+        -
+        <span class="price-bubble" data-price-max>{{ maxValue | ceil }}</span>
+    </div>
+</div>
 
-                                <input
-                                  class="range range__max"
-                                  min="0"
-                                  {%- if uses_comma_decimals -%}
-                                    max="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' | ceil }}"
-                                  {%- else -%}
-                                    max="{{ filter.range_max | money_without_currency | replace: ',', '' | ceil }}"
-                                  {%- endif -%}
-                                   step="{{ step_value }}"
-                                  type="range"
-                                  {%- if filter.max_value.value -%}
-                                    {%- if uses_comma_decimals -%}
-                                      value="{{ filter.max_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' | ceil }}"
-                                    {%- else -%}
-                                      value="{{ filter.max_value.value | money_without_currency | replace: ',', '' | ceil }}"
-                                    {%- endif -%}
-                                  {%- else -%}
-                                    {%- if uses_comma_decimals -%}
-                                      value="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' | ceil }}"
-                                    {%- else -%}
-                                      value="{{ filter.range_max | money_without_currency | replace: ',', '' | ceil }}"
-                                    {%- endif -%}
-                                  {%- endif -%} 
-                                />
-                              </div>
-                            </div>
-                            
-                              <div class="price-range-wrapper facets__header-vertical">
-                                {{ 'products.facets.price' | t }}
-                                {{ cart.currency.symbol }}:
-                                <span class="price-bubble" data-price-min>{{ minValue | ceil }}</span>
-                                -
-                                <span class="price-bubble" data-price-max>{{ maxValue | ceil }}</span>
-                              </div>
-                            </div>
                           {% endunless %}
                        </price-range>
                     </div>
