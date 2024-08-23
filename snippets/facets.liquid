@@ -574,6 +574,8 @@
                             </div>
                             {% unless type_price_range == 'only_input' %}
                            <div class="price-slider-container">
+
+                              
                               {%- capture minValue -%}
                                 {%- if uses_comma_decimals -%}
                                    {%- if filter.min_value.value -%}
@@ -636,6 +638,8 @@
                                   {{ 100 | minus: currentMaxVal | append: '%' }}  
                               {%- endcapture -%}
 
+                               {%- assign step_value = maxValue | minus: minValue | divided_by: 100.0 | ceil | at_least: 1 -%}
+
                             <div class="price-slider">
                               <div class="slider">
                                 <div class="progress d-block" style="left:{{ progressValueLeft }}; right:{{ progressValueRight }};"></div>
@@ -651,7 +655,7 @@
                                 <input
                                   class="range range__min"
                                   min="0"
-                                  step="{% if maxValueNumber <= 100 %}1{% elsif maxValueNumber > 100 and maxValueNumber <= 1000 %}10{% else %}100{% endif %}"
+                                  step="{{ step_value }}"
                                   type="range"
                                   {%- if uses_comma_decimals -%}
                                     max="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
