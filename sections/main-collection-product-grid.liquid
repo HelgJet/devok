@@ -42,13 +42,13 @@
     assign terms = collection.terms | escape
     assign results_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
   endif
-   assign is_page_collection = false
+   assign isPageCollection = false
   if request.page_type == 'collection'
-     assign is_page_collection = true
+     assign isPageCollection = true
   endif
    assign enable_custom_filtering = true
 -%}
-{%- if  is_page_collection  -%}
+{%- if  isPageCollection  -%}
 
   <div class="facet-container--custom">
     <facet-filters-form class="facets facets__custom--type">
@@ -185,7 +185,7 @@
                 <legend class="visually-hidden">{{ filter.label | escape }}</legend>
                 <div class="facets-wrap">
                   <div class="select-dropdown">
-               {% comment %}
+             
              <select name="{{ filter.param_name }}" id="Select-{{ filter.param_name | escape }}-{{ section.id }}">
                        <option value="" disabled selected>Years</option>
                       {%- for value in filter.values -%}
@@ -197,7 +197,7 @@
                         </option>
                       {%- endfor -%}
                     </select>
-                <label for="Select-{{ filter.label | escape }}-{{ section.id }}" class="custom-label">
+                  {% comment %}<label for="Select-{{ filter.label | escape }}-{{ section.id }}" class="custom-label">
                     Choose {{ filter.label }} from the list:
                   </label>               
    {% endcomment %}
