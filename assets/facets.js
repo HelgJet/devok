@@ -356,21 +356,44 @@ FacetFiltersForm.setListeners();
 class PriceRange extends HTMLElement {
   constructor() {
     super();
-    this.setupPriceRangeSlider();
-    this.setupEventListeners();
-    this.updatePriceDisplay();
-  }
-
-  setupEventListeners() {
-    this.querySelectorAll('input').forEach((element) => {
-      element.addEventListener('change', this.onRangeChange.bind(this));
-    });
+    this.productsPriceRangeSlider();
+    this.querySelectorAll('input')
+      .forEach(element => element.addEventListener('change', this.onRangeChange.bind(this)));
+    this.setMinAndMaxValues(); 
   }
 
   onRangeChange(event) {
     this.adjustToValidValues(event.currentTarget);
-    this.updatePriceDisplay();
-    this.setupPriceRangeSlider();
+    this.setMinAndMaxValues();
+    this.setMinAndMaxPrice();
+    this.productsPriceRangeSlider();  
+  }
+
+  setMinAndMaxPrice() {
+    const parent = this.querySelector(".price-slider-container");  
+    if(!parent) return;  
+     const minPriceContainer = this.querySelector('[data-price-min]');
+     const maxPriceContainer = this.querySelector('[data-price-max]');
+
+     const inputs = this.querySelectorAll('input'); 
+     const minInput = inputs[0];
+     const maxInput = inputs[1]; 
+
+    if (minInput.value && minInput.value != null) minPriceContainer.innerText = (minInput.value / 100 * 100).toFixed(2);
+    if (maxInput.value) maxPriceContainer.innerText = (maxInput.value / 100 * 100).toFixed(2); 
+    if (minInput.value === '') minPriceContainer.innerText = 0;
+    if (maxInput.value === '') maxPriceContainer.innerText = (maxInput.getAttribute('max') / 100 * 100).toFixed(2); 
+  }
+
+  setMinAndMaxValues() {
+    const inputs = this.querySelectorAll('input'); 
+    const minInput = inputs[0];
+    const maxInput = inputs[1];
+
+    if (maxInput.value) minInput.setAttribute('max', maxInput.value);
+    if (minInput.value) maxInput.setAttribute('min', minInput.value);
+    if (minInput.value === '') maxInput.setAttribute('min', 0);
+    if (maxInput.value === '') minInput.setAttribute('max', maxInput.getAttribute('max')); 
   }
 
   adjustToValidValues(input) {
@@ -379,77 +402,63 @@ class PriceRange extends HTMLElement {
     const max = Number(input.getAttribute('max'));
 
     if (value < min) input.value = min;
-    if (value > max) input.value = max;
+    if (value > max) input.value = max; 
   }
 
-  updatePriceDisplay() {
-    const parent = this.querySelector(".price-slider-container");
-    if (!parent) return;
+    productsPriceRangeSlider() {
+        const parent = this.querySelector(".price-slider-container"); 
+        if(!parent) return;   
 
-    const minPriceContainer = this.querySelector('[data-price-min]');
-    const maxPriceContainer = this.querySelector('[data-price-max]');
+         const rangeSlider = this.querySelectorAll("input[type=range]"),
+               priceSlider = this.querySelectorAll("input[type=number]"),
+               range = this.querySelector(".slider .progress"),
+               dataMaxVal = this.querySelector('.range-input'); 
+               let priceGap = 1;
+             
+               if (parseFloat(dataMaxVal.dataset.maxpriceValue) < 100) priceGap = 5;
+               else priceGap = parseFloat(dataMaxVal.dataset.maxpriceValue / 10);  
+            
+             priceSlider.forEach((input) => {
+              input.addEventListener("input", (e) => {
 
-    const inputs = this.querySelectorAll('input');
-    const minInput = inputs[0];
-    const maxInput = inputs[1]; 
+                 let priceMin = parseInt(priceSlider[0].value),
+                     priceMax = parseInt(priceSlider[1].value);
+                        
+                  if (priceMax - priceMin >= priceGap && priceMax <= rangeSlider[1].max) {
+                    if (e.target.className === "field__input input__min") {
+                      rangeSlider[0].value = priceMin;
+                      range.style.left = (priceMin / rangeSlider[0].max) * 100 + "%";
+                    } else {
+                      rangeSlider[1].value = priceMax;
+                      range.style.right = 100 - (priceMax / rangeSlider[1].max) * 100 + "%";
+                    } 
+                  }
+              });
+            }); 
 
-    const formatMoney = (value) => window.theme.Currency.formatMoney(value * 100);
+      rangeSlider.forEach((input) => {
+        input.addEventListener("input", (e) => {   
+         let  slideMin = parseInt(rangeSlider[0].value),
+              slideMax = parseInt(rangeSlider[1].value); 
 
-    minPriceContainer.innerText = minInput.value ? formatMoney(minInput.value) : 0;
-    maxPriceContainer.innerText = maxInput.value ? formatMoney(maxInput.value) : formatMoney(maxInput.getAttribute('max') * 100);
-  }
-
-  setupPriceRangeSlider() {
-    const parent = this.querySelector(".price-slider-container");
-    if (!parent) return;
-
-    const rangeSlider = this.querySelectorAll("input[type=range]");
-    const priceSlider = this.querySelectorAll("input[type=number]");
-    const range = this.querySelector(".slider .progress");
-    const dataMaxVal = this.querySelector('.range-input');
-    let priceGap = parseFloat(dataMaxVal.dataset.maxpriceValue) < 100 ? 5 : parseFloat(dataMaxVal.dataset.maxpriceValue / 10);
-
-    priceSlider.forEach((input) => {
-      input.addEventListener("input", () => {
-        let priceMin = parseInt(priceSlider[0].value);
-        let priceMax = parseInt(priceSlider[1].value);
-
-        if (priceMax - priceMin >= priceGap && priceMax <= rangeSlider[1].max) {
-          if (input.classList.contains("input__min")) {
-            rangeSlider[0].value = priceMin;
-            range.style.left = (priceMin / rangeSlider[0].max) * 100 + "%";
+          if (slideMax - slideMin < priceGap) {
+            if (e.target.className === "range range__min") {
+              rangeSlider[0].value = slideMax - priceGap;
+            } else {
+              rangeSlider[1].value = slideMin + priceGap;   
+            }
           } else {
-            rangeSlider[1].value = priceMax;
-            range.style.right = 100 - (priceMax / rangeSlider[1].max) * 100 + "%";
+            priceSlider[0].value = slideMin;
+            priceSlider[1].value = slideMax;
+            range.style.left = (slideMin / rangeSlider[0].max) * 100 + "%";
+            range.style.right = 100 - (slideMax / rangeSlider[1].max) * 100 + "%";
           }
-        }
+        });
       });
-    });
-
-    rangeSlider.forEach((input) => {
-      input.addEventListener("input", () => {
-        let slideMin = parseInt(rangeSlider[0].value);
-        let slideMax = parseInt(rangeSlider[1].value);
-
-        if (slideMax - slideMin < priceGap) {
-          if (input.classList.contains("range__min")) {
-            rangeSlider[0].value = slideMax - priceGap;
-          } else {
-            rangeSlider[1].value = slideMin + priceGap;
-          }
-        } else {
-          priceSlider[0].value = slideMin;
-          priceSlider[1].value = slideMax;
-          range.style.left = (slideMin / rangeSlider[0].max) * 100 + "%";
-          range.style.right = 100 - (slideMax / rangeSlider[1].max) * 100 + "%";
-        }
-      });
-    });
   }
 }
 
 customElements.define('price-range', PriceRange);
-
 class FacetRemove extends HTMLElement {
   constructor() {
     super();
