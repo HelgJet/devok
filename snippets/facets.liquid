@@ -646,9 +646,9 @@
                               </div>
                               <div class="range-input" 
                               {%- if uses_comma_decimals -%}
-                                    data-maxprice-value="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                                    data-maxprice-value="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' | ceil }}"
                               {%- else -%}
-                                    data-maxprice-value="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                                    data-maxprice-value="{{ filter.range_max | money_without_currency | replace: ',', '' | ceil }}"
                               {%- endif -%}
                               >
                                {%- assign maxValueNumber = maxValue | floor -%}
@@ -658,21 +658,21 @@
                                   step="{{ step_value }}"
                                   type="range"
                                   {%- if uses_comma_decimals -%}
-                                    max="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                                    max="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' | ceil }}"
                                   {%- else -%}
-                                    max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                                    max="{{ filter.range_max | money_without_currency | replace: ',', '' | ceil }}"
                                   {%- endif -%}
                                   {%- if filter.min_value.value -%}
                                     {%- if uses_comma_decimals -%}
-                                      value="{{ filter.min_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                                      value="{{ filter.min_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' | ceil }}"
                                     {%- else -%}
-                                      value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
+                                      value="{{ filter.min_value.value | money_without_currency | replace: ',', '' | ceil }}"
                                     {%- endif -%}
                                   {%- else -%}
                                    {%- if uses_comma_decimals -%}
-                                      value="{{ 0 | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                                      value="{{ 0 | money_without_currency | replace: '.', '' | replace: ',', '.' | ceil }}"
                                     {%- else -%}
-                                      value="{{ 0 | money_without_currency | replace: ',', '' }}"
+                                      value="{{ 0 | money_without_currency | replace: ',', '' | ceil }}"
                                     {%- endif -%}
                                   {%- endif -%}
                                />
@@ -681,23 +681,23 @@
                                   class="range range__max"
                                   min="0"
                                   {%- if uses_comma_decimals -%}
-                                    max="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                                    max="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' | ceil }}"
                                   {%- else -%}
-                                    max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                                    max="{{ filter.range_max | money_without_currency | replace: ',', '' | ceil }}"
                                   {%- endif -%}
                                    step="{{ step_value }}"
                                   type="range"
                                   {%- if filter.max_value.value -%}
                                     {%- if uses_comma_decimals -%}
-                                      value="{{ filter.max_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                                      value="{{ filter.max_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' | ceil }}"
                                     {%- else -%}
-                                      value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
+                                      value="{{ filter.max_value.value | money_without_currency | replace: ',', '' | ceil }}"
                                     {%- endif -%}
                                   {%- else -%}
                                     {%- if uses_comma_decimals -%}
-                                      value="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                                      value="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' | ceil }}"
                                     {%- else -%}
-                                      value="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                                      value="{{ filter.range_max | money_without_currency | replace: ',', '' | ceil }}"
                                     {%- endif -%}
                                   {%- endif -%} 
                                 />
