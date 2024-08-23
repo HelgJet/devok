@@ -1343,12 +1343,12 @@
                                 -%}
 
                                 {%- capture progress_value_left -%}
-        {%- if min_value == filter_min_range -%}
-            0%
-        {%- else -%}
-            {{ min_value | divided_by: filter_max_range | times: 100 | append: '%' }}
-        {%- endif -%}
-    {%- endcapture -%}
+                                    {%- if min_value == filter_min_range -%}
+                                        0%
+                                    {%- else -%}
+                                        {{ min_value | divided_by: filter_max_range | times: 100 | append: '%' }}
+                                    {%- endif -%}
+                                {%- endcapture -%}
 
                                 {%- assign max_value_percentage = max_value
                                   | divided_by: filter_max_range
