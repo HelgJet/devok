@@ -42,13 +42,13 @@
     assign terms = collection.terms | escape
     assign results_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
   endif
-   assign isPageCollection = false
+   assign is_page_collection = false
   if request.page_type == 'collection'
-     assign isPageCollection = true
+     assign is_page_collection = true
   endif
    assign enable_custom_filtering = true
 -%}
-{%- if  isPageCollection  -%}
+{%- if  is_page_collection  -%}
 
   <div class="facet-container--custom">
     <facet-filters-form class="facets facets__custom--type">
@@ -80,19 +80,16 @@
                   class="js-filter"
                 >
                   <legend class="visually-hidden">{{ filter.label | escape }}</legend>
-                  <div class="facets-wrap page-width isolate is-slider--desktop page-width-desktop">
-                    <slider-component class="slider-mobile-gutter">
+                  <div class="facets-wrap page-width isolate page-width-desktop">
+               
                       <ul
-                        class="grid facets__custom--type facets-type__wrapper facets-wrap facets__list list-unstyled no-js-hidden collection-list grid--6-col-desktop slider slider--desktop grid--peek"
-                        role="list"
-                        id="Slider-{{ section.id }}"
+                        class="horizontal-media-scroller"
                         role="list"
                         aria-label="{{ 'general.slider.name' | t }}"
                       >
                         {%- for value in filter.values -%}
                           <li
-                            class="list-menu__item facets__item grid__item slider__slide {% if value.count == 0 and value.active == false %} facet-checkbox--disabled{% endif %}"
-                            id="Slide-{{ section.id }}-{{ forloop.index }}"
+                            class="list-menu__item facets__item  {% if value.count == 0 and value.active == false %} facet-checkbox--disabled{% endif %}"
                           >
                             <label
                               for="Filter-{{ filter.param_name | escape }}-{{ forloop.index }}"
@@ -128,7 +125,10 @@
                           </li>
                         {%- endfor -%}
                       </ul>
-                      {%- if is_slider -%}
+                       
+                  
+                    {%- if is_slider -%}
+                       {% comment %} 
                       <div class="slider-buttons no-js-hidden">
                         <button
                           type="button"
@@ -150,11 +150,13 @@
                           {% render 'icon-caret' %}
                         </button>
                       </div>
+                          {% endcomment %}
                       {%- endif -%}
-                    </slider-component>
+               
+                    </div>
                   </div>
                 </div>
-              </div>
+        
             {%- endif -%}
           {%- endfor -%}
         {%- endif -%}
