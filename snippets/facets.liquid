@@ -707,9 +707,9 @@
                               <div class="price-range-wrapper facets__header-vertical">
                                 {{ 'products.facets.price' | t }}
                                 {{ cart.currency.symbol }}:
-                                <span class="price-bubble" data-price-min>{{ minValue }}</span>
+                                <span class="price-bubble" data-price-min>{{ minValue | ceil }}</span>
                                 -
-                                <span class="price-bubble" data-price-max>{{ maxValue }}</span>
+                                <span class="price-bubble" data-price-max>{{ maxValue | ceil }}</span>
                               </div>
                             </div>
                           {% endunless %}
