@@ -603,19 +603,14 @@
         {%- endif -%}
     {%- endcapture -%}
 
-    {%- capture progress_value_right -%}
-        {%- if max_value == filter_max_range -%}
-            0%
-        {%- else -%}
-            {{ 100 | minus: (max_value | divided_by: filter_max_range | times: 100) | append: '%' }}
-        {%- endif -%}
-    {%- endcapture -%}
-
-    {%- assign step_value = (max_value | minus: min_value | divided_by: 100.0) | ceil | at_least: 1 -%}
+    {%- assign max_value_percentage = max_value | divided_by: filter_max_range | times: 100 -%}
+    {%- assign progress_value_right = 100 | minus: max_value_percentage -%}
+  
+    {% assign step_value = max_value | minus: min_value | divided_by: 100.0 | ceil | at_least: 1 %}
 
     <div class="price-slider">
         <div class="slider">
-            <div class="progress d-block" style="left:{{ progress_value_left }}; right:{{ progress_value_right }};"></div>
+            <div class="progress d-block" style="left:{{ progress_value_left }}; right:{{ progress_value_right }}%;"></div>
         </div>
         <div class="range-input" 
             data-maxprice-value="{{ filter.range_max | money_without_currency | replace: replace_char, replace_with }}">
@@ -646,6 +641,7 @@
         <span class="price-bubble" data-price-max>{{ max_value | ceil }}</span>
     </div>
 </div>
+
 
 
 
