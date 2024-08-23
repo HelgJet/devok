@@ -685,7 +685,7 @@
                                   {%- else -%}
                                     max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
                                   {%- endif -%}
-                                   step="{% if maxValueNumber <= 100 %}1{% elsif maxValueNumber > 100 and maxValueNumber <= 1000 %}10{% else %}100{% endif %}"
+                                   step="{{ step_value }}"
                                   type="range"
                                   {%- if filter.max_value.value -%}
                                     {%- if uses_comma_decimals -%}
