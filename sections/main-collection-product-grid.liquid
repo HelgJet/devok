@@ -197,42 +197,7 @@
                         </option>
                       {%- endfor -%}
                     </select>
-                  {% comment %}<label for="Select-{{ filter.label | escape }}-{{ section.id }}" class="custom-label">
-                    Choose {{ filter.label }} from the list:
-                  </label>               
-   {% endcomment %}
-                    <input list="Select-{{ filter.param_name | escape }}-{{ section.id }}" placeholder="Choose {{ filter.label }}" name="{{ filter.param_name }}" id="Select-{{ filter.label | escape }}-{{ section.id }}" class="custom-input">
-                  <datalist id="Select-{{ filter.param_name | escape }}-{{ section.id }}" class="custom-datalist">
-                    {%- for value in filter.values -%}
-                      <option value="{{ value.value }}" {% if value.active %} selected {% endif %} class="custom-option">{{- value.label | escape }}</option>
-                    {%- endfor -%}
-                  </datalist>  
-
-                    
-                    <style>
-/* Style the label */
-.custom-label {
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-  color: #333;
-  margin-bottom: 5px;
-  display: inline-block;
-}
-
-/* Style the input field */
-.custom-input {
-  width: 200px;
-  padding: 8px;
-  font-size: 14px;
-  font-family: Arial, sans-serif;
-  color: #333;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-                
-                    </style>
-
+                      
                   </div>
                 </div>
               </div>
