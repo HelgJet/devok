@@ -1,3 +1,12 @@
+/*
+* ------------------------------------------------------------
+* IMPORTANT: The contents of this file are auto-generated.
+*
+* This file may be updated by the Shopify admin theme editor
+* or related systems. Please exercise caution as any changes
+* made to this file may be overwritten.
+* ------------------------------------------------------------
+*/
 {
   "sections": {
     "0982bc30-bc03-4c3e-91de-9de9d9d7f4ec": {
@@ -52,7 +61,7 @@
         "show_color_link": true,
         "show_countdown": true,
         "enable_filtering": true,
-        "filter_type": "vertical",
+        "filter_type": "horizontal",
         "enable_default_state_opened": false,
         "enable_sorting": true,
         "type_price_range": "default",
