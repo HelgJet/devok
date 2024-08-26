@@ -76,20 +76,26 @@ const devokLoadMore = async (button) => {
 };
 
 const handleInfiniteScroll = () => {
-  const loadTarget = document.querySelector("#devok-load-more");
-  if (!loadTarget) return;
-  const dataInf = loadTarget.getAttribute("data-infinite");
-  if (dataInf !== "true") return;
-  const buttonTarget = loadTarget.querySelector("#devok-load-button");
-  if (!loadTarget || !buttonTarget) return;
-  const scrollOffset = 100;
-  const targetScroll = loadTarget.offsetTop;
-  const scrollPosition = window.innerHeight + window.pageYOffset;
+    const loadTarget = document.querySelector('#zmz-load-more');
+    
+    // Check if the element exists before accessing its attributes
+    if (!loadTarget) return;
+    
+    const dataInf = loadTarget.getAttribute('data-infinite');  
+    if (dataInf != 'true') return; 
+    
+    const buttonTarget = loadTarget.querySelector('#zmz-load-button');
+    if (!buttonTarget) return; 
+    
+    const scrollOffset = 100; 
+    const targetScroll = loadTarget.offsetTop;
+    const scrollPosition = window.innerHeight + window.pageYOffset;  
 
-  if (scrollPosition >= targetScroll - scrollOffset) {
-    devokLoadMore(buttonTarget);
-  }
+    if (scrollPosition >= targetScroll - scrollOffset) {
+      zmzLoadMore();  
+    }
 };
+
 
 if (dataInfinite != "false") {
   window.addEventListener("scroll", handleInfiniteScroll);
