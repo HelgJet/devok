@@ -22,6 +22,11 @@
           "settings": {
           }
         },
+        "air_product_reviews_app_summary_block_BDg7ct": {
+          "type": "shopify:\/\/apps\/air-product-reviews\/blocks\/app-summary-block\/c4e1e9ca-4d46-4e76-bc39-7e42417cb327",
+          "settings": {
+          }
+        },
         "price": {
           "type": "price",
           "settings": {
@@ -203,6 +208,7 @@
       "block_order": [
         "d314344f-58a5-4c38-9d6f-31af4cbed0e3",
         "title",
+        "air_product_reviews_app_summary_block_BDg7ct",
         "price",
         "5581422c-cd42-4bd2-b1ee-4ebe51b0cb41",
         "variant_picker",
