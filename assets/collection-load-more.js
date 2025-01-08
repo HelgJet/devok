@@ -80,8 +80,8 @@ const devokLoadMore = async (button) => {
     console.error("Failed to load more products:", error);
   } finally {
     isLoading = false;
-    gridContainer.classList.remove("loading");
-    loadMoreSpinner.classList.add("hidden");
+    gridContainer?.classList.remove("loading");
+    loadMoreSpinner?.classList.add("hidden");
     if (dataInfinite == "false") {
       button.classList.remove("hidden");
     }
@@ -90,16 +90,11 @@ const devokLoadMore = async (button) => {
 
 // Function to handle infinite scroll
 const handleInfiniteScroll = () => {
-    const loadTarget = document.querySelector("#devok-load-more");
-    
-    // Check if the element exists before accessing its attributes
-    if (!loadTarget) return;
-    
-    const dataInf = loadTarget.getAttribute('data-infinite');  
-    if (dataInf !== 'true') return; 
-    
+  const loadTarget = document.querySelector("#devok-load-more");
+  if (!loadTarget || loadTarget.getAttribute("data-infinite") !== "true") return;
+
   const buttonTarget = loadTarget.querySelector("#devok-load-button");
-    if (!buttonTarget) return; 
+  if (!buttonTarget) return;
     
     const scrollOffset = 100;   // Buffer distance to trigger load
     const targetScroll = loadTarget.offsetTop;
