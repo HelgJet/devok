@@ -13,68 +13,59 @@ const dataInfinite = document
 // Function to load more products dynamically
 const devokLoadMore = async (button) => {
   // Prevent re-triggering the function if already loading
-  if (isLoading) return;
+  if (isLoading || !button) return;
   isLoading = true;
+  
   const loadMoreWrapper = document.querySelector("#devok-load-more");
-  if (!loadMoreWrapper) return;
-  button = loadMoreWrapper.querySelector("#devok-load-button") || button;
-
-  const loadMoreSpinner = loadMoreWrapper.querySelector(".load-more__spinner");
-  const paginationList = document.querySelector(".pagination");
   const gridContainer = document.querySelector(".product-grid");
+  const loadMoreSpinner = loadMoreWrapper?.querySelector(".load-more__spinner");
+  const paginationList = document.querySelector(".pagination");
 
-  if (!button) return;
 
   try {
-    if (dataInfinite == "false") {
-      button.classList.add("hidden");
-    }
-    const nextDataUrl = button.getAttribute("data-next-url");
-    const nextUrl = new URL(nextDataUrl, currentUrl).href;
-
-    gridContainer.classList.add("loading");
-    loadMoreSpinner.classList.remove("hidden");
+    button.classList.add("hidden");
+    gridContainer?.classList.add("loading");
+    loadMoreSpinner?.classList.remove("hidden");
+    
+     const nextUrl = new URL(button.getAttribute("data-next-url"), currentUrl).href;
 
     const response = await fetch(nextUrl);
     if (!response.ok) {
       throw new Error(`HTTP error ${response.status}`);
     }
 
-    const data = await response.text();
-    const parser = new DOMParser();
-    const parseFromString = parser.parseFromString.bind(parser); // Bind the context to the parseFromString method
-    const newPage = parseFromString(data, "text/html");
+    const newPage = new DOMParser().parseFromString(await response.text(), "text/html");
 
-    if (newPage) {
-      if (dataInfinite == "false") {
-        button.classList.remove("hidden");
-      }
-
-      const grid = document.querySelector("[data-grid-js]");
-      grid.innerHTML += newPage.querySelector("[data-grid-js]").innerHTML;
+    const newGridContent = newPage.querySelector("[data-grid-js]")?.innerHTML;
+    if (newGridContent) {
+      document.querySelector("[data-grid-js]").innerHTML += newGridContent;
+    }
 
       // Reinitialize interactivity features
       activeCompare();
       activeWishlist();
 
       // Replace the load-more wrapper with the new one
-      const loadMore = document.querySelector("#devok-load-more");
-      loadMore.replaceWith(newPage.querySelector("#devok-load-more"));
+      const newLoadMore = newPage.querySelector("#devok-load-more");
+    if (newLoadMore) {
+      loadMoreWrapper.replaceWith(newLoadMore);
+    }
 
 
       // Update the pagination if present
       if (paginationList) {
         paginationList.replaceWith(newPage.querySelector(".pagination"));
       }
-    }
+    
     
    // Trigger custom events for non-infinite scenarios
+    const newPagination = newPage.querySelector(".pagination");
+    if (newPagination && paginationList) {
+      paginationList.replaceWith(newPagination);
+    }
+
     if (dataInfinite === "false") {
-      const event = new CustomEvent("devok.paginate.next");
-      document.querySelector("#devok-load-more").dispatchEvent(event);
-      if (paginationList) {
-        document.querySelector(".pagination").dispatchEvent(event);
-      }
+      document.querySelector("#devok-load-more")?.dispatchEvent(new CustomEvent("devok.paginate.next"));
     }
   } catch (error) {
     console.error("Failed to load more products:", error);
@@ -82,9 +73,7 @@ const devokLoadMore = async (button) => {
     isLoading = false;
     gridContainer?.classList.remove("loading");
     loadMoreSpinner?.classList.add("hidden");
-    if (dataInfinite == "false") {
-      button.classList.remove("hidden");
-    }
+    button.classList.remove("hidden");
   }
 };
 
