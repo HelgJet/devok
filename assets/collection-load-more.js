@@ -1,10 +1,18 @@
+// State variable to prevent multiple concurrent load operations
 let isLoading = false;
+
+// Get the current page URL
 const currentUrl = window.location.href;
+
+// Check if infinite scroll is enabled based on a data attribute
 const dataInfinite = document
   .querySelector("#devok-load-more")
-  .getAttribute("data-infinite");
+  ?.getAttribute("data-infinite");
 
+
+// Function to load more products dynamically
 const devokLoadMore = async (button) => {
+  // Prevent re-triggering the function if already loading
   if (isLoading) return;
   isLoading = true;
   const loadMoreWrapper = document.querySelector("#devok-load-more");
@@ -45,17 +53,22 @@ const devokLoadMore = async (button) => {
       const grid = document.querySelector("[data-grid-js]");
       grid.innerHTML += newPage.querySelector("[data-grid-js]").innerHTML;
 
+      // Reinitialize interactivity features
       activeCompare();
       activeWishlist();
 
+      // Replace the load-more wrapper with the new one
       const loadMore = document.querySelector("#devok-load-more");
       loadMore.replaceWith(newPage.querySelector("#devok-load-more"));
 
+
+      // Update the pagination if present
       if (paginationList) {
         paginationList.replaceWith(newPage.querySelector(".pagination"));
       }
     }
-
+    
+   // Trigger custom events for non-infinite scenarios
     if (dataInfinite === "false") {
       const event = new CustomEvent("devok.paginate.next");
       document.querySelector("#devok-load-more").dispatchEvent(event);
@@ -75,25 +88,26 @@ const devokLoadMore = async (button) => {
   }
 };
 
+// Function to handle infinite scroll
 const handleInfiniteScroll = () => {
-    const loadTarget = document.querySelector('#zmz-load-more');
+    const loadTarget = document.querySelector("#devok-load-more");
     
     // Check if the element exists before accessing its attributes
     if (!loadTarget) return;
     
     const dataInf = loadTarget.getAttribute('data-infinite');  
-    if (dataInf != 'true') return; 
+    if (dataInf !== 'true') return; 
     
-    const buttonTarget = loadTarget.querySelector('#zmz-load-button');
+  const buttonTarget = loadTarget.querySelector("#devok-load-button");
     if (!buttonTarget) return; 
     
-    const scrollOffset = 100; 
+    const scrollOffset = 100;   // Buffer distance to trigger load
     const targetScroll = loadTarget.offsetTop;
     const scrollPosition = window.innerHeight + window.pageYOffset;  
 
-    if (scrollPosition >= targetScroll - scrollOffset) {
-      zmzLoadMore();  
-    }
+  if (scrollPosition >= targetScroll - scrollOffset) {
+    devokLoadMore(buttonTarget);
+  }
 };
 
 
