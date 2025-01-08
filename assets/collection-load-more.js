@@ -9,63 +9,65 @@ const dataInfinite = document
   .querySelector("#devok-load-more")
   ?.getAttribute("data-infinite");
 
-
 // Function to load more products dynamically
 const devokLoadMore = async (button) => {
   // Prevent re-triggering the function if already loading
   if (isLoading || !button) return;
   isLoading = true;
-  
+
   const loadMoreWrapper = document.querySelector("#devok-load-more");
   const gridContainer = document.querySelector(".product-grid");
   const loadMoreSpinner = loadMoreWrapper?.querySelector(".load-more__spinner");
   const paginationList = document.querySelector(".pagination");
 
-
   try {
     button.classList.add("hidden");
     gridContainer?.classList.add("loading");
     loadMoreSpinner?.classList.remove("hidden");
-    
-     const nextUrl = new URL(button.getAttribute("data-next-url"), currentUrl).href;
+
+    const nextUrl = new URL(button.getAttribute("data-next-url"), currentUrl)
+      .href;
 
     const response = await fetch(nextUrl);
     if (!response.ok) {
       throw new Error(`HTTP error ${response.status}`);
     }
 
-    const newPage = new DOMParser().parseFromString(await response.text(), "text/html");
+    const newPage = new DOMParser().parseFromString(
+      await response.text(),
+      "text/html"
+    );
 
     const newGridContent = newPage.querySelector("[data-grid-js]")?.innerHTML;
     if (newGridContent) {
       document.querySelector("[data-grid-js]").innerHTML += newGridContent;
     }
 
-      // Reinitialize interactivity features
-      activeCompare();
-      activeWishlist();
+    // Reinitialize interactivity features
+    activeCompare();
+    activeWishlist();
 
-      // Replace the load-more wrapper with the new one
-      const newLoadMore = newPage.querySelector("#devok-load-more");
+    // Replace the load-more wrapper with the new one
+    const newLoadMore = newPage.querySelector("#devok-load-more");
     if (newLoadMore) {
       loadMoreWrapper.replaceWith(newLoadMore);
     }
 
+    // Update the pagination if present
+    if (paginationList) {
+      paginationList.replaceWith(newPage.querySelector(".pagination"));
+    }
 
-      // Update the pagination if present
-      if (paginationList) {
-        paginationList.replaceWith(newPage.querySelector(".pagination"));
-      }
-    
-    
-   // Trigger custom events for non-infinite scenarios
+    // Trigger custom events for non-infinite scenarios
     const newPagination = newPage.querySelector(".pagination");
     if (newPagination && paginationList) {
       paginationList.replaceWith(newPagination);
     }
 
     if (dataInfinite === "false") {
-      document.querySelector("#devok-load-more")?.dispatchEvent(new CustomEvent("devok.paginate.next"));
+      document
+        .querySelector("#devok-load-more")
+        ?.dispatchEvent(new CustomEvent("devok.paginate.next"));
     }
   } catch (error) {
     console.error("Failed to load more products:", error);
@@ -80,20 +82,20 @@ const devokLoadMore = async (button) => {
 // Function to handle infinite scroll
 const handleInfiniteScroll = () => {
   const loadTarget = document.querySelector("#devok-load-more");
-  if (!loadTarget || loadTarget.getAttribute("data-infinite") !== "true") return;
+  if (!loadTarget || loadTarget.getAttribute("data-infinite") !== "true")
+    return;
 
   const buttonTarget = loadTarget.querySelector("#devok-load-button");
   if (!buttonTarget) return;
-    
-    const scrollOffset = 100;   // Buffer distance to trigger load
-    const targetScroll = loadTarget.offsetTop;
-    const scrollPosition = window.innerHeight + window.pageYOffset;  
+
+  const scrollOffset = 100; // Buffer distance to trigger load
+  const targetScroll = loadTarget.offsetTop;
+  const scrollPosition = window.innerHeight + window.pageYOffset;
 
   if (scrollPosition >= targetScroll - scrollOffset) {
     devokLoadMore(buttonTarget);
   }
 };
-
 
 if (dataInfinite != "false") {
   window.addEventListener("scroll", handleInfiniteScroll);
