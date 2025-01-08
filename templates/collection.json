@@ -1,12 +1,12 @@
 /*
-* ------------------------------------------------------------
-* IMPORTANT: The contents of this file are auto-generated.
-*
-* This file may be updated by the Shopify admin theme editor
-* or related systems. Please exercise caution as any changes
-* made to this file may be overwritten.
-* ------------------------------------------------------------
-*/
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "0982bc30-bc03-4c3e-91de-9de9d9d7f4ec": {
@@ -15,7 +15,7 @@
         "template--14893808975914__0982bc30-bc03-4c3e-91de-9de9d9d7f4ec-167675197644a76286-1": {
           "type": "text",
           "settings": {
-            "text": "<p>One day only<\/p>"
+            "text": "<p>One day only</p>"
           }
         }
       },
@@ -49,7 +49,7 @@
         "use_section_width": false,
         "products_per_page": 9,
         "columns_desktop": 3,
-        "pagination_type": "pagination_page",
+        "pagination_type": "pagination_combinate",
         "image_ratio": "portrait",
         "show_secondary_image": true,
         "show_vendor": false,
